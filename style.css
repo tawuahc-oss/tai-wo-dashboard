@@ -39,15 +39,18 @@ body {
 .dashboard {
 
     width: 100vw;
+
     height: 100vh;
 
-    padding: 2vh 2vw;
+    padding: 1.2vh 2vw;
 
     display: flex;
 
     flex-direction: column;
 
-    gap: 1.5vh;
+    gap: 1vh;
+
+    overflow: hidden;
 
 }
 
@@ -66,21 +69,21 @@ body {
 
 .time {
 
-    font-size: clamp(45px, 6vw, 100px);
+    font-size: clamp(42px, 5vw, 82px);
 
     font-weight: 700;
 
     letter-spacing: 2px;
 
-    line-height: 1;
+    line-height: 0.95;
 
 }
 
 .date {
 
-    margin-top: 8px;
+    margin-top: 4px;
 
-    font-size: clamp(18px, 2vw, 30px);
+    font-size: clamp(16px, 1.5vw, 26px);
 
     color: #777;
 
@@ -135,15 +138,17 @@ body {
 
     display: grid;
 
-    grid-template-columns:
-        1fr 2fr;
+    grid-template-columns: 1fr 2fr;
 
-    gap: 1.5vw;
+    gap: 1.2vw;
+
+    height: 24vh;
 
     min-height: 0;
 
-}
+    flex-shrink: 0;
 
+}
 
 /* =========================================
    CLOCK
@@ -157,15 +162,23 @@ body {
 
     align-items: center;
 
+    justify-content: flex-start;
+
+    min-height: 0;
+
+    overflow: hidden;
+
 }
 
 .analog-clock {
 
     position: relative;
 
-    width: min(25vh, 20vw);
+    width: min(17vh, 17vw);
 
-    aspect-ratio: 1;
+    height: min(17vh, 17vw);
+
+    flex-shrink: 0;
 
     border: 5px solid #d99bad;
 
@@ -374,7 +387,13 @@ body {
 
 .forecast-card {
 
+    height: 17vh;
+
     min-height: 0;
+
+    flex-shrink: 0;
+
+    overflow: hidden;
 
 }
 
@@ -395,9 +414,11 @@ body {
 
     background: #faf7f5;
 
-    border-radius: 15px;
+    border-radius: 12px;
 
-    padding: 10px 5px;
+    padding: 5px 3px;
+
+    min-width: 0;
 
 }
 
@@ -473,11 +494,11 @@ body {
 
     background: #f7eeee;
 
-    border-radius: 15px;
+    border-radius: 12px;
 
-    padding: 10px 15px;
+    padding: 7px 12px;
 
-    min-width: 100px;
+    min-width: 85px;
 
     text-align: center;
 
@@ -639,3 +660,46 @@ footer {
     }
 
 }
+
+.mtr-card {
+
+    height: 18vh;
+
+    min-height: 0;
+
+    flex-shrink: 0;
+
+    overflow: hidden;
+
+}
+
+.news-grid {
+
+    height: 14vh;
+
+    flex-shrink: 0;
+
+    min-height: 0;
+
+}
+
+.news-card {
+
+    min-height: 0;
+
+    overflow: hidden;
+
+}
+
+.calendar-card {
+
+    height: 11vh;
+
+    min-height: 0;
+
+    flex-shrink: 0;
+
+    overflow: hidden;
+
+}
+
