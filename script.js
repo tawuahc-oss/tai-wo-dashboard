@@ -18,6 +18,10 @@ const WEATHER_API =
     "https://api.open-meteo.com/v1/forecast";
 
 
+const HKO_API =
+    "https://data.weather.gov.hk/weatherAPI/opendata/weather.php";
+
+
 const MTR_API =
     "https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php";
 
@@ -35,7 +39,7 @@ const NOW_GOOGLE_RSS =
 
 
 /* =====================================================
-   WEATHER INFO
+   WEATHER ICONS
 ===================================================== */
 
 function weatherInfo(code) {
@@ -147,9 +151,7 @@ function updateClock() {
                     "Asia/Hong_Kong"
 
             }
-        ).format(
-            now
-        );
+        ).format(now);
 
 
     document.getElementById(
@@ -211,9 +213,7 @@ function updateClock() {
                     "Asia/Hong_Kong"
 
             }
-        ).format(
-            now
-        );
+        ).format(now);
 
 
     document.getElementById(
@@ -239,9 +239,7 @@ function updateClock() {
                         "Asia/Hong_Kong"
 
                 }
-            ).format(
-                now
-            );
+            ).format(now);
 
 
         document.getElementById(
@@ -357,7 +355,7 @@ function updateClock() {
 
 
 /* =====================================================
-   LOCATION
+   CURRENT LOCATION
 ===================================================== */
 
 function getCurrentLocation() {
@@ -447,7 +445,7 @@ function getCurrentLocation() {
 
 
 /* =====================================================
-   WEATHER
+   CURRENT WEATHER
 ===================================================== */
 
 async function loadWeather() {
@@ -618,6 +616,183 @@ async function loadWeather() {
 
 
 /* =====================================================
+   HKO TODAY FORECAST + SPECIAL WEATHER TIPS
+===================================================== */
+
+async function loadHKOWeatherText() {
+
+    const forecastBox =
+        document.getElementById(
+            "hkoForecast"
+        );
+
+
+    const specialBox =
+        document.getElementById(
+            "hkoSpecialTips"
+        );
+
+
+    try {
+
+        const [
+            forecastResponse,
+            specialResponse
+        ] =
+            await Promise.all([
+
+                fetch(
+                    `${HKO_API}?dataType=flw&lang=tc`,
+                    {
+                        cache:
+                            "no-store"
+                    }
+                ),
+
+                fetch(
+                    `${HKO_API}?dataType=swt&lang=tc`,
+                    {
+                        cache:
+                            "no-store"
+                    }
+                )
+
+            ]);
+
+
+        /* =========================================
+           TODAY FORECAST
+        ========================================== */
+
+        if (
+            !forecastResponse.ok
+        ) {
+
+            throw new Error(
+                "HKO forecast unavailable"
+            );
+
+        }
+
+
+        const forecastData =
+            await forecastResponse.json();
+
+
+        const forecastText =
+
+            String(
+                forecastData.forecastDesc ||
+                ""
+            ).trim();
+
+
+        forecastBox.textContent =
+
+            forecastText ||
+
+            "暫時未有今日天氣預報";
+
+
+        /* =========================================
+           SPECIAL WEATHER TIPS
+        ========================================== */
+
+        if (
+            specialResponse.ok
+        ) {
+
+            const specialData =
+                await specialResponse.json();
+
+
+            const tips =
+                Array.isArray(
+                    specialData.swt
+                )
+                    ? specialData.swt
+                    : [];
+
+
+            const descriptions =
+                tips
+
+                    .map(
+                        item =>
+                            String(
+                                item.desc ||
+                                ""
+                            ).trim()
+                    )
+
+                    .filter(
+                        Boolean
+                    );
+
+
+            if (
+                descriptions.length > 0
+            ) {
+
+                specialBox.hidden =
+                    false;
+
+
+                specialBox.textContent =
+                    descriptions.join(
+                        " "
+                    );
+
+            }
+
+            else {
+
+                specialBox.hidden =
+                    true;
+
+                specialBox.textContent =
+                    "";
+
+            }
+
+        }
+
+        else {
+
+            specialBox.hidden =
+                true;
+
+            specialBox.textContent =
+                "";
+
+        }
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "HKO weather text error:",
+            error
+        );
+
+
+        forecastBox.textContent =
+            "今日天氣預報暫時無法載入";
+
+
+        specialBox.hidden =
+            true;
+
+        specialBox.textContent =
+            "";
+
+    }
+
+}
+
+
+/* =====================================================
    FORECAST
 ===================================================== */
 
@@ -686,10 +861,9 @@ function renderForecast(
             <div class="forecast-temp">
                 ${
                     Math.round(
-                        data.hourly
-                            .temperature_2m[
-                                hour
-                            ]
+                        data.hourly.temperature_2m[
+                            hour
+                        ]
                     )
                 }°
             </div>
@@ -717,7 +891,7 @@ function renderForecast(
 
 /* =====================================================
    MTR
-   ONLY THE NEXT TWO TRAINS
+   ONLY NEXT 2
 ===================================================== */
 
 async function loadMTR() {
@@ -820,10 +994,6 @@ function renderTrains(
     container.innerHTML =
         "";
 
-
-    /*
-       ONLY 2 upcoming trains.
-    */
 
     const upcoming =
         trains
@@ -978,10 +1148,12 @@ function renderNews(
 
 
     items
+
         .slice(
             0,
             30
         )
+
         .forEach(
             item => {
 
@@ -1196,7 +1368,6 @@ function updateLastUpdated() {
     document.getElementById(
         "lastUpdated"
     ).textContent =
-
         `Updated ${formatTime()}`;
 
 }
@@ -1228,6 +1399,8 @@ async function refreshDashboard() {
         await Promise.allSettled([
 
             loadWeather(),
+
+            loadHKOWeatherText(),
 
             loadMTR(),
 
@@ -1277,10 +1450,14 @@ document.addEventListener(
 
     () => {
 
+
         updateClock();
 
 
         loadWeather();
+
+
+        loadHKOWeatherText();
 
 
         loadMTR();
@@ -1314,6 +1491,17 @@ document.addEventListener(
         setInterval(
 
             loadWeather,
+
+            10 * 60 * 1000
+
+        );
+
+
+        /* HKO TEXT */
+
+        setInterval(
+
+            loadHKOWeatherText,
 
             10 * 60 * 1000
 
