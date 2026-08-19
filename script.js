@@ -11,44 +11,41 @@ const FALLBACK_LATITUDE = 22.4505;
 const FALLBACK_LONGITUDE = 114.1649;
 
 
-/* OPEN-METEO */
-
 const WEATHER_API =
     "https://api.open-meteo.com/v1/forecast";
 
-
-/* HONG KONG OBSERVATORY */
-
-const HKO_FORECAST_API =
-    "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=flw&lang=tc";
-
-const HKO_SPECIAL_API =
-    "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=swt&lang=tc";
-
-
-/* MTR */
 
 const MTR_API =
     "https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php";
 
 
-/* RSS */
+const HKO_CURRENT_WEATHER_API =
+    "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=tc";
+
+
+const HKO_FORECAST_API =
+    "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=tc";
+
+
+const HKO_WARNING_INFO_API =
+    "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=warnsum&lang=tc";
+
+
+const HKO_SPECIAL_TIP_API =
+    "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=swt&lang=tc";
+
 
 const RSS_TO_JSON =
     "https://api.rss2json.com/v1/api.json";
+
 
 const BBC_RSS =
     "https://feeds.bbci.co.uk/news/world/rss.xml";
 
 
-/*
-   NOW NEWS
-
-   Google News searches restricted to NOW News.
-*/
-
 const NOW_LOCAL_RSS =
     "https://news.google.com/rss/search?q=site%3Anews.now.com%2Fhome%2Flocal&hl=zh-HK&gl=HK&ceid=HK%3Azh-Hant";
+
 
 const NOW_INTERNATIONAL_RSS =
     "https://news.google.com/rss/search?q=site%3Anews.now.com%2Fhome%2Finternational&hl=zh-HK&gl=HK&ceid=HK%3Azh-Hant";
@@ -75,28 +72,17 @@ function weatherInfo(code) {
         53: ["🌦️", "毛毛雨"],
         55: ["🌧️", "毛毛雨"],
 
-        56: ["🌧️", "凍雨"],
-        57: ["🌧️", "凍雨"],
-
         61: ["🌧️", "小雨"],
         63: ["🌧️", "中雨"],
         65: ["🌧️", "大雨"],
-
-        66: ["🌧️", "凍雨"],
-        67: ["🌧️", "凍雨"],
 
         71: ["🌨️", "小雪"],
         73: ["🌨️", "中雪"],
         75: ["❄️", "大雪"],
 
-        77: ["❄️", "雪粒"],
-
         80: ["🌦️", "陣雨"],
         81: ["🌧️", "陣雨"],
         82: ["🌧️", "大驟雨"],
-
-        85: ["🌨️", "陣雪"],
-        86: ["❄️", "大雪"],
 
         95: ["⛈️", "雷暴"],
         96: ["⛈️", "雷暴"],
@@ -112,7 +98,29 @@ function weatherInfo(code) {
 
 
 /* =====================================================
-   CLOCK + DATE
+   FORMAT TIME
+===================================================== */
+
+function formatTime() {
+
+    return new Intl.DateTimeFormat(
+        "en-US",
+        {
+            hour: "numeric",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true,
+            timeZone: "Asia/Hong_Kong"
+        }
+    ).format(
+        new Date()
+    );
+
+}
+
+
+/* =====================================================
+   CLOCK + DATE + LUNAR
 ===================================================== */
 
 function updateClock() {
@@ -123,19 +131,6 @@ function updateClock() {
 
     /* DIGITAL TIME */
 
-    const timeString =
-        new Intl.DateTimeFormat(
-            "en-US",
-            {
-                hour: "numeric",
-                minute: "2-digit",
-                second: "2-digit",
-                hour12: true,
-                timeZone: "Asia/Hong_Kong"
-            }
-        ).format(now);
-
-
     const digitalTime =
         document.getElementById(
             "digitalTime"
@@ -145,7 +140,7 @@ function updateClock() {
     if (digitalTime) {
 
         digitalTime.textContent =
-            timeString;
+            formatTime();
 
     }
 
@@ -313,10 +308,12 @@ function updateClock() {
             "hourHand"
         );
 
+
     const minuteHand =
         document.getElementById(
             "minuteHand"
         );
+
 
     const secondHand =
         document.getElementById(
@@ -351,7 +348,7 @@ function updateClock() {
 
 
 /* =====================================================
-   LOCATION
+   CURRENT LOCATION
 ===================================================== */
 
 function getCurrentLocation() {
@@ -413,58 +410,35 @@ function getCurrentLocation() {
 
 
                 {
+
                     enableHighAccuracy: true,
+
                     timeout: 10000,
+
                     maximumAge: 300000
+
                 }
 
             );
 
         }
+
     );
 
 }
 
 
 /* =====================================================
-   FETCH JSON
+   HKO TEXT
 ===================================================== */
 
-async function fetchJSON(url) {
-
-    const response =
-        await fetch(
-            url,
-            {
-                cache: "no-store"
-            }
-        );
-
-
-    if (!response.ok) {
-
-        throw new Error(
-            `Request failed: ${response.status}`
-        );
-
-    }
-
-
-    return response.json();
-
-}
-
-
-/* =====================================================
-   HKO WEATHER FORECAST TEXT
-===================================================== */
-
-async function loadHKOWeatherText() {
+async function loadHKOText() {
 
     const forecastElement =
         document.getElementById(
             "hkoForecast"
         );
+
 
     const specialElement =
         document.getElementById(
@@ -472,259 +446,208 @@ async function loadHKOWeatherText() {
         );
 
 
-    /*
-       Start hidden until HKO data is received.
-    */
+    const specialSection =
+        document.getElementById(
+            "hkoSpecialSection"
+        );
+
 
     if (forecastElement) {
 
-        forecastElement.style.display =
-            "none";
-
         forecastElement.textContent =
-            "";
+            "載入中...";
 
     }
 
 
     if (specialElement) {
 
-        specialElement.style.display =
-            "none";
-
         specialElement.textContent =
-            "";
+            "載入中...";
 
     }
 
 
-    const results =
-        await Promise.allSettled([
+    try {
 
-            fetchJSON(
-                HKO_FORECAST_API
-            ),
-
-            fetchJSON(
-                HKO_SPECIAL_API
-            )
-
-        ]);
-
-
-    /* ---------------------------------------------
-       HKO 天氣預測
-    --------------------------------------------- */
-
-    if (
-        forecastElement &&
-        results[0].status === "fulfilled"
-    ) {
-
-        const data =
-            results[0].value;
-
-
-        const forecastText =
-            data.forecastDesc ||
-            data.forecastPeriod ||
-            data.generalSituation ||
-            "";
-
-
-        if (
-            forecastText &&
-            forecastText.trim()
-        ) {
-
-            forecastElement.textContent =
-                `天氣預報：${forecastText.trim()}`;
-
-            forecastElement.style.display =
-                "-webkit-box";
-
-        }
-
-    }
-
-
-    /* ---------------------------------------------
-       HKO 特別天氣提示
-    --------------------------------------------- */
-
-    if (
-        specialElement &&
-        results[1].status === "fulfilled"
-    ) {
-
-        const data =
-            results[1].value;
-
-
-        const tips =
-            extractSpecialWeatherTips(
-                data
+        const forecastResponse =
+            await fetch(
+                HKO_FORECAST_API,
+                {
+                    cache: "no-store"
+                }
             );
 
 
-        if (tips.length > 0) {
+        if (!forecastResponse.ok) {
 
-            specialElement.textContent =
-                `⚠️ 特別天氣提示：${tips.join("　")}`;
+            throw new Error(
+                "HKO forecast unavailable"
+            );
 
-            specialElement.style.display =
-                "-webkit-box";
+        }
+
+
+        const forecastData =
+            await forecastResponse.json();
+
+
+        const generalSituation =
+            (
+                forecastData.generalSituation ||
+                ""
+            ).trim();
+
+
+        const weatherForecast =
+            (
+                forecastData.weatherForecast ||
+                ""
+            ).trim();
+
+
+        let forecastText =
+            weatherForecast;
+
+
+        if (
+            generalSituation &&
+            weatherForecast
+        ) {
+
+            forecastText =
+                `${generalSituation}\n\n${weatherForecast}`;
+
+        }
+
+
+        else if (generalSituation) {
+
+            forecastText =
+                generalSituation;
+
+        }
+
+
+        if (forecastElement) {
+
+            forecastElement.textContent =
+                forecastText ||
+                "暫時未能取得天氣預測";
 
         }
 
     }
 
-}
+    catch (error) {
+
+        console.error(
+            "HKO forecast error:",
+            error
+        );
 
 
-/* =====================================================
-   EXTRACT HKO SPECIAL WEATHER TIPS
-===================================================== */
+        if (forecastElement) {
 
-function extractSpecialWeatherTips(data) {
+            forecastElement.textContent =
+                "暫時未能取得天氣預測";
 
-    const results =
-        [];
-
-
-    const seen =
-        new Set();
-
-
-    function addText(text) {
-
-        if (
-            typeof text !== "string"
-        ) {
-            return;
         }
-
-
-        const cleaned =
-            text
-                .replace(/\s+/g, " ")
-                .trim();
-
-
-        if (
-            !cleaned ||
-            cleaned.length < 2 ||
-            seen.has(cleaned)
-        ) {
-            return;
-        }
-
-
-        seen.add(cleaned);
-
-        results.push(cleaned);
 
     }
 
 
-    function walk(value, keyName = "") {
+    try {
 
-        if (
-            value === null ||
-            value === undefined
-        ) {
-            return;
-        }
-
-
-        if (
-            typeof value === "string"
-        ) {
-
-            const allowedKeys = [
-
-                "swt",
-                "desc",
-                "description",
-                "content",
-                "message",
-                "text",
-                "details",
-                "detail",
-                "tip"
-
-            ];
+        const specialResponse =
+            await fetch(
+                HKO_SPECIAL_TIP_API,
+                {
+                    cache: "no-store"
+                }
+            );
 
 
-            if (
-                !keyName ||
-                allowedKeys.includes(
-                    keyName.toLowerCase()
-                )
-            ) {
+        if (specialResponse.ok) {
 
-                addText(value);
+            const specialData =
+                await specialResponse.json();
+
+
+            const specialText =
+                (
+                    specialData.swt ||
+                    specialData.desc ||
+                    specialData.message ||
+                    ""
+                ).trim();
+
+
+            if (specialText) {
+
+                if (specialElement) {
+
+                    specialElement.textContent =
+                        specialText;
+
+                }
+
+
+                if (specialSection) {
+
+                    specialSection.classList.remove(
+                        "hidden"
+                    );
+
+                }
 
             }
 
-            return;
+            else {
+
+                if (specialSection) {
+
+                    specialSection.classList.add(
+                        "hidden"
+                    );
+
+                }
+
+            }
 
         }
 
+        else {
 
-        if (Array.isArray(value)) {
+            if (specialSection) {
 
-            value.forEach(
-                item =>
-                    walk(item, keyName)
-            );
-
-            return;
-
-        }
-
-
-        if (
-            typeof value === "object"
-        ) {
-
-            Object.entries(value)
-                .forEach(
-                    ([key, item]) =>
-                        walk(item, key)
+                specialSection.classList.add(
+                    "hidden"
                 );
 
+            }
+
         }
 
     }
 
+    catch (error) {
 
-    /*
-       HKO normally returns special tips
-       inside swt, but this also handles
-       variations in the returned structure.
-    */
-
-    if (
-        data &&
-        data.swt !== undefined
-    ) {
-
-        walk(
-            data.swt,
-            "swt"
+        console.error(
+            "HKO special weather tip error:",
+            error
         );
 
+
+        if (specialSection) {
+
+            specialSection.classList.add(
+                "hidden"
+            );
+
+        }
+
     }
-
-    else {
-
-        walk(data);
-
-    }
-
-
-    return results.slice(0, 3);
 
 }
 
@@ -879,7 +802,8 @@ async function loadWeather() {
                     {
                         hour: "numeric",
                         hourCycle: "h23",
-                        timeZone: "Asia/Hong_Kong"
+                        timeZone:
+                            "Asia/Hong_Kong"
                     }
                 ).format(
                     new Date()
@@ -905,6 +829,9 @@ async function loadWeather() {
             data,
             hkHour
         );
+
+
+        await loadHKOText();
 
 
         const weatherUpdated =
@@ -943,28 +870,8 @@ async function loadWeather() {
 
         }
 
-    }
 
-
-    /*
-       HKO text is loaded separately.
-
-       This means even if Open-Meteo has an error,
-       HKO forecast text can still load.
-    */
-
-    try {
-
-        await loadHKOWeatherText();
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "HKO text error:",
-            error
-        );
+        await loadHKOText();
 
     }
 
@@ -972,7 +879,7 @@ async function loadWeather() {
 
 
 /* =====================================================
-   FORECAST
+   HOURLY FORECAST
 ===================================================== */
 
 function renderForecast(
@@ -987,7 +894,9 @@ function renderForecast(
 
 
     if (!forecast) {
+
         return;
+
     }
 
 
@@ -1002,18 +911,15 @@ function renderForecast(
     ) {
 
         const hour =
-            startHour + i;
+            (startHour + i) % 24;
 
-
-        /*
-           Do not wrap back to 00:00 because
-           only forecast_days=1 is requested.
-        */
 
         if (
-            hour >= data.hourly.time.length
+            !data.hourly.time[hour]
         ) {
-            break;
+
+            continue;
+
         }
 
 
@@ -1035,13 +941,8 @@ function renderForecast(
             );
 
 
-        /*
-           IMPORTANT:
-           CSS uses forecast-item.
-        */
-
         item.className =
-            "forecast-item";
+            "forecast-hour";
 
 
         item.innerHTML =
@@ -1118,11 +1019,6 @@ async function loadMTR() {
         }
 
 
-        /*
-           DOWN = towards Admiralty
-           UP   = towards Sheung Shui
-        */
-
         renderTrains(
             station.DOWN || [],
             "mtrDown"
@@ -1176,9 +1072,7 @@ async function loadMTR() {
 }
 
 
-/* =====================================================
-   RENDER TRAINS
-===================================================== */
+/* ONLY TWO UPCOMING TRAINS */
 
 function renderTrains(
     trains,
@@ -1192,7 +1086,9 @@ function renderTrains(
 
 
     if (!container) {
+
         return;
+
     }
 
 
@@ -1206,7 +1102,10 @@ function renderTrains(
                 train =>
                     train.valid === "Y"
             )
-            .slice(0, 2);
+            .slice(
+                0,
+                2
+            );
 
 
     if (
@@ -1234,19 +1133,10 @@ function renderTrains(
                 "train";
 
 
-            /*
-               IMPORTANT:
-               CSS uses train-destination.
-            */
-
             item.innerHTML =
                 `
                     <div class="train-time">
                         ${train.ttnt} min
-                    </div>
-
-                    <div class="train-destination">
-                        ${train.dest || ""}
                     </div>
                 `;
 
@@ -1265,10 +1155,9 @@ function renderTrains(
    RSS HELPERS
 ===================================================== */
 
-
-/* RSS2JSON */
-
-async function getRSS2JSON(rssURL) {
+async function getRSS2JSON(
+    rssURL
+) {
 
     const url =
         `${RSS_TO_JSON}?rss_url=` +
@@ -1317,9 +1206,9 @@ async function getRSS2JSON(rssURL) {
 }
 
 
-/* ALLORIGINS */
-
-async function getRSSAllOrigins(rssURL) {
+async function getRSSAllOrigins(
+    rssURL
+) {
 
     const url =
         "https://api.allorigins.win/raw?url=" +
@@ -1369,9 +1258,9 @@ async function getRSSAllOrigins(rssURL) {
 }
 
 
-/* CORSPROXY */
-
-async function getRSSCorsProxy(rssURL) {
+async function getRSSCorsProxy(
+    rssURL
+) {
 
     const url =
         "https://corsproxy.io/?" +
@@ -1421,11 +1310,9 @@ async function getRSSCorsProxy(rssURL) {
 }
 
 
-/* =====================================================
-   PARSE RSS XML
-===================================================== */
-
-function parseRSSXML(xml) {
+function parseRSSXML(
+    xml
+) {
 
     const parser =
         new DOMParser();
@@ -1465,22 +1352,12 @@ function parseRSSXML(xml) {
                 "";
 
 
-            const pubDate =
-                item.querySelector(
-                    "pubDate"
-                )?.textContent
-                ?.trim() ||
-                "";
-
-
             return {
 
                 title:
                     decodeHTML(title),
 
-                link,
-
-                pubDate
+                link
 
             };
 
@@ -1490,11 +1367,9 @@ function parseRSSXML(xml) {
 }
 
 
-/* =====================================================
-   DECODE HTML
-===================================================== */
-
-function decodeHTML(text) {
+function decodeHTML(
+    text
+) {
 
     const textarea =
         document.createElement(
@@ -1511,11 +1386,9 @@ function decodeHTML(text) {
 }
 
 
-/* =====================================================
-   TRY MULTIPLE RSS METHODS
-===================================================== */
-
-async function getRSS(rssURL) {
+async function getRSS(
+    rssURL
+) {
 
     const methods = [
 
@@ -1567,7 +1440,6 @@ async function getRSS(rssURL) {
             lastError =
                 error;
 
-
             console.warn(
                 "RSS method failed:",
                 error
@@ -1604,7 +1476,9 @@ function renderNews(
 
 
     if (!container) {
+
         return;
+
     }
 
 
@@ -1626,7 +1500,10 @@ function renderNews(
 
 
     items
-        .slice(0, 30)
+        .slice(
+            0,
+            30
+        )
         .forEach(
             item => {
 
@@ -1681,7 +1558,9 @@ async function loadNowNews() {
 
 
     if (!container) {
+
         return;
+
     }
 
 
@@ -1711,6 +1590,7 @@ async function loadNowNews() {
 
         let localItems =
             [];
+
 
         let internationalItems =
             [];
@@ -1759,20 +1639,25 @@ async function loadNowNews() {
                             item.title ||
                             ""
                         )
-                        .trim();
+                            .trim();
 
 
                     if (
                         !key ||
                         seen.has(key)
                     ) {
+
                         return;
+
                     }
 
 
                     seen.add(key);
 
-                    combined.push(item);
+
+                    combined.push(
+                        item
+                    );
 
                 }
             );
@@ -1806,84 +1691,30 @@ async function loadNowNews() {
         );
 
 
-        /*
-           Fallback direct links.
-        */
-
         container.innerHTML =
-            "";
+            `
+                <a
+                    class="news-item"
+                    href="https://news.now.com/home/local"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    港聞｜NOW News
+                </a>
 
+                <a
+                    class="news-item"
+                    href="https://news.now.com/home/international"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    兩岸國際｜NOW News
+                </a>
 
-        const localLink =
-            document.createElement(
-                "a"
-            );
-
-
-        localLink.className =
-            "news-item";
-
-        localLink.textContent =
-            "港聞｜NOW News";
-
-        localLink.href =
-            "https://news.now.com/home/local";
-
-        localLink.target =
-            "_blank";
-
-        localLink.rel =
-            "noopener noreferrer";
-
-
-        container.appendChild(
-            localLink
-        );
-
-
-        const internationalLink =
-            document.createElement(
-                "a"
-            );
-
-
-        internationalLink.className =
-            "news-item";
-
-        internationalLink.textContent =
-            "兩岸國際｜NOW News";
-
-        internationalLink.href =
-            "https://news.now.com/home/international";
-
-        internationalLink.target =
-            "_blank";
-
-        internationalLink.rel =
-            "noopener noreferrer";
-
-
-        container.appendChild(
-            internationalLink
-        );
-
-
-        const status =
-            document.createElement(
-                "div"
-            );
-
-
-        status.className =
-            "news-item";
-
-        status.textContent =
-            "NOW News 暫時無法取得即時標題";
-
-
-        container.appendChild(
-            status
-        );
+                <div class="news-item">
+                    NOW News 暫時無法取得即時標題
+                </div>
+            `;
 
     }
 
@@ -1903,7 +1734,9 @@ async function loadBBCNews() {
 
 
     if (!container) {
+
         return;
+
     }
 
 
@@ -1960,7 +1793,9 @@ function loadCalendar() {
 
 
     if (!calendar) {
+
         return;
+
     }
 
 
@@ -1970,28 +1805,6 @@ function loadCalendar() {
                 iCloud Calendar 尚未連接
             </div>
         `;
-
-}
-
-
-/* =====================================================
-   TIME FORMAT
-===================================================== */
-
-function formatTime() {
-
-    return new Intl.DateTimeFormat(
-        "en-US",
-        {
-            hour: "numeric",
-            minute: "2-digit",
-            second: "2-digit",
-            hour12: true,
-            timeZone: "Asia/Hong_Kong"
-        }
-    ).format(
-        new Date()
-    );
 
 }
 
@@ -2009,7 +1822,9 @@ function updateLastUpdated() {
 
 
     if (!element) {
+
         return;
+
     }
 
 
@@ -2032,7 +1847,9 @@ async function refreshDashboard() {
 
 
     if (!button) {
+
         return;
+
     }
 
 
@@ -2095,7 +1912,7 @@ document.addEventListener(
     () => {
 
 
-        /* INITIAL LOAD */
+        /* INITIAL */
 
         updateClock();
 
@@ -2120,7 +1937,7 @@ document.addEventListener(
         );
 
 
-        /* WEATHER + HKO TEXT */
+        /* WEATHER + HKO */
 
         setInterval(
             loadWeather,
@@ -2144,7 +1961,7 @@ document.addEventListener(
         );
 
 
-        /* BBC NEWS */
+        /* BBC */
 
         setInterval(
             loadBBCNews,
