@@ -120,8 +120,10 @@ function updateClock() {
         );
 
     if (digitalTime) {
+
         digitalTime.textContent =
             timeString;
+
     }
 
 
@@ -178,6 +180,7 @@ function updateClock() {
             "dateMain"
         );
 
+
     if (dateMain) {
 
         dateMain.textContent =
@@ -190,6 +193,7 @@ function updateClock() {
         document.getElementById(
             "lunarDate"
         );
+
 
     if (lunarDate) {
 
@@ -231,7 +235,9 @@ function updateClock() {
                 hourCycle: "h23",
                 timeZone: "Asia/Hong_Kong"
             }
-        ).formatToParts(now);
+        ).formatToParts(
+            new Date()
+        );
 
 
     const getTimePart =
@@ -265,9 +271,11 @@ function updateClock() {
         minute * 0.5 +
         second / 120;
 
+
     const minuteAngle =
         minute * 6 +
         second * 0.1;
+
 
     const secondAngle =
         second * 6;
@@ -278,10 +286,12 @@ function updateClock() {
             "hourHand"
         );
 
+
     const minuteHand =
         document.getElementById(
             "minuteHand"
         );
+
 
     const secondHand =
         document.getElementById(
@@ -327,6 +337,7 @@ function getCurrentLocation() {
             if (!navigator.geolocation) {
 
                 resolve({
+
                     latitude:
                         FALLBACK_LATITUDE,
 
@@ -334,6 +345,7 @@ function getCurrentLocation() {
                         FALLBACK_LONGITUDE,
 
                     fallback: true
+
                 });
 
                 return;
@@ -346,6 +358,7 @@ function getCurrentLocation() {
                 position => {
 
                     resolve({
+
                         latitude:
                             position.coords.latitude,
 
@@ -353,6 +366,7 @@ function getCurrentLocation() {
                             position.coords.longitude,
 
                         fallback: false
+
                     });
 
                 },
@@ -361,6 +375,7 @@ function getCurrentLocation() {
                 () => {
 
                     resolve({
+
                         latitude:
                             FALLBACK_LATITUDE,
 
@@ -368,15 +383,20 @@ function getCurrentLocation() {
                             FALLBACK_LONGITUDE,
 
                         fallback: true
+
                     });
 
                 },
 
 
                 {
+
                     enableHighAccuracy: true,
+
                     timeout: 10000,
+
                     maximumAge: 300000
+
                 }
 
             );
@@ -427,10 +447,15 @@ function hideHKOPanel(
 ) {
 
     const panel =
-        document.getElementById(panelId);
+        document.getElementById(
+            panelId
+        );
+
 
     const content =
-        document.getElementById(contentId);
+        document.getElementById(
+            contentId
+        );
 
 
     if (content) {
@@ -462,10 +487,15 @@ function showHKOPanel(
 ) {
 
     const panel =
-        document.getElementById(panelId);
+        document.getElementById(
+            panelId
+        );
+
 
     const content =
-        document.getElementById(contentId);
+        document.getElementById(
+            contentId
+        );
 
 
     if (
@@ -474,12 +504,15 @@ function showHKOPanel(
         !text ||
         !text.trim()
     ) {
+
         return;
+
     }
 
 
     content.textContent =
         text.trim();
+
 
     content.scrollTop =
         0;
@@ -498,6 +531,7 @@ async function loadHKOWeatherText() {
         "hkoForecastPanel",
         "hkoForecast"
     );
+
 
     hideHKOPanel(
         "hkoSpecialPanel",
@@ -519,7 +553,9 @@ async function loadHKOWeatherText() {
         ]);
 
 
-    /* HKO 天氣預測 */
+    /* =================================================
+       HKO FORECAST
+    ================================================= */
 
     if (
         results[0].status ===
@@ -543,9 +579,13 @@ async function loadHKOWeatherText() {
         ) {
 
             showHKOPanel(
+
                 "hkoForecastPanel",
+
                 "hkoForecast",
+
                 forecastText
+
             );
 
         }
@@ -553,7 +593,9 @@ async function loadHKOWeatherText() {
     }
 
 
-    /* HKO 特別天氣提示 */
+    /* =================================================
+       HKO SPECIAL WEATHER TIP
+    ================================================= */
 
     if (
         results[1].status ===
@@ -571,9 +613,13 @@ async function loadHKOWeatherText() {
         ) {
 
             showHKOPanel(
+
                 "hkoSpecialPanel",
+
                 "hkoSpecial",
+
                 tips.join("　")
+
             );
 
         }
@@ -592,6 +638,7 @@ function extractSpecialWeatherTips(data) {
     const results =
         [];
 
+
     const seen =
         new Set();
 
@@ -599,9 +646,12 @@ function extractSpecialWeatherTips(data) {
     function addText(text) {
 
         if (
-            typeof text !== "string"
+            typeof text !==
+            "string"
         ) {
+
             return;
+
         }
 
 
@@ -616,7 +666,9 @@ function extractSpecialWeatherTips(data) {
             cleaned.length < 2 ||
             seen.has(cleaned)
         ) {
+
             return;
+
         }
 
 
@@ -636,12 +688,15 @@ function extractSpecialWeatherTips(data) {
             value === null ||
             value === undefined
         ) {
+
             return;
+
         }
 
 
         if (
-            typeof value === "string"
+            typeof value ===
+            "string"
         ) {
 
             const allowedKeys = [
@@ -676,7 +731,9 @@ function extractSpecialWeatherTips(data) {
         }
 
 
-        if (Array.isArray(value)) {
+        if (
+            Array.isArray(value)
+        ) {
 
             value.forEach(
                 item =>
@@ -692,13 +749,17 @@ function extractSpecialWeatherTips(data) {
 
 
         if (
-            typeof value === "object"
+            typeof value ===
+            "object"
         ) {
 
             Object.entries(value)
                 .forEach(
                     ([key, item]) =>
-                        walk(item, key)
+                        walk(
+                            item,
+                            key
+                        )
                 );
 
         }
@@ -725,7 +786,10 @@ function extractSpecialWeatherTips(data) {
     }
 
 
-    return results.slice(0, 3);
+    return results.slice(
+        0,
+        3
+    );
 
 }
 
@@ -786,6 +850,7 @@ async function loadWeather() {
                 "weatherTitle"
             );
 
+
         if (weatherTitle) {
 
             weatherTitle.textContent =
@@ -801,6 +866,7 @@ async function loadWeather() {
                 "weatherIcon"
             );
 
+
         if (weatherIcon) {
 
             weatherIcon.textContent =
@@ -813,6 +879,7 @@ async function loadWeather() {
             document.getElementById(
                 "temperature"
             );
+
 
         if (temperature) {
 
@@ -829,6 +896,7 @@ async function loadWeather() {
                 "weatherDescription"
             );
 
+
         if (weatherDescription) {
 
             weatherDescription.textContent =
@@ -841,6 +909,7 @@ async function loadWeather() {
             document.getElementById(
                 "todayRange"
             );
+
 
         if (todayRange) {
 
@@ -858,6 +927,7 @@ async function loadWeather() {
             document.getElementById(
                 "humidity"
             );
+
 
         if (humidity) {
 
@@ -883,13 +953,16 @@ async function loadWeather() {
         const hourPart =
             hkParts.find(
                 part =>
-                    part.type === "hour"
+                    part.type ===
+                    "hour"
             );
 
 
         const hkHour =
             hourPart
-                ? Number(hourPart.value)
+                ? Number(
+                    hourPart.value
+                )
                 : 0;
 
 
@@ -897,6 +970,7 @@ async function loadWeather() {
             document.getElementById(
                 "rainProbability"
             );
+
 
         if (rainProbability) {
 
@@ -924,6 +998,7 @@ async function loadWeather() {
                 "weatherUpdated"
             );
 
+
         if (weatherUpdated) {
 
             weatherUpdated.textContent =
@@ -932,6 +1007,7 @@ async function loadWeather() {
         }
 
     }
+
 
     catch (error) {
 
@@ -946,6 +1022,7 @@ async function loadWeather() {
                 "weatherDescription"
             );
 
+
         if (description) {
 
             description.textContent =
@@ -956,7 +1033,7 @@ async function loadWeather() {
     }
 
 
-    /* HKO loads separately */
+    /* HKO text loads separately */
 
     try {
 
@@ -990,8 +1067,11 @@ function renderForecast(
             "forecast"
         );
 
+
     if (!forecast) {
+
         return;
+
     }
 
 
@@ -1016,7 +1096,9 @@ function renderForecast(
         if (
             hour >= totalHours
         ) {
+
             break;
+
         }
 
 
@@ -1054,12 +1136,19 @@ function renderForecast(
 
                 <div class="forecast-temp">
                     ${Math.round(
-                        data.hourly.temperature_2m[hour]
+                        data.hourly.temperature_2m[
+                            hour
+                        ]
                     )}°
                 </div>
 
                 <div class="forecast-rain">
-                    ${data.hourly.precipitation_probability[hour] ?? 0}%
+                    ${
+                        data.hourly
+                            .precipitation_probability[
+                                hour
+                            ] ?? 0
+                    }%
                 </div>
             `;
 
@@ -1121,12 +1210,14 @@ async function loadMTR() {
             "mtrDown"
         );
 
+
         renderTrains(
             station.UP || [],
             "mtrUp"
         );
 
     }
+
 
     catch (error) {
 
@@ -1140,6 +1231,7 @@ async function loadMTR() {
             document.getElementById(
                 "mtrDown"
             );
+
 
         const up =
             document.getElementById(
@@ -1177,8 +1269,11 @@ function renderTrains(
             elementId
         );
 
+
     if (!container) {
+
         return;
+
     }
 
 
@@ -1192,7 +1287,10 @@ function renderTrains(
                 train =>
                     train.valid === "Y"
             )
-            .slice(0, 2);
+            .slice(
+                0,
+                2
+            );
 
 
     if (
@@ -1246,7 +1344,9 @@ function renderTrains(
    RSS HELPERS
 ===================================================== */
 
-async function getRSS2JSON(rssURL) {
+async function getRSS2JSON(
+    rssURL
+) {
 
     const url =
         `${RSS_TO_JSON}?rss_url=` +
@@ -1295,7 +1395,9 @@ async function getRSS2JSON(rssURL) {
 }
 
 
-async function getRSSAllOrigins(rssURL) {
+async function getRSSAllOrigins(
+    rssURL
+) {
 
     const url =
         "https://api.allorigins.win/raw?url=" +
@@ -1338,12 +1440,16 @@ async function getRSSAllOrigins(rssURL) {
     }
 
 
-    return parseRSSXML(xml);
+    return parseRSSXML(
+        xml
+    );
 
 }
 
 
-async function getRSSCorsProxy(rssURL) {
+async function getRSSCorsProxy(
+    rssURL
+) {
 
     const url =
         "https://corsproxy.io/?" +
@@ -1386,12 +1492,16 @@ async function getRSSCorsProxy(rssURL) {
     }
 
 
-    return parseRSSXML(xml);
+    return parseRSSXML(
+        xml
+    );
 
 }
 
 
-function parseRSSXML(xml) {
+function parseRSSXML(
+    xml
+) {
 
     const parser =
         new DOMParser();
@@ -1440,12 +1550,16 @@ function parseRSSXML(xml) {
 
 
             return {
+
                 title:
-                    decodeHTML(title),
+                    decodeHTML(
+                        title
+                    ),
 
                 link,
 
                 pubDate
+
             };
 
         }
@@ -1454,7 +1568,9 @@ function parseRSSXML(xml) {
 }
 
 
-function decodeHTML(text) {
+function decodeHTML(
+    text
+) {
 
     const textarea =
         document.createElement(
@@ -1471,18 +1587,26 @@ function decodeHTML(text) {
 }
 
 
-async function getRSS(rssURL) {
+async function getRSS(
+    rssURL
+) {
 
     const methods = [
 
         () =>
-            getRSS2JSON(rssURL),
+            getRSS2JSON(
+                rssURL
+            ),
 
         () =>
-            getRSSAllOrigins(rssURL),
+            getRSSAllOrigins(
+                rssURL
+            ),
 
         () =>
-            getRSSCorsProxy(rssURL)
+            getRSSCorsProxy(
+                rssURL
+            )
 
     ];
 
@@ -1512,10 +1636,12 @@ async function getRSS(rssURL) {
 
         }
 
+
         catch (error) {
 
             lastError =
                 error;
+
 
             console.warn(
                 "RSS method failed:",
@@ -1551,8 +1677,11 @@ function renderNews(
             elementId
         );
 
+
     if (!container) {
+
         return;
+
     }
 
 
@@ -1574,7 +1703,10 @@ function renderNews(
 
 
     items
-        .slice(0, 30)
+        .slice(
+            0,
+            30
+        )
         .forEach(
             item => {
 
@@ -1627,8 +1759,11 @@ async function loadNowNews() {
             "nowNews"
         );
 
+
     if (!container) {
+
         return;
+
     }
 
 
@@ -1659,6 +1794,7 @@ async function loadNowNews() {
         let localItems =
             [];
 
+
         let internationalItems =
             [];
 
@@ -1688,6 +1824,7 @@ async function loadNowNews() {
         const seen =
             new Set();
 
+
         const combined =
             [];
 
@@ -1712,13 +1849,20 @@ async function loadNowNews() {
                         !key ||
                         seen.has(key)
                     ) {
+
                         return;
+
                     }
 
 
-                    seen.add(key);
+                    seen.add(
+                        key
+                    );
 
-                    combined.push(item);
+
+                    combined.push(
+                        item
+                    );
 
                 }
             );
@@ -1733,6 +1877,7 @@ async function loadNowNews() {
                 combined
             );
 
+
             return;
 
         }
@@ -1743,6 +1888,7 @@ async function loadNowNews() {
         );
 
     }
+
 
     catch (error) {
 
@@ -1761,20 +1907,26 @@ async function loadNowNews() {
                 "a"
             );
 
+
         localLink.className =
             "news-item";
+
 
         localLink.textContent =
             "港聞｜NOW News";
 
+
         localLink.href =
             "https://news.now.com/home/local";
+
 
         localLink.target =
             "_blank";
 
+
         localLink.rel =
             "noopener noreferrer";
+
 
         container.appendChild(
             localLink
@@ -1786,20 +1938,26 @@ async function loadNowNews() {
                 "a"
             );
 
+
         internationalLink.className =
             "news-item";
+
 
         internationalLink.textContent =
             "兩岸國際｜NOW News";
 
+
         internationalLink.href =
             "https://news.now.com/home/international";
+
 
         internationalLink.target =
             "_blank";
 
+
         internationalLink.rel =
             "noopener noreferrer";
+
 
         container.appendChild(
             internationalLink
@@ -1811,11 +1969,14 @@ async function loadNowNews() {
                 "div"
             );
 
+
         status.className =
             "news-item";
 
+
         status.textContent =
             "NOW News 暫時無法取得即時標題";
+
 
         container.appendChild(
             status
@@ -1837,8 +1998,11 @@ async function loadBBCNews() {
             "bbcNews"
         );
 
+
     if (!container) {
+
         return;
+
     }
 
 
@@ -1856,6 +2020,7 @@ async function loadBBCNews() {
         );
 
     }
+
 
     catch (error) {
 
@@ -1893,8 +2058,11 @@ function loadCalendar() {
             "calendar"
         );
 
+
     if (!calendar) {
+
         return;
+
     }
 
 
@@ -1917,11 +2085,22 @@ function formatTime() {
     return new Intl.DateTimeFormat(
         "en-US",
         {
-            hour: "numeric",
-            minute: "2-digit",
-            second: "2-digit",
-            hour12: true,
-            timeZone: "Asia/Hong_Kong"
+
+            hour:
+                "numeric",
+
+            minute:
+                "2-digit",
+
+            second:
+                "2-digit",
+
+            hour12:
+                true,
+
+            timeZone:
+                "Asia/Hong_Kong"
+
         }
     ).format(
         new Date()
@@ -1941,8 +2120,11 @@ function updateLastUpdated() {
             "lastUpdated"
         );
 
+
     if (!element) {
+
         return;
+
     }
 
 
@@ -1963,14 +2145,18 @@ async function refreshDashboard() {
             "refreshButton"
         );
 
+
     if (!button) {
+
         return;
+
     }
 
 
     button.classList.add(
         "loading"
     );
+
 
     button.disabled =
         true;
@@ -1995,6 +2181,7 @@ async function refreshDashboard() {
 
     }
 
+
     finally {
 
         setTimeout(
@@ -2003,6 +2190,7 @@ async function refreshDashboard() {
                 button.classList.remove(
                     "loading"
                 );
+
 
                 button.disabled =
                     false;
