@@ -1,494 +1,1038 @@
 :root {
     --pink-background: #efb0b7;
     --pink-background-2: #f3c1c6;
+
     --card-background: rgba(255, 244, 246, 0.82);
     --small-card: rgba(230, 173, 181, 0.30);
+
     --text: #39353a;
     --secondary: #766a70;
     --muted: #998a90;
+
     --border: rgba(180, 103, 117, 0.28);
-    --shadow: 0 5px 18px rgba(120, 60, 72, 0.08);
+
+    --shadow:
+        0 5px 18px
+        rgba(120, 60, 72, 0.08);
 }
 
-* { box-sizing: border-box; }
 
-html, body {
+/* =========================================
+   RESET
+========================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+
+html,
+body {
     width: 100%;
     height: 100%;
+
     margin: 0;
     padding: 0;
+
     overflow: hidden;
 }
 
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-        "PingFang TC", "Noto Sans TC", sans-serif;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "PingFang TC",
+        "Noto Sans TC",
+        sans-serif;
+
     color: var(--text);
-    background: linear-gradient(135deg, var(--pink-background), var(--pink-background-2));
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--pink-background),
+            var(--pink-background-2)
+        );
 }
+
+
+/* =========================================
+   DASHBOARD
+========================================= */
 
 .dashboard {
     width: 100%;
+
+    height: 100vh;
     height: 100dvh;
+
+    min-height: 100vh;
     min-height: 100dvh;
+
     padding:
         max(8px, env(safe-area-inset-top))
         max(14px, env(safe-area-inset-right))
         2px
         max(14px, env(safe-area-inset-left));
+
     display: grid;
-    grid-template-rows: minmax(0, 1fr) auto;
+
+    grid-template-rows:
+        minmax(0, 1fr)
+        auto;
+
     gap: 5px;
+
     overflow: hidden;
 }
+
+
+/* =========================================
+   MAIN GRID
+========================================= */
 
 .dashboard-content {
     min-width: 0;
     min-height: 0;
+
     display: grid;
+
     grid-template-rows:
         minmax(0, 1.58fr)
         minmax(0, 0.60fr)
         minmax(0, 0.76fr)
         minmax(0, 0.96fr);
+
     gap: 7px;
+
     overflow: hidden;
 }
+
+
+/* =========================================
+   CARD
+========================================= */
 
 .card {
     min-width: 0;
     min-height: 0;
-    background: var(--card-background);
-    border: 1px solid rgba(255,255,255,0.25);
+
+    background:
+        var(--card-background);
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.25);
+
     border-radius: 25px;
-    box-shadow: var(--shadow);
+
+    box-shadow:
+        var(--shadow);
+
     overflow: hidden;
 }
 
+
 .card-title {
-    font-size: clamp(15px, 1.5vw, 21px);
+    font-size:
+        clamp(15px, 1.5vw, 21px);
+
     font-weight: 800;
+
     line-height: 1.15;
+
     letter-spacing: 0.02em;
 }
 
-/* CLOCK + DATE + WEATHER */
+
+/* =========================================
+   TOP GRID
+========================================= */
+
 .top-grid {
     min-width: 0;
     min-height: 0;
+
     display: grid;
-    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.6fr);
+
+    grid-template-columns:
+        minmax(0, 0.85fr)
+        minmax(0, 1.6fr);
+
     gap: 7px;
 }
+
+
+/* =========================================
+   CLOCK
+========================================= */
 
 .clock-card {
     min-width: 0;
     min-height: 0;
+
     padding: 8px 12px;
+
     display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
+
+    grid-template-rows:
+        auto
+        minmax(0, 1fr);
+
     justify-items: center;
 }
 
+
 .digital-time {
-    font-size: clamp(25px, 3vw, 43px);
+    font-size:
+        clamp(25px, 3vw, 43px);
+
     font-weight: 800;
+
     line-height: 1;
+
     margin-top: 1px;
+
     white-space: nowrap;
 }
+
 
 .clock-area {
     min-width: 0;
     min-height: 0;
+
     width: 100%;
+
     display: flex;
+
     align-items: center;
     justify-content: center;
+
     overflow: hidden;
 }
 
+
 .analog-clock {
     position: relative;
+
     width: 190px;
     height: 190px;
+
     max-width: 100%;
     max-height: 100%;
+
     aspect-ratio: 1 / 1;
+
     flex: 0 0 auto;
-    border: 3px solid rgba(92,71,77,0.55);
+
+    border:
+        3px solid
+        rgba(92, 71, 77, 0.55);
+
     border-radius: 50%;
-    background: rgba(255,250,251,0.20);
+
+    background:
+        rgba(255, 250, 251, 0.20);
 }
+
 
 .clock-number {
     position: absolute;
-    font-size: clamp(12px, 1.3vw, 17px);
+
+    font-size:
+        clamp(12px, 1.3vw, 17px);
+
     font-weight: 800;
 }
-.clock-12 { top: 7px; left: 50%; transform: translateX(-50%); }
-.clock-3 { right: 9px; top: 50%; transform: translateY(-50%); }
-.clock-6 { bottom: 7px; left: 50%; transform: translateX(-50%); }
-.clock-9 { left: 9px; top: 50%; transform: translateY(-50%); }
+
+
+.clock-12 {
+    top: 7px;
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+}
+
+
+.clock-3 {
+    right: 9px;
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+}
+
+
+.clock-6 {
+    bottom: 7px;
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+}
+
+
+.clock-9 {
+    left: 9px;
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+}
+
 
 .clock-hand {
     position: absolute;
+
     left: 50%;
     bottom: 50%;
-    transform-origin: 50% 100%;
+
+    transform-origin:
+        50% 100%;
+
     border-radius: 99px;
 }
-.clock-hour { width: 6px; height: 29%; background: #3e393d; }
-.clock-minute { width: 5px; height: 38%; background: #4b4449; }
-.clock-second { width: 2px; height: 43%; background: #c46f7a; }
+
+
+.clock-hour {
+    width: 6px;
+    height: 29%;
+
+    background: #3e393d;
+}
+
+
+.clock-minute {
+    width: 5px;
+    height: 38%;
+
+    background: #4b4449;
+}
+
+
+.clock-second {
+    width: 2px;
+    height: 43%;
+
+    background: #c46f7a;
+}
+
 
 .clock-center {
     position: absolute;
+
     width: 11px;
     height: 11px;
+
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+
+    transform:
+        translate(-50%, -50%);
+
     border-radius: 50%;
+
     background: #39353a;
 }
+
+
+/* =========================================
+   DATE + WEATHER COLUMN
+========================================= */
 
 .weather-column {
     min-width: 0;
     min-height: 0;
+
     display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
+
+    grid-template-rows:
+        auto
+        minmax(0, 1fr);
+
     gap: 7px;
+
     overflow: hidden;
 }
+
+
+/* =========================================
+   DATE
+========================================= */
 
 .date-bubble {
     position: relative;
+
     width: 100%;
     min-width: 0;
-    padding: 8px 62px 8px 20px;
+
+    padding:
+        8px
+        62px
+        8px
+        20px;
+
     text-align: center;
-    background: rgba(255,226,230,0.55);
-    border: 1px solid var(--border);
+
+    background:
+        rgba(255, 226, 230, 0.55);
+
+    border:
+        1px solid
+        var(--border);
+
     border-radius: 24px;
-    box-shadow: 0 2px 8px rgba(130,70,80,0.04);
+
+    box-shadow:
+        0 2px 8px
+        rgba(130, 70, 80, 0.04);
 }
 
+
 .date-main {
-    font-size: clamp(26px, 3.1vw, 44px);
+    font-size:
+        clamp(26px, 3.1vw, 44px);
+
     font-weight: 800;
+
     line-height: 1.12;
+
     white-space: nowrap;
 }
+
 
 .date-lunar {
     margin-top: 2px;
-    font-size: clamp(12px, 1.2vw, 17px);
+
+    font-size:
+        clamp(12px, 1.2vw, 17px);
+
     color: var(--secondary);
 }
+
 
 .refresh-button {
     position: absolute;
+
     top: 8px;
     right: 10px;
+
     z-index: 5;
+
     width: 40px;
     height: 40px;
-    border: 1px solid var(--border);
+
+    border:
+        1px solid
+        var(--border);
+
     border-radius: 50%;
-    background: rgba(255,244,246,0.90);
+
+    background:
+        rgba(255, 244, 246, 0.90);
+
     color: var(--text);
+
     font-size: 24px;
+
     line-height: 1;
+
     cursor: pointer;
+
     display: flex;
+
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 8px rgba(125,69,79,0.08);
-}
-.refresh-button:active { transform: scale(0.92); }
-.refresh-button.loading { animation: refresh-spin 0.7s linear infinite; }
-.refresh-button:disabled { opacity: 0.65; }
-@keyframes refresh-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-/* WEATHER */
+    box-shadow:
+        0 2px 8px
+        rgba(125, 69, 79, 0.08);
+}
+
+
+.refresh-button:active {
+    transform:
+        scale(0.92);
+}
+
+
+.refresh-button.loading {
+    animation:
+        refresh-spin
+        0.7s
+        linear
+        infinite;
+}
+
+
+.refresh-button:disabled {
+    opacity: 0.65;
+}
+
+
+@keyframes refresh-spin {
+
+    from {
+        transform:
+            rotate(0deg);
+    }
+
+    to {
+        transform:
+            rotate(360deg);
+    }
+
+}
+
+
+/* =========================================
+   WEATHER
+========================================= */
+
 .weather-card {
     min-width: 0;
     min-height: 0;
+
     padding: 10px 14px;
+
     display: flex;
+
     flex-direction: column;
+
     overflow: hidden;
 }
 
+
 .weather-main {
     flex: 1;
+
     min-height: 0;
+
     display: flex;
+
     align-items: center;
+
     gap: 16px;
+
+    min-width: 0;
 }
+
+
+.weather-temperature-block {
+    min-width: 0;
+}
+
 
 .weather-icon {
     flex: 0 0 auto;
-    font-size: clamp(45px, 5vw, 70px);
+
+    font-size:
+        clamp(45px, 5vw, 70px);
 }
 
+
 .temperature {
-    font-size: clamp(43px, 5.2vw, 70px);
+    font-size:
+        clamp(43px, 5.2vw, 70px);
+
     font-weight: 800;
+
     line-height: 0.95;
+
+    white-space: nowrap;
 }
+
 
 .weather-description {
     margin-top: 5px;
-    font-size: clamp(14px, 1.4vw, 20px);
+
+    font-size:
+        clamp(14px, 1.4vw, 20px);
+
     color: var(--secondary);
+
+    line-height: 1.2;
 }
+
+
+/* TODAY / HUMIDITY / RAIN */
 
 .weather-details {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
     gap: 8px;
+
+    min-width: 0;
 }
+
 
 .weather-detail {
     min-width: 0;
+
     padding: 6px 10px;
+
     border-radius: 14px;
-    background: var(--small-card);
+
+    background:
+        var(--small-card);
 }
+
 
 .weather-detail-label {
     display: block;
+
     font-size: 11px;
+
     color: var(--secondary);
+
+    white-space: nowrap;
 }
+
 
 .weather-detail-value {
     display: block;
+
     margin-top: 1px;
-    font-size: clamp(14px, 1.45vw, 20px);
+
+    font-size:
+        clamp(14px, 1.45vw, 20px);
+
     font-weight: 800;
+
     white-space: nowrap;
 }
+
+
+/* =========================================
+   HKO FORECAST TEXT
+========================================= */
 
 .hko-forecast,
 .hko-special {
     display: none;
+
     min-width: 0;
+
     overflow: hidden;
-    text-overflow: ellipsis;
+
+    word-break: break-word;
 }
+
 
 .hko-forecast {
     margin-top: 5px;
-    font-size: clamp(9px, 0.82vw, 12px);
-    line-height: 1.25;
+
+    font-size:
+        clamp(9px, 0.82vw, 12px);
+
+    line-height: 1.28;
+
     color: var(--secondary);
+
+    display: -webkit-box;
+
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+
+    overflow: hidden;
 }
+
 
 .hko-special {
     margin-top: 4px;
+
     padding: 4px 8px;
+
     border-radius: 12px;
-    background: rgba(230,173,181,0.36);
-    font-size: clamp(9px, 0.82vw, 12px);
+
+    background:
+        rgba(230, 173, 181, 0.36);
+
+    font-size:
+        clamp(9px, 0.82vw, 12px);
+
     font-weight: 700;
-    line-height: 1.2;
+
+    line-height: 1.25;
+
     color: var(--text);
+
+    display: -webkit-box;
+
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+
+    overflow: hidden;
 }
+
 
 .updated {
     margin-top: 4px;
+
     font-size: 10px;
+
     color: var(--muted);
 }
 
-/* FORECAST */
+
+/* =========================================
+   FORECAST
+========================================= */
+
 .forecast-card {
     min-width: 0;
     min-height: 0;
+
     padding: 9px 12px;
+
     display: flex;
+
     flex-direction: column;
 }
 
+
 .forecast {
     flex: 1;
+
     min-height: 0;
+
     margin-top: 4px;
+
     display: grid;
-    grid-template-columns: repeat(8, minmax(0, 1fr));
+
+    grid-template-columns:
+        repeat(8, minmax(0, 1fr));
+
     gap: 6px;
+
     overflow: hidden;
 }
+
 
 .forecast-item {
     min-width: 0;
     min-height: 0;
+
     display: flex;
+
     flex-direction: column;
+
     justify-content: center;
     align-items: center;
+
     padding: 3px;
+
     border-radius: 13px;
-    background: var(--small-card);
+
+    background:
+        var(--small-card);
 }
 
-.forecast-time { font-size: clamp(10px, 1vw, 14px); color: var(--secondary); }
-.forecast-icon { margin: 2px 0; font-size: clamp(18px, 2vw, 28px); }
-.forecast-temp { font-size: clamp(13px, 1.4vw, 19px); font-weight: 800; }
-.forecast-rain { font-size: clamp(9px, 0.9vw, 12px); color: var(--secondary); }
 
-/* MTR + CALENDAR */
+.forecast-time {
+    font-size:
+        clamp(10px, 1vw, 14px);
+
+    color: var(--secondary);
+}
+
+
+.forecast-icon {
+    margin: 2px 0;
+
+    font-size:
+        clamp(18px, 2vw, 28px);
+}
+
+
+.forecast-temp {
+    font-size:
+        clamp(13px, 1.4vw, 19px);
+
+    font-weight: 800;
+}
+
+
+.forecast-rain {
+    font-size:
+        clamp(9px, 0.9vw, 12px);
+
+    color: var(--secondary);
+}
+
+
+/* =========================================
+   MTR + CALENDAR
+========================================= */
+
 .middle-grid {
     min-width: 0;
     min-height: 0;
+
     display: grid;
-    grid-template-columns: minmax(175px, 0.34fr) minmax(0, 2.35fr);
+
+    grid-template-columns:
+        minmax(175px, 0.34fr)
+        minmax(0, 2.35fr);
+
     gap: 7px;
 }
+
 
 .mtr-card,
 .calendar-card {
     min-width: 0;
     min-height: 0;
+
     padding: 9px 12px;
+
     display: flex;
+
     flex-direction: column;
 }
 
+
 .mtr-grid {
     flex: 1;
+
     min-height: 0;
+
     margin-top: 4px;
+
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
     gap: 7px;
 }
+
 
 .mtr-direction {
     min-width: 0;
     min-height: 0;
+
     display: flex;
+
     flex-direction: column;
 }
 
+
 .direction-title {
     margin-bottom: 3px;
-    font-size: clamp(11px, 1.1vw, 16px);
+
+    font-size:
+        clamp(11px, 1.1vw, 16px);
+
     font-weight: 800;
+
+    white-space: nowrap;
 }
+
 
 .train-list {
     min-width: 0;
     min-height: 0;
+
     display: grid;
-    grid-template-columns: 1fr;
+
+    grid-template-columns:
+        1fr;
+
     align-content: start;
+
     gap: 4px;
-    overflow-y: auto;
+
+    overflow: hidden;
 }
+
 
 .train {
     min-width: 0;
+
     padding: 4px 3px;
+
     border-radius: 10px;
+
     text-align: center;
-    background: var(--small-card);
+
+    background:
+        var(--small-card);
 }
 
+
 .train-time {
-    font-size: clamp(12px, 1.15vw, 17px);
+    font-size:
+        clamp(12px, 1.15vw, 17px);
+
     font-weight: 800;
+
     white-space: nowrap;
 }
+
 
 .train-destination {
     margin-top: 1px;
+
     font-size: 9px;
+
     color: var(--secondary);
+
     white-space: nowrap;
+
     overflow: hidden;
+
     text-overflow: ellipsis;
 }
 
+
 .calendar-list {
     flex: 1;
+
     min-height: 0;
+
     margin-top: 5px;
+
     overflow-y: auto;
 }
 
+
 .calendar-empty {
-    font-size: clamp(12px, 1.15vw, 16px);
+    font-size:
+        clamp(12px, 1.15vw, 16px);
+
     color: var(--secondary);
 }
 
-/* NEWS */
+
+/* =========================================
+   NEWS
+========================================= */
+
 .news-grid {
     min-width: 0;
     min-height: 0;
+
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
     gap: 7px;
 }
+
 
 .news-card {
     min-width: 0;
     min-height: 0;
+
     padding: 9px 13px;
+
     display: flex;
+
     flex-direction: column;
 }
 
+
 .news-subtitle {
     margin-top: 2px;
+
     font-size: 11px;
+
     color: var(--secondary);
 }
 
+
 .news-list {
     flex: 1;
+
     min-height: 0;
+
     margin-top: 4px;
+
     overflow-y: auto;
     overflow-x: hidden;
+
     padding-right: 5px;
+
     scrollbar-width: thin;
 }
 
-.news-list::-webkit-scrollbar { width: 5px; }
+
+.news-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+
 .news-list::-webkit-scrollbar-thumb {
-    background: rgba(130,76,87,0.40);
+    background:
+        rgba(130, 76, 87, 0.40);
+
     border-radius: 20px;
 }
 
+
 .news-item {
     display: block;
+
     padding: 4px 2px;
-    border-bottom: 1px solid rgba(140,85,95,0.16);
+
+    border-bottom:
+        1px solid
+        rgba(140, 85, 95, 0.16);
+
     color: var(--text);
+
     text-decoration: none;
-    font-size: clamp(11px, 1.05vw, 15px);
+
+    font-size:
+        clamp(11px, 1.05vw, 15px);
+
     line-height: 1.25;
 }
-.news-item:hover { text-decoration: underline; }
 
-/* FOOTER */
-footer {
-    min-width: 0;
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-    font-size: 10px;
-    line-height: 1;
-    color: rgba(70,55,60,0.55);
+
+.news-item:hover {
+    text-decoration: underline;
 }
 
-/* TABLET PORTRAIT */
-@media (orientation: portrait) and (min-width: 600px) {
+
+/* =========================================
+   FOOTER
+========================================= */
+
+footer {
+    min-width: 0;
+
+    display: flex;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    font-size: 10px;
+
+    line-height: 1;
+
+    color:
+        rgba(70, 55, 60, 0.55);
+}
+
+
+/* =========================================
+   TABLET PORTRAIT
+========================================= */
+
+@media
+    (orientation: portrait)
+    and (min-width: 600px) {
+
     .dashboard-content {
         grid-template-rows:
             minmax(0, 1.35fr)
@@ -497,26 +1041,63 @@ footer {
             minmax(0, 1fr);
     }
 
+
     .top-grid {
-        grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.55fr);
+        grid-template-columns:
+            minmax(0, 0.82fr)
+            minmax(0, 1.55fr);
     }
+
 
     .analog-clock {
         width: 185px;
         height: 185px;
     }
 
+
     .middle-grid {
-        grid-template-columns: minmax(175px, 0.55fr) minmax(0, 1.65fr);
+        grid-template-columns:
+            minmax(175px, 0.55fr)
+            minmax(0, 1.65fr);
     }
+
+
+    .mtr-card,
+    .calendar-card {
+        padding: 8px 10px;
+    }
+
+
+    .mtr-grid {
+        gap: 6px;
+    }
+
 
     .train-list {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: 1fr;
     }
+
+
+    .hko-forecast {
+        -webkit-line-clamp: 2;
+    }
+
+
+    .hko-special {
+        -webkit-line-clamp: 3;
+    }
+
 }
 
-/* LANDSCAPE: keep 30° clear and details vertically aligned */
-@media (orientation: landscape) and (min-width: 700px) {
+
+/* =========================================
+   LANDSCAPE
+========================================= */
+
+@media
+    (orientation: landscape)
+    and (min-width: 700px) {
+
     .dashboard-content {
         grid-template-rows:
             minmax(0, 1.42fr)
@@ -525,92 +1106,161 @@ footer {
             minmax(0, 0.96fr);
     }
 
+
+    /*
+       LEFT:
+       CURRENT TEMPERATURE
+
+       RIGHT:
+       今日 / 濕度 / 降雨
+    */
+
     .weather-card {
         display: grid;
-        grid-template-columns: minmax(210px, 0.78fr) minmax(0, 1.72fr);
-        grid-template-rows: auto minmax(62px, auto) auto auto auto;
+
+        grid-template-columns:
+            minmax(210px, 0.78fr)
+            minmax(0, 1.72fr);
+
+        grid-template-rows:
+            auto
+            minmax(62px, auto)
+            auto
+            auto
+            auto;
+
         column-gap: 12px;
         row-gap: 3px;
+
         align-items: center;
     }
+
 
     .weather-card > .card-title {
         grid-column: 1 / -1;
         grid-row: 1;
     }
 
+
     .weather-main {
         grid-column: 1;
-        grid-row: 2 / 4;
+        grid-row: 2;
+
         min-height: 0;
+
         flex: none;
+
         align-self: stretch;
+
         display: flex;
+
         align-items: center;
+
         gap: 10px;
+
         overflow: hidden;
     }
+
 
     .weather-details {
         grid-column: 2;
         grid-row: 2;
+
         width: 100%;
+
         align-self: center;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
+
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
+
         gap: 6px;
     }
+
 
     .hko-forecast {
         grid-column: 1 / -1;
         grid-row: 3;
+
         margin-top: 0;
+
+        -webkit-line-clamp: 2;
     }
+
 
     .hko-special {
         grid-column: 1 / -1;
         grid-row: 4;
+
         margin-top: 0;
+
+        -webkit-line-clamp: 3;
     }
+
 
     .updated {
         grid-column: 1 / -1;
         grid-row: 5;
+
         margin-top: 0;
     }
 
+
+    /* SMALLER MTR / MORE CALENDAR SPACE */
+
     .middle-grid {
-        grid-template-columns: minmax(175px, 0.30fr) minmax(0, 2.55fr);
+        grid-template-columns:
+            minmax(175px, 0.30fr)
+            minmax(0, 2.55fr);
     }
+
 
     .mtr-card,
     .calendar-card {
         padding: 8px 10px;
     }
 
+
     .mtr-grid {
         gap: 6px;
     }
 
+
     .date-main {
-        font-size: clamp(30px, 3.3vw, 48px);
+        font-size:
+            clamp(30px, 3.3vw, 48px);
     }
+
 }
 
-/* SMALL SCREENS */
+
+/* =========================================
+   SMALL SCREENS
+========================================= */
+
 @media (max-width: 599px) {
-    html, body { overflow: auto; }
+
+    html,
+    body {
+        overflow: auto;
+    }
+
 
     .dashboard {
         height: auto;
         min-height: 100vh;
+
         overflow: visible;
     }
 
+
     .dashboard-content {
         display: flex;
+
         flex-direction: column;
+
         overflow: visible;
     }
+
 
     .top-grid,
     .middle-grid,
@@ -618,17 +1268,24 @@ footer {
         grid-template-columns: 1fr;
     }
 
+
     .card {
         min-height: 180px;
     }
 
+
     .forecast {
         overflow-x: auto;
-        grid-template-columns: repeat(8, 75px);
+
+        grid-template-columns:
+            repeat(8, 75px);
     }
+
 
     .date-main {
         white-space: normal;
+
         font-size: 26px;
     }
+
 }
