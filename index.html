@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -21,6 +22,7 @@
     <title>Tai Wo Dashboard</title>
 
     <link rel="stylesheet" href="style.css">
+
 </head>
 
 <body>
@@ -37,28 +39,28 @@
     </button>
 
 
-    <header class="header">
-        <div class="date-time-bubble">
-            <div id="dateMain" class="top-date">
-                Loading...
-            </div>
-
-            <div id="lunarDate" class="lunar">
-                農曆載入中...
-            </div>
-        </div>
-    </header>
-
-
     <main class="dashboard-content">
+
+
+        <!-- =========================================
+             TOP
+             CLOCK + DATE + CURRENT WEATHER
+        ========================================== -->
 
         <section class="top-grid">
 
+
+            <!-- CLOCK -->
+
             <section class="card clock-card">
 
-                <div id="digitalTime" class="clock-time">
+                <div
+                    id="digitalTime"
+                    class="clock-time"
+                >
                     --:--:-- --
                 </div>
+
 
                 <div class="analog-clock">
 
@@ -67,20 +69,24 @@
                     <div class="number n6">6</div>
                     <div class="number n9">9</div>
 
+
                     <div
                         id="hourHand"
                         class="hand hour-hand"
                     ></div>
+
 
                     <div
                         id="minuteHand"
                         class="hand minute-hand"
                     ></div>
 
+
                     <div
                         id="secondHand"
                         class="hand second-hand"
                     ></div>
+
 
                     <div class="clock-center"></div>
 
@@ -89,74 +95,147 @@
             </section>
 
 
-            <section class="card weather-card">
+            <!-- DATE + WEATHER COLUMN -->
 
-                <div
-                    id="weatherTitle"
-                    class="card-title"
-                >
-                    🌤️ TAI WO WEATHER
-                </div>
+            <section class="weather-column">
 
-                <div class="weather-main">
 
-                    <div
-                        id="weatherIcon"
-                        class="weather-icon"
-                    >
-                        🌤️
-                    </div>
+                <!-- DATE -->
 
-                    <div>
+                <header class="header">
+
+                    <div class="date-time-bubble">
 
                         <div
-                            id="temperature"
-                            class="temperature"
-                        >
-                            --°
-                        </div>
-
-                        <div
-                            id="weatherDescription"
-                            class="weather-description"
+                            id="dateMain"
+                            class="top-date"
                         >
                             Loading...
                         </div>
 
+
+                        <div
+                            id="lunarDate"
+                            class="lunar"
+                        >
+                            農曆載入中...
+                        </div>
+
                     </div>
 
-                </div>
+                </header>
 
-                <div class="weather-details">
 
-                    <div>
-                        <span>今日</span>
-                        <strong id="todayRange">--° — --°</strong>
+                <!-- CURRENT WEATHER -->
+
+                <section class="card weather-card">
+
+                    <div
+                        id="weatherTitle"
+                        class="card-title"
+                    >
+                        🌤️ TAI WO WEATHER
                     </div>
 
-                    <div>
-                        <span>💧 濕度</span>
-                        <strong id="humidity">--%</strong>
+
+                    <div class="weather-main">
+
+                        <div
+                            id="weatherIcon"
+                            class="weather-icon"
+                        >
+                            🌤️
+                        </div>
+
+
+                        <div>
+
+                            <div
+                                id="temperature"
+                                class="temperature"
+                            >
+                                --°
+                            </div>
+
+
+                            <div
+                                id="weatherDescription"
+                                class="weather-description"
+                            >
+                                Loading...
+                            </div>
+
+                        </div>
+
                     </div>
 
-                    <div>
-                        <span>🌧️ 降雨</span>
-                        <strong id="rainProbability">--%</strong>
+
+                    <div class="weather-details">
+
+                        <div>
+
+                            <span>
+                                今日
+                            </span>
+
+                            <strong
+                                id="todayRange"
+                            >
+                                --° — --°
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                💧 濕度
+                            </span>
+
+                            <strong
+                                id="humidity"
+                            >
+                                --%
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                🌧️ 降雨
+                            </span>
+
+                            <strong
+                                id="rainProbability"
+                            >
+                                --%
+                            </strong>
+
+                        </div>
+
                     </div>
 
-                </div>
 
-                <div
-                    id="weatherUpdated"
-                    class="updated"
-                >
-                    Weather updating...
-                </div>
+                    <div
+                        id="weatherUpdated"
+                        class="updated"
+                    >
+                        Weather updating...
+                    </div>
+
+                </section>
 
             </section>
 
         </section>
 
+
+        <!-- =========================================
+             FORECAST
+        ========================================== -->
 
         <section class="card forecast-card">
 
@@ -164,16 +243,23 @@
                 🌦️ TODAY'S FORECAST
             </div>
 
+
             <div
                 id="forecast"
                 class="forecast"
-            >
-            </div>
+            ></div>
 
         </section>
 
 
+        <!-- =========================================
+             MTR + CALENDAR
+        ========================================== -->
+
         <section class="middle-grid">
+
+
+            <!-- MTR -->
 
             <section class="card mtr-card">
 
@@ -181,13 +267,16 @@
                     🚆 MTR · TAI WO
                 </div>
 
+
                 <div class="mtr-grid">
+
 
                     <div class="mtr-direction">
 
                         <div class="direction-title">
                             往金鐘
                         </div>
+
 
                         <div
                             id="mtrDown"
@@ -205,6 +294,7 @@
                             往上水
                         </div>
 
+
                         <div
                             id="mtrUp"
                             class="train-list"
@@ -214,16 +304,20 @@
 
                     </div>
 
+
                 </div>
 
             </section>
 
+
+            <!-- CALENDAR -->
 
             <section class="card calendar-card">
 
                 <div class="card-title">
                     📅 CALENDAR
                 </div>
+
 
                 <div
                     id="calendar"
@@ -237,7 +331,14 @@
         </section>
 
 
+        <!-- =========================================
+             NEWS
+        ========================================== -->
+
         <section class="news-grid">
+
+
+            <!-- NOW NEWS -->
 
             <section class="card news-card">
 
@@ -245,9 +346,11 @@
                     🇭🇰 NOW NEWS
                 </div>
 
+
                 <div class="news-subtitle">
                     本地 · 兩岸
                 </div>
+
 
                 <div
                     id="nowNews"
@@ -259,15 +362,19 @@
             </section>
 
 
+            <!-- BBC NEWS -->
+
             <section class="card news-card">
 
                 <div class="card-title">
                     🌍 BBC NEWS
                 </div>
 
+
                 <div class="news-subtitle">
                     WORLD
                 </div>
+
 
                 <div
                     id="bbcNews"
@@ -278,14 +385,21 @@
 
             </section>
 
+
         </section>
+
 
     </main>
 
 
+    <!-- FOOTER -->
+
     <footer>
 
-        <span>Tai Wo Dashboard</span>
+        <span>
+            Tai Wo Dashboard
+        </span>
+
 
         <span id="lastUpdated">
             Updated --
@@ -293,7 +407,9 @@
 
     </footer>
 
+
 </div>
+
 
 <script src="script.js"></script>
 
