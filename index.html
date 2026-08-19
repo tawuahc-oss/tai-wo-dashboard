@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
-
 <head>
-
     <meta charset="UTF-8">
 
     <meta
@@ -23,24 +21,19 @@
     <title>Tai Wo Dashboard</title>
 
     <link rel="stylesheet" href="style.css">
-
 </head>
-
 
 <body>
 
 <div class="dashboard">
 
-
     <main class="dashboard-content">
-
 
         <!-- =========================================
              CLOCK + DATE + WEATHER
         ========================================== -->
 
         <section class="top-grid">
-
 
             <!-- CLOCK -->
 
@@ -52,7 +45,6 @@
                 >
                     --:--:-- --
                 </div>
-
 
                 <div class="clock-area">
 
@@ -77,24 +69,20 @@
                             9
                         </div>
 
-
                         <div
                             id="hourHand"
                             class="clock-hand clock-hour"
                         ></div>
-
 
                         <div
                             id="minuteHand"
                             class="clock-hand clock-minute"
                         ></div>
 
-
                         <div
                             id="secondHand"
                             class="clock-hand clock-second"
                         ></div>
-
 
                         <div class="clock-center"></div>
 
@@ -114,26 +102,6 @@
 
                 <div class="date-bubble">
 
-                    <div class="date-content">
-
-                        <div
-                            id="dateMain"
-                            class="date-main"
-                        >
-                            Loading...
-                        </div>
-
-
-                        <div
-                            id="lunarDate"
-                            class="date-lunar"
-                        >
-                            農曆資料載入中...
-                        </div>
-
-                    </div>
-
-
                     <button
                         id="refreshButton"
                         class="refresh-button"
@@ -143,13 +111,26 @@
                         ↻
                     </button>
 
+                    <div
+                        id="dateMain"
+                        class="date-main"
+                    >
+                        Loading...
+                    </div>
+
+                    <div
+                        id="lunarDate"
+                        class="date-lunar"
+                    >
+                        農曆資料載入中...
+                    </div>
+
                 </div>
 
 
                 <!-- WEATHER -->
 
                 <div class="card weather-card">
-
 
                     <div
                         id="weatherTitle"
@@ -159,32 +140,95 @@
                     </div>
 
 
-                    <div class="weather-main">
+                    <!-- CURRENT WEATHER + DETAILS -->
+
+                    <div class="weather-summary-row">
 
 
-                        <div
-                            id="weatherIcon"
-                            class="weather-icon"
-                        >
-                            ☁️
-                        </div>
+                        <!-- ICON + CURRENT TEMPERATURE -->
 
-
-                        <div class="weather-temperature-block">
+                        <div class="weather-main">
 
                             <div
-                                id="temperature"
-                                class="temperature"
+                                id="weatherIcon"
+                                class="weather-icon"
                             >
-                                --°
+                                ☁️
                             </div>
 
 
-                            <div
-                                id="weatherDescription"
-                                class="weather-description"
-                            >
-                                Loading...
+                            <div class="weather-temperature-block">
+
+                                <div
+                                    id="temperature"
+                                    class="temperature"
+                                >
+                                    --°
+                                </div>
+
+                                <div
+                                    id="weatherDescription"
+                                    class="weather-description"
+                                >
+                                    Loading...
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- TODAY / HUMIDITY / RAIN
+                             ALWAYS VERTICAL
+                             ON THE RIGHT OF TEMPERATURE -->
+
+                        <div class="weather-details">
+
+                            <div class="weather-detail">
+
+                                <span class="weather-detail-label">
+                                    今日
+                                </span>
+
+                                <strong
+                                    id="todayRange"
+                                    class="weather-detail-value"
+                                >
+                                    --° — --°
+                                </strong>
+
+                            </div>
+
+
+                            <div class="weather-detail">
+
+                                <span class="weather-detail-label">
+                                    💧 濕度
+                                </span>
+
+                                <strong
+                                    id="humidity"
+                                    class="weather-detail-value"
+                                >
+                                    --%
+                                </strong>
+
+                            </div>
+
+
+                            <div class="weather-detail">
+
+                                <span class="weather-detail-label">
+                                    🌧️ 降雨
+                                </span>
+
+                                <strong
+                                    id="rainProbability"
+                                    class="weather-detail-value"
+                                >
+                                    --%
+                                </strong>
+
                             </div>
 
                         </div>
@@ -192,69 +236,17 @@
                     </div>
 
 
-                    <!-- TODAY / HUMIDITY / RAIN -->
-
-                    <div class="weather-details">
-
-
-                        <div class="weather-detail">
-
-                            <span class="weather-detail-label">
-                                今日
-                            </span>
-
-                            <strong
-                                id="todayRange"
-                                class="weather-detail-value"
-                            >
-                                --° — --°
-                            </strong>
-
-                        </div>
-
-
-                        <div class="weather-detail">
-
-                            <span class="weather-detail-label">
-                                💧 濕度
-                            </span>
-
-                            <strong
-                                id="humidity"
-                                class="weather-detail-value"
-                            >
-                                --%
-                            </strong>
-
-                        </div>
-
-
-                        <div class="weather-detail">
-
-                            <span class="weather-detail-label">
-                                🌧️ 降雨
-                            </span>
-
-                            <strong
-                                id="rainProbability"
-                                class="weather-detail-value"
-                            >
-                                --%
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- HKO SCROLLABLE TEXT AREA -->
+                    <!-- HKO TEXT
+                         TWO INDEPENDENT SCROLL AREAS -->
 
                     <div class="weather-hko-text">
 
 
-                        <div
-                            id="hkoForecastSection"
-                            class="weather-hko-section"
+                        <!-- FORECAST -->
+
+                        <section
+                            id="hkoForecastPanel"
+                            class="weather-hko-section hidden"
                         >
 
                             <div class="weather-hko-label">
@@ -264,30 +256,28 @@
                             <div
                                 id="hkoForecast"
                                 class="weather-hko-content"
-                            >
-                                載入中...
-                            </div>
+                            ></div>
 
-                        </div>
+                        </section>
 
 
-                        <div
-                            id="hkoSpecialSection"
-                            class="weather-hko-section"
+                        <!-- SPECIAL WEATHER TIP -->
+
+                        <section
+                            id="hkoSpecialPanel"
+                            class="weather-hko-section hidden"
                         >
 
                             <div class="weather-hko-label">
-                                特別天氣提示
+                                ⚠️ 特別天氣提示
                             </div>
 
                             <div
                                 id="hkoSpecial"
                                 class="weather-hko-content"
-                            >
-                                暫無特別天氣提示
-                            </div>
+                            ></div>
 
-                        </div>
+                        </section>
 
                     </div>
 
@@ -298,7 +288,6 @@
                     >
                         Weather updating...
                     </div>
-
 
                 </div>
 
@@ -313,7 +302,6 @@
 
         <section class="card forecast-card">
 
-
             <div
                 id="forecastTitle"
                 class="card-title"
@@ -321,12 +309,10 @@
                 🌦️ TODAY'S FORECAST
             </div>
 
-
             <div
                 id="forecast"
                 class="forecast"
             ></div>
-
 
         </section>
 
@@ -342,7 +328,6 @@
 
             <div class="card mtr-card">
 
-
                 <div class="card-title">
                     🚆 MTR · TAI WO
                 </div>
@@ -350,6 +335,8 @@
 
                 <div class="mtr-grid">
 
+
+                    <!-- TO ADMIRALTY -->
 
                     <div class="mtr-direction">
 
@@ -367,6 +354,8 @@
                     </div>
 
 
+                    <!-- TO SHEUNG SHUI -->
+
                     <div class="mtr-direction">
 
                         <div class="direction-title">
@@ -382,7 +371,6 @@
 
                     </div>
 
-
                 </div>
 
             </div>
@@ -392,11 +380,9 @@
 
             <div class="card calendar-card">
 
-
                 <div class="card-title">
                     📅 CALENDAR
                 </div>
-
 
                 <div
                     id="calendar"
@@ -408,7 +394,6 @@
                     </div>
 
                 </div>
-
 
             </div>
 
@@ -465,9 +450,7 @@
 
             </div>
 
-
         </section>
-
 
     </main>
 
@@ -486,12 +469,10 @@
 
     </footer>
 
-
 </div>
 
 
 <script src="script.js"></script>
 
 </body>
-
 </html>
