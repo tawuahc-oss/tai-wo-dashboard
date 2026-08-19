@@ -1,7 +1,6 @@
 /* =========================================
    TAI WO DASHBOARD
-   RESPONSIVE VERSION
-   iPad PORTRAIT + LANDSCAPE
+   RESPONSIVE iPAD VERSION
 ========================================= */
 
 * {
@@ -33,19 +32,16 @@ body {
 
 
 /* =========================================
-   MAIN DASHBOARD
+   DASHBOARD
 ========================================= */
 
 .dashboard {
-
     width: 100%;
     height: 100%;
 
     padding: 1vh 2vw;
 
-    display: flex;
-
-    flex-direction: column;
+    display: grid;
 
     gap: 1vh;
 
@@ -58,24 +54,18 @@ body {
 ========================================= */
 
 .header {
-
-    flex: 0 0 10%;
-
     min-height: 0;
 
     display: flex;
-
     flex-direction: column;
 
     justify-content: center;
-
     align-items: center;
 
     overflow: hidden;
 }
 
 .time {
-
     font-size: clamp(42px, 5vw, 82px);
 
     font-weight: 700;
@@ -88,7 +78,6 @@ body {
 }
 
 .date {
-
     margin-top: 4px;
 
     font-size: clamp(16px, 1.5vw, 26px);
@@ -100,10 +89,12 @@ body {
 
 
 /* =========================================
-   ALL CARDS
+   GENERAL CARD
 ========================================= */
 
 .card {
+    width: 100%;
+    height: 100%;
 
     background: #ffffff;
 
@@ -114,7 +105,7 @@ body {
     padding: 1vh 1.5vw;
 
     box-shadow:
-        0 5px 18px rgba(0,0,0,0.05);
+        0 5px 18px rgba(0, 0, 0, 0.05);
 
     min-height: 0;
 
@@ -122,7 +113,6 @@ body {
 }
 
 .card-title {
-
     font-size: clamp(18px, 1.5vw, 27px);
 
     font-weight: 700;
@@ -130,7 +120,14 @@ body {
     line-height: 1.1;
 
     margin-bottom: 0.6vh;
+}
 
+.updated {
+    font-size: 11px;
+
+    color: #999;
+
+    margin-top: 5px;
 }
 
 
@@ -139,12 +136,8 @@ body {
 ========================================= */
 
 .top-grid {
-
-    flex: 0 0 29%;
-
-    min-height: 0;
-
     width: 100%;
+    height: 100%;
 
     display: grid;
 
@@ -153,19 +146,17 @@ body {
 
     gap: 1.2vw;
 
+    min-height: 0;
+
     overflow: hidden;
 }
 
 
 /* =========================================
-   CLOCK CARD
+   CLOCK
 ========================================= */
 
 .clock-card {
-
-    width: 100%;
-    height: 100%;
-
     display: flex;
 
     flex-direction: column;
@@ -180,7 +171,6 @@ body {
 }
 
 .analog-clock {
-
     position: relative;
 
     width: min(19vh, 17vw);
@@ -199,7 +189,6 @@ body {
 }
 
 .number {
-
     position: absolute;
 
     font-weight: 700;
@@ -208,47 +197,37 @@ body {
 }
 
 .n12 {
-
     top: 6px;
-
     left: 50%;
 
     transform: translateX(-50%);
 }
 
 .n3 {
-
     right: 8px;
-
     top: 50%;
 
     transform: translateY(-50%);
 }
 
 .n6 {
-
     bottom: 6px;
-
     left: 50%;
 
     transform: translateX(-50%);
 }
 
 .n9 {
-
     left: 8px;
-
     top: 50%;
 
     transform: translateY(-50%);
 }
 
 .hand {
-
     position: absolute;
 
     left: 50%;
-
     bottom: 50%;
 
     transform-origin: bottom center;
@@ -257,46 +236,37 @@ body {
 }
 
 .hour-hand {
-
     width: 7px;
-
     height: 25%;
 
-    background: #333333;
+    background: #333;
 }
 
 .minute-hand {
-
     width: 5px;
-
     height: 34%;
 
-    background: #555555;
+    background: #555;
 }
 
 .second-hand {
-
     width: 2px;
-
     height: 39%;
 
     background: #d66;
 }
 
 .clock-center {
-
     position: absolute;
 
     width: 12px;
-
     height: 12px;
 
-    background: #333333;
+    background: #333;
 
     border-radius: 50%;
 
     left: 50%;
-
     top: 50%;
 
     transform: translate(-50%, -50%);
@@ -308,32 +278,22 @@ body {
 ========================================= */
 
 .weather-card {
-
-    width: 100%;
-    height: 100%;
-
     min-height: 0;
 
     overflow: hidden;
 }
 
 .weather-main {
-
     display: flex;
 
     align-items: center;
 
     gap: 18px;
 
-    height: 11vh;
-
-    max-height: 55%;
-
     overflow: hidden;
 }
 
 .weather-icon {
-
     font-size: clamp(48px, 5vw, 78px);
 
     line-height: 1;
@@ -342,7 +302,6 @@ body {
 }
 
 .temperature {
-
     font-size: clamp(48px, 5vw, 78px);
 
     font-weight: 700;
@@ -351,14 +310,12 @@ body {
 }
 
 .weather-description {
-
     font-size: clamp(16px, 1.5vw, 25px);
 
     margin-top: 4px;
 }
 
 .weather-details {
-
     display: grid;
 
     grid-template-columns:
@@ -366,13 +323,10 @@ body {
 
     gap: 10px;
 
-    margin-top: 0.5vh;
-
     overflow: hidden;
 }
 
 .weather-details div {
-
     background: #faf6f4;
 
     padding: 7px 12px;
@@ -381,13 +335,10 @@ body {
 
     min-width: 0;
 
-    height: 5vh;
-
     overflow: hidden;
 }
 
 .weather-details span {
-
     display: block;
 
     color: #888;
@@ -398,7 +349,6 @@ body {
 }
 
 .weather-details strong {
-
     display: block;
 
     font-size: clamp(17px, 1.4vw, 23px);
@@ -408,33 +358,18 @@ body {
     white-space: nowrap;
 }
 
-.updated {
-
-    font-size: 11px;
-
-    color: #999;
-
-    margin-top: 5px;
-}
-
 
 /* =========================================
    FORECAST
 ========================================= */
 
 .forecast-card {
-
-    flex: 0 0 14%;
-
     min-height: 0;
-
-    width: 100%;
 
     overflow: hidden;
 }
 
 .forecast {
-
     display: grid;
 
     grid-template-columns:
@@ -442,22 +377,17 @@ body {
 
     gap: 7px;
 
-    height: calc(100% - 30px);
-
     min-height: 0;
 
     overflow: hidden;
 }
 
 .forecast-hour {
-
     text-align: center;
 
     background: #faf7f5;
 
     border-radius: 13px;
-
-    padding: 4px 3px;
 
     min-width: 0;
 
@@ -465,33 +395,25 @@ body {
 }
 
 .forecast-time {
-
     font-size: 13px;
 
     color: #777;
 }
 
 .forecast-icon {
-
     font-size: 23px;
-
-    margin: 4px 0;
 }
 
 .forecast-temp {
-
     font-weight: 700;
 
     font-size: 18px;
 }
 
 .forecast-rain {
-
     font-size: 12px;
 
     color: #5b8ca8;
-
-    margin-top: 2px;
 }
 
 
@@ -500,18 +422,12 @@ body {
 ========================================= */
 
 .mtr-card {
-
-    flex: 0 0 15%;
-
     min-height: 0;
-
-    width: 100%;
 
     overflow: hidden;
 }
 
 .mtr-grid {
-
     display: grid;
 
     grid-template-columns:
@@ -523,7 +439,6 @@ body {
 }
 
 .direction-title {
-
     font-size: clamp(18px, 1.5vw, 25px);
 
     font-weight: 700;
@@ -532,7 +447,6 @@ body {
 }
 
 .train-list {
-
     display: flex;
 
     gap: 9px;
@@ -541,7 +455,6 @@ body {
 }
 
 .train {
-
     background: #f7eeee;
 
     border-radius: 13px;
@@ -554,14 +467,12 @@ body {
 }
 
 .train-time {
-
     font-size: 19px;
 
     font-weight: 700;
 }
 
 .train-minutes {
-
     font-size: 12px;
 
     color: #777;
@@ -573,13 +484,6 @@ body {
 ========================================= */
 
 .news-grid {
-
-    flex: 0 0 11%;
-
-    min-height: 0;
-
-    width: 100%;
-
     display: grid;
 
     grid-template-columns:
@@ -587,21 +491,18 @@ body {
 
     gap: 1.5vw;
 
+    min-height: 0;
+
     overflow: hidden;
 }
 
 .news-card {
-
-    width: 100%;
-    height: 100%;
-
     min-height: 0;
 
     overflow: hidden;
 }
 
 .news-subtitle {
-
     color: #999;
 
     font-size: 13px;
@@ -610,7 +511,6 @@ body {
 }
 
 .news-list {
-
     display: flex;
 
     flex-direction: column;
@@ -621,14 +521,13 @@ body {
 }
 
 .news-item {
-
     font-size: clamp(14px, 1.2vw, 20px);
 
     line-height: 1.2;
 
     padding-bottom: 4px;
 
-    border-bottom: 1px solid #eeeeee;
+    border-bottom: 1px solid #eee;
 
     overflow: hidden;
 
@@ -643,18 +542,12 @@ body {
 ========================================= */
 
 .calendar-card {
-
-    flex: 0 0 8%;
-
     min-height: 0;
-
-    width: 100%;
 
     overflow: hidden;
 }
 
 .calendar-list {
-
     display: flex;
 
     flex-direction: column;
@@ -665,7 +558,6 @@ body {
 }
 
 .calendar-item {
-
     display: flex;
 
     gap: 15px;
@@ -678,7 +570,6 @@ body {
 }
 
 .calendar-time {
-
     font-weight: 700;
 
     min-width: 80px;
@@ -690,157 +581,281 @@ body {
 ========================================= */
 
 footer {
-
-    flex: 1 1 auto;
-
-    min-height: 0;
-
     display: flex;
 
     justify-content: space-between;
 
     align-items: center;
 
-    color: #aaaaaa;
+    color: #aaa;
 
     font-size: 10px;
+
+    min-height: 0;
 
     overflow: hidden;
 }
 
 
-/* =========================================
-   LANDSCAPE iPAD
-========================================= */
+/* =========================================================
+   iPAD LANDSCAPE
+   ========================================================= */
 
 @media (orientation: landscape) {
 
     .dashboard {
 
-        gap: 1vh;
+        /*
+           The available height is divided between
+           the actual sections.
 
+           The important part:
+           Weather gets enough height.
+           Forecast gets enough height to show
+           temperature + rain percentage.
+        */
+
+        grid-template-rows:
+
+            minmax(0, 9fr)
+
+            minmax(0, 36fr)
+
+            minmax(0, 17fr)
+
+            minmax(0, 15fr)
+
+            minmax(0, 11fr)
+
+            minmax(0, 8fr)
+
+            minmax(0, 2fr);
     }
 
-    .header {
 
-        flex-basis: 9%;
-
-    }
-
-    .top-grid {
-
-        flex-basis: 30%;
-
-    }
-
-    .forecast-card {
-
-        flex-basis: 15%;
-
-    }
-
-    .mtr-card {
-
-        flex-basis: 15%;
-
-    }
-
-    .news-grid {
-
-        flex-basis: 12%;
-
-    }
-
-    .calendar-card {
-
-        flex-basis: 8%;
-
-    }
-
-}
-
-
-/* =========================================
-   PORTRAIT iPad
-========================================= */
-
-@media (orientation: portrait) {
-
-    .dashboard {
-
-        gap: 1vh;
-
-    }
-
-    .header {
-
-        flex-basis: 10%;
-
-    }
-
-    .top-grid {
-
-        flex-basis: 28%;
-
-    }
-
-    .forecast-card {
-
-        flex-basis: 14%;
-
-    }
-
-    .mtr-card {
-
-        flex-basis: 15%;
-
-    }
-
-    .news-grid {
-
-        flex-basis: 12%;
-
-    }
-
-    .calendar-card {
-
-        flex-basis: 9%;
-
-    }
-
-}
-
-
-/* =========================================
-   VERY SHORT SCREEN
-========================================= */
-
-@media (max-height: 700px) {
-
-    .card {
-
-        padding-top: 0.7vh;
-        padding-bottom: 0.7vh;
-
-    }
-
-    .analog-clock {
-
-        width: 16vh;
-        height: 16vh;
-
-    }
+    /* -------------------------
+       Weather
+    ------------------------- */
 
     .weather-main {
 
-        height: 9vh;
+        height: 52%;
+
+        min-height: 0;
+    }
+
+    .weather-icon {
+
+        font-size: 58px;
+    }
+
+    .temperature {
+
+        font-size: 58px;
+    }
+
+    .weather-description {
+
+        font-size: 18px;
+    }
+
+    .weather-details {
+
+        height: 28%;
+
+        margin-top: 1%;
 
     }
 
     .weather-details div {
 
-        height: 4.5vh;
+        height: 100%;
 
+        padding: 5px 10px;
+
+    }
+
+    .weather-details span {
+
+        font-size: 12px;
+
+    }
+
+    .weather-details strong {
+
+        font-size: 18px;
+
+    }
+
+
+    /* -------------------------
+       Forecast
+    ------------------------- */
+
+    .forecast-card {
+
+        padding-top: 0.8vh;
+
+        padding-bottom: 0.8vh;
+
+    }
+
+    .forecast {
+
+        height: calc(100% - 27px);
+
+        gap: 7px;
+
+    }
+
+    .forecast-hour {
+
+        padding: 3px;
+
+        display: flex;
+
+        flex-direction: column;
+
+        align-items: center;
+
+        justify-content: center;
+
+    }
+
+    .forecast-time {
+
+        font-size: 12px;
+
+    }
+
+    .forecast-icon {
+
+        font-size: 21px;
+
+        margin: 2px 0;
+
+    }
+
+    .forecast-temp {
+
+        font-size: 16px;
+
+    }
+
+    .forecast-rain {
+
+        font-size: 11px;
+
+    }
+
+
+    /* -------------------------
+       Clock
+    ------------------------- */
+
+    .analog-clock {
+
+        width: min(22vh, 18vw);
+
+        height: min(22vh, 18vw);
+
+    }
+
+
+    /* -------------------------
+       MTR
+    ------------------------- */
+
+    .mtr-card {
+
+        padding-top: 0.8vh;
+
+        padding-bottom: 0.8vh;
+
+    }
+
+    .direction-title {
+
+        font-size: 20px;
+
+    }
+
+
+    /* -------------------------
+       News
+    ------------------------- */
+
+    .news-card {
+
+        padding-top: 0.8vh;
+
+        padding-bottom: 0.8vh;
+
+    }
+
+    .news-item {
+
+        font-size: 15px;
+
+    }
+
+
+    /* -------------------------
+       Calendar
+    ------------------------- */
+
+    .calendar-card {
+
+        padding-top: 0.7vh;
+
+        padding-bottom: 0.7vh;
+
+    }
+
+}
+
+
+/* =========================================================
+   iPAD PORTRAIT
+   ========================================================= */
+
+@media (orientation: portrait) {
+
+    .dashboard {
+
+        grid-template-rows:
+
+            minmax(0, 10fr)
+
+            minmax(0, 28fr)
+
+            minmax(0, 15fr)
+
+            minmax(0, 15fr)
+
+            minmax(0, 12fr)
+
+            minmax(0, 9fr)
+
+            minmax(0, 2fr);
+    }
+
+
+    .weather-main {
+
+        height: auto;
+
+        min-height: 0;
+    }
+
+    .weather-details {
+
+        margin-top: 1vh;
+    }
+
+    .forecast {
+
+        height: calc(100% - 30px);
     }
 
 }
