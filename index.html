@@ -5,7 +5,7 @@
 
     <meta
         name="viewport"
-        content="width=device-width, initial-scale=1.0"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
     >
 
     <meta
@@ -20,44 +20,34 @@
 
     <title>Tai Wo Dashboard</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=10">
 </head>
 
 <body>
 
 <div class="dashboard">
 
-    <!-- REFRESH BUTTON -->
-
     <button
         id="refreshButton"
         class="refresh-button"
         type="button"
         aria-label="Refresh dashboard"
-        title="Refresh"
     >
         ↻
     </button>
 
 
-    <!-- HEADER -->
+    <!-- TOP DATE BUBBLE -->
 
     <header class="header">
 
         <div class="date-time-bubble">
 
             <div
-                id="time"
-                class="time"
+                id="topDate"
+                class="top-date"
             >
-                12:00:00 PM
-            </div>
-
-            <div
-                id="date"
-                class="date"
-            >
-                19/08/2026 · 星期三
+                2026年8月19日 星期三
             </div>
 
             <div
@@ -72,176 +62,233 @@
     </header>
 
 
-    <!-- TOP GRID -->
+    <main class="dashboard-content">
 
-    <section class="top-grid">
 
-        <!-- ANALOG CLOCK -->
+        <!-- CLOCK + WEATHER -->
 
-        <div class="card clock-card">
+        <section class="top-grid">
 
-            <div class="card-title">
-                CLOCK
+            <div class="card clock-card">
+
+                <div
+                    id="clockTime"
+                    class="clock-time"
+                >
+                    1:00:00 PM
+                </div>
+
+                <div class="analog-clock">
+
+                    <div class="number n12">12</div>
+                    <div class="number n3">3</div>
+                    <div class="number n6">6</div>
+                    <div class="number n9">9</div>
+
+                    <div
+                        id="hourHand"
+                        class="hand hour-hand"
+                    ></div>
+
+                    <div
+                        id="minuteHand"
+                        class="hand minute-hand"
+                    ></div>
+
+                    <div
+                        id="secondHand"
+                        class="hand second-hand"
+                    ></div>
+
+                    <div class="clock-center"></div>
+
+                </div>
+
             </div>
 
-            <div class="analog-clock">
 
-                <div class="number n12">12</div>
-                <div class="number n3">3</div>
-                <div class="number n6">6</div>
-                <div class="number n9">9</div>
+            <div class="card weather-card">
 
                 <div
-                    id="hourHand"
-                    class="hand hour-hand"
-                ></div>
+                    id="weatherTitle"
+                    class="card-title"
+                >
+                    📍 CURRENT WEATHER
+                </div>
+
+
+                <div class="weather-main">
+
+                    <div
+                        id="weatherIcon"
+                        class="weather-icon"
+                    >
+                        ☁️
+                    </div>
+
+                    <div>
+
+                        <div
+                            id="temperature"
+                            class="temperature"
+                        >
+                            --°
+                        </div>
+
+                        <div
+                            id="weatherDescription"
+                            class="weather-description"
+                        >
+                            Loading...
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="weather-details">
+
+                    <div>
+                        <span>今日</span>
+                        <strong id="todayRange">--° — --°</strong>
+                    </div>
+
+                    <div>
+                        <span>💧 濕度</span>
+                        <strong id="humidity">--%</strong>
+                    </div>
+
+                    <div>
+                        <span>🌧️ 降雨</span>
+                        <strong id="rainProbability">--%</strong>
+                    </div>
+
+                </div>
+
 
                 <div
-                    id="minuteHand"
-                    class="hand minute-hand"
-                ></div>
-
-                <div
-                    id="secondHand"
-                    class="hand second-hand"
-                ></div>
-
-                <div class="clock-center"></div>
+                    id="weatherUpdated"
+                    class="updated"
+                >
+                    Weather updating...
+                </div>
 
             </div>
 
-        </div>
+        </section>
 
 
-        <!-- WEATHER -->
+        <!-- FORECAST -->
 
-        <div class="card weather-card">
+        <section class="card forecast-card">
 
             <div
-                id="weatherTitle"
+                id="forecastTitle"
                 class="card-title"
             >
-                🌤️ TAI WO WEATHER
+                🌦️ TODAY'S FORECAST
             </div>
-
-            <div class="weather-main">
-
-                <div
-                    id="weatherIcon"
-                    class="weather-icon"
-                >
-                    ☁️
-                </div>
-
-                <div>
-
-                    <div
-                        id="temperature"
-                        class="temperature"
-                    >
-                        --°
-                    </div>
-
-                    <div
-                        id="weatherDescription"
-                        class="weather-description"
-                    >
-                        Loading...
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="weather-details">
-
-                <div>
-
-                    <span>今日</span>
-
-                    <strong id="todayRange">
-                        --° — --°
-                    </strong>
-
-                </div>
-
-
-                <div>
-
-                    <span>💧 濕度</span>
-
-                    <strong id="humidity">
-                        --%
-                    </strong>
-
-                </div>
-
-
-                <div>
-
-                    <span>🌧️ 降雨</span>
-
-                    <strong id="rainProbability">
-                        --%
-                    </strong>
-
-                </div>
-
-            </div>
-
 
             <div
-                id="weatherUpdated"
-                class="updated"
-            >
-                Weather updating...
+                id="forecast"
+                class="forecast"
+            ></div>
+
+        </section>
+
+
+        <!-- MTR + CALENDAR -->
+
+        <section class="middle-grid">
+
+            <div class="card mtr-card">
+
+                <div class="card-title">
+                    🚆 MTR · TAI WO 太和站
+                </div>
+
+                <div class="mtr-grid">
+
+                    <div class="mtr-direction">
+
+                        <div class="direction-title">
+                            往金鐘
+                        </div>
+
+                        <div
+                            id="mtrDown"
+                            class="train-list"
+                        >
+                            Loading...
+                        </div>
+
+                    </div>
+
+
+                    <div class="mtr-direction">
+
+                        <div class="direction-title">
+                            往上水
+                        </div>
+
+                        <div
+                            id="mtrUp"
+                            class="train-list"
+                        >
+                            Loading...
+                        </div>
+
+                    </div>
+
+                </div>
+
             </div>
 
-        </div>
 
-    </section>
+            <div class="card calendar-card">
 
-
-    <!-- FORECAST -->
-
-    <section class="card forecast-card">
-
-        <div
-            id="forecastTitle"
-            class="card-title"
-        >
-            🌦️ TODAY'S FORECAST · TAI WO
-        </div>
-
-        <div
-            id="forecast"
-            class="forecast"
-        ></div>
-
-    </section>
-
-
-    <!-- MTR -->
-
-    <section class="card mtr-card">
-
-        <div class="card-title">
-            🚆 MTR · TAI WO 太和站
-        </div>
-
-
-        <div class="mtr-grid">
-
-            <div class="mtr-direction">
-
-                <div class="direction-title">
-                    往金鐘 / Admiralty
+                <div class="card-title">
+                    📅 CALENDAR
                 </div>
 
                 <div
-                    id="mtrDown"
-                    class="train-list"
+                    id="calendar"
+                    class="calendar-list"
+                >
+                    iCloud Calendar
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- NEWS -->
+
+        <section class="news-grid">
+
+            <div class="card news-card">
+
+                <div class="news-header">
+
+                    <div>
+                        <div class="card-title">
+                            🇭🇰 NOW NEWS
+                        </div>
+
+                        <div class="news-subtitle">
+                            本地 · 兩岸
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="nowNews"
+                    class="news-list"
                 >
                     Loading...
                 </div>
@@ -249,120 +296,49 @@
             </div>
 
 
-            <div class="mtr-direction">
+            <div class="card news-card">
 
-                <div class="direction-title">
-                    往上水 / Sheung Shui
+                <div class="news-header">
+
+                    <div>
+                        <div class="card-title">
+                            🌍 BBC NEWS
+                        </div>
+
+                        <div class="news-subtitle">
+                            WORLD
+                        </div>
+
+                    </div>
+
                 </div>
 
+
                 <div
-                    id="mtrUp"
-                    class="train-list"
+                    id="bbcNews"
+                    class="news-list"
                 >
                     Loading...
                 </div>
 
             </div>
 
-        </div>
+        </section>
 
+    </main>
 
-        <div
-            id="mtrUpdated"
-            class="updated"
-        >
-            MTR updating...
-        </div>
-
-    </section>
-
-
-    <!-- NEWS -->
-
-    <section class="news-grid">
-
-        <!-- NOW NEWS -->
-
-        <div class="card news-card">
-
-            <div class="card-title">
-                🇭🇰 NOW NEWS
-            </div>
-
-            <div class="news-subtitle">
-                本地 · 兩岸
-            </div>
-
-            <div
-                id="nowNews"
-                class="news-list"
-            >
-                Loading...
-            </div>
-
-        </div>
-
-
-        <!-- BBC NEWS -->
-
-        <div class="card news-card">
-
-            <div class="card-title">
-                🌍 BBC NEWS
-            </div>
-
-            <div class="news-subtitle">
-                WORLD
-            </div>
-
-            <div
-                id="bbcNews"
-                class="news-list"
-            >
-                Loading...
-            </div>
-
-        </div>
-
-    </section>
-
-
-    <!-- CALENDAR -->
-
-    <section class="card calendar-card">
-
-        <div class="card-title">
-            📅 TODAY
-        </div>
-
-        <div
-            id="calendar"
-            class="calendar-list"
-        >
-            iCloud Calendar will be added here.
-        </div>
-
-    </section>
-
-
-    <!-- FOOTER -->
 
     <footer>
 
-        <span>
-            Tai Wo Dashboard
-        </span>
+        <span>Tai Wo Dashboard</span>
 
-        <span id="lastUpdated">
-            --
-        </span>
+        <span id="lastUpdated">--</span>
 
     </footer>
 
 </div>
 
-
-<script src="script.js"></script>
+<script src="script.js?v=10"></script>
 
 </body>
 </html>
