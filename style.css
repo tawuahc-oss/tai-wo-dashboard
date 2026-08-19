@@ -1,42 +1,38 @@
 :root {
-    --bg-main: #f5c7c9;
-    --bg-top: #f0b4b7;
-    --bg-card: rgba(255, 244, 245, 0.78);
-    --bg-card-soft: rgba(255, 238, 240, 0.62);
-    --bg-item: rgba(236, 193, 197, 0.40);
+    --bg-main: #f4c4c8;
+    --bg-top: #efb4ba;
 
-    --border: rgba(211, 143, 151, 0.42);
-    --border-strong: rgba(198, 123, 133, 0.50);
+    --card: rgba(255, 244, 246, 0.78);
+    --item: rgba(232, 180, 187, 0.34);
 
-    --text: #353238;
-    --text-secondary: #706a70;
-    --text-muted: #91878d;
+    --border: rgba(193, 120, 132, 0.36);
+
+    --text: #39353a;
+    --secondary: #70656c;
+    --muted: #94848c;
 
     --shadow:
-        0 8px 24px rgba(123, 70, 78, 0.10);
+        0 7px 20px rgba(125, 69, 79, 0.09);
 
-    --radius: 24px;
+    --radius: 22px;
 }
 
-
-/* =========================
-   GLOBAL
-========================= */
 
 * {
     box-sizing: border-box;
 }
 
 
-html {
-    min-height: 100%;
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
 }
 
 
 body {
-    margin: 0;
-    min-height: 100vh;
-
     font-family:
         -apple-system,
         BlinkMacSystemFont,
@@ -50,292 +46,241 @@ body {
     background:
         linear-gradient(
             135deg,
-            var(--bg-top) 0%,
-            var(--bg-main) 48%,
-            #efbfc2 100%
+            var(--bg-top),
+            var(--bg-main) 55%,
+            #efbec4
         );
-
-    -webkit-font-smoothing: antialiased;
 }
 
 
-/* =========================
-   DASHBOARD
-========================= */
+/* MAIN PAGE */
 
 .dashboard {
     position: relative;
 
     width: 100%;
-    max-width: 1500px;
+    height: 100vh;
+    height: 100dvh;
 
-    min-height: 100vh;
+    max-width: 1600px;
 
-    margin: 0 auto;
+    margin: auto;
 
-    padding:
-        26px
-        28px
-        22px;
+    padding: 12px 18px 8px;
 
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+    display: grid;
+
+    grid-template-rows:
+        auto
+        minmax(0, 1fr)
+        auto;
+
+    gap: 8px;
+
+    overflow: hidden;
 }
 
 
-/* =========================
-   REFRESH BUTTON
-========================= */
+/* REFRESH */
 
 .refresh-button {
     position: absolute;
 
-    top: 24px;
-    right: 28px;
+    top: 13px;
+    right: 18px;
 
-    z-index: 20;
+    z-index: 10;
 
-    width: 46px;
-    height: 46px;
+    width: 40px;
+    height: 40px;
 
     border: 1px solid var(--border);
     border-radius: 50%;
 
     background:
-        rgba(255, 244, 245, 0.72);
+        rgba(255, 244, 246, 0.72);
 
     color: var(--text);
 
-    font-size: 28px;
-    line-height: 1;
+    font-size: 24px;
 
     cursor: pointer;
-
-    box-shadow:
-        0 5px 16px rgba(123, 70, 78, 0.10);
-
-    transition:
-        transform 0.2s ease,
-        background 0.2s ease,
-        box-shadow 0.2s ease;
-}
-
-
-.refresh-button:hover {
-    background:
-        rgba(255, 255, 255, 0.84);
-
-    transform: rotate(25deg);
-
-    box-shadow:
-        0 8px 20px rgba(123, 70, 78, 0.15);
-}
-
-
-.refresh-button:active {
-    transform:
-        rotate(180deg)
-        scale(0.92);
 }
 
 
 .refresh-button.loading {
-    animation:
-        spin 0.8s linear infinite;
+    animation: spin 0.8s linear infinite;
 }
 
 
 @keyframes spin {
-
-    from {
-        transform: rotate(0deg);
-    }
-
     to {
         transform: rotate(360deg);
     }
-
 }
 
 
-/* =========================
-   HEADER
-========================= */
+/* HEADER */
 
 .header {
     display: flex;
     justify-content: center;
 
-    padding:
-        2px
-        70px
-        0;
+    padding: 0 55px;
 }
 
 
 .date-time-bubble {
-    min-width: min(700px, 100%);
-
-    padding:
-        14px
-        32px
-        15px;
+    padding: 8px 28px;
 
     text-align: center;
 
     border: 1px solid var(--border);
-    border-radius: 28px;
+    border-radius: 22px;
 
     background:
-        rgba(255, 235, 237, 0.30);
-
-    box-shadow:
-        0 6px 20px rgba(123, 70, 78, 0.05);
+        rgba(255, 237, 240, 0.36);
 }
 
 
-.time {
-    font-size:
-        clamp(42px, 6vw, 78px);
-
+.top-date {
+    font-size: clamp(17px, 1.8vw, 25px);
     font-weight: 800;
-
-    line-height: 1;
-
-    letter-spacing: -2px;
-}
-
-
-.date {
-    margin-top: 7px;
-
-    font-size:
-        clamp(17px, 2vw, 23px);
-
-    font-weight: 500;
-
-    color: var(--text-secondary);
 }
 
 
 .lunar {
-    margin-top: 5px;
+    margin-top: 2px;
 
-    font-size:
-        clamp(14px, 1.6vw, 18px);
+    font-size: clamp(13px, 1.2vw, 17px);
 
-    color: var(--text-muted);
+    color: var(--secondary);
 }
 
 
-/* =========================
-   CARD
-========================= */
+/* CONTENT */
+
+.dashboard-content {
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-rows:
+        minmax(170px, 1.35fr)
+        minmax(95px, 0.7fr)
+        minmax(120px, 0.95fr)
+        minmax(130px, 1fr);
+
+    gap: 8px;
+
+    overflow: hidden;
+}
+
+
+/* CARD */
 
 .card {
+    min-height: 0;
+
     overflow: hidden;
 
     border: 1px solid var(--border);
     border-radius: var(--radius);
 
-    background:
-        var(--bg-card);
+    background: var(--card);
 
-    box-shadow:
-        var(--shadow);
+    box-shadow: var(--shadow);
 
-    backdrop-filter:
-        blur(12px);
-
-    -webkit-backdrop-filter:
-        blur(12px);
+    backdrop-filter: blur(10px);
 }
 
 
 .card-title {
-    font-size:
-        clamp(18px, 2vw, 25px);
-
+    font-size: clamp(14px, 1.35vw, 20px);
     font-weight: 800;
-
-    letter-spacing: 0.3px;
 }
 
 
 .updated {
-    margin-top: 10px;
+    margin-top: 4px;
 
-    font-size: 14px;
+    font-size: 11px;
 
-    color: var(--text-muted);
+    color: var(--muted);
 }
 
 
-/* =========================
-   TOP GRID
-========================= */
+/* TOP GRID */
 
 .top-grid {
+    min-height: 0;
+
     display: grid;
 
     grid-template-columns:
-        minmax(260px, 0.8fr)
-        minmax(450px, 1.7fr);
+        minmax(230px, 0.85fr)
+        minmax(400px, 1.5fr);
 
-    gap: 14px;
+    gap: 8px;
 }
 
+
+/* CLOCK */
 
 .clock-card {
-    min-height: 340px;
+    min-height: 0;
 
-    padding: 22px;
+    padding: 12px;
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    display: grid;
+
+    grid-template-rows:
+        auto
+        minmax(0, 1fr);
+
+    justify-items: center;
 }
 
 
-.clock-card .card-title {
-    margin-bottom: 14px;
+.clock-time {
+    font-size: clamp(25px, 3vw, 44px);
+
+    font-weight: 800;
+
+    line-height: 1;
+
+    margin-bottom: 4px;
 }
 
-
-/* =========================
-   ANALOG CLOCK
-========================= */
 
 .analog-clock {
     position: relative;
 
-    width: min(230px, 70vw);
+    height: 100%;
+    max-height: 160px;
+
     aspect-ratio: 1;
 
-    margin: auto 0;
+    align-self: center;
 
-    border:
-        4px solid
-        rgba(115, 84, 90, 0.58);
-
+    border: 3px solid rgba(96, 71, 76, 0.60);
     border-radius: 50%;
 
     background:
-        rgba(255, 249, 249, 0.32);
+        rgba(255, 250, 251, 0.25);
 }
 
 
 .number {
     position: absolute;
 
-    font-size: 19px;
+    font-size: 13px;
     font-weight: 700;
 }
 
 
 .n12 {
-    top: 12px;
+    top: 7px;
     left: 50%;
 
     transform: translateX(-50%);
@@ -343,15 +288,15 @@ body {
 
 
 .n3 {
+    right: 9px;
     top: 50%;
-    right: 15px;
 
     transform: translateY(-50%);
 }
 
 
 .n6 {
-    bottom: 12px;
+    bottom: 7px;
     left: 50%;
 
     transform: translateX(-50%);
@@ -359,8 +304,8 @@ body {
 
 
 .n9 {
+    left: 9px;
     top: 50%;
-    left: 15px;
 
     transform: translateY(-50%);
 }
@@ -372,31 +317,25 @@ body {
     left: 50%;
     bottom: 50%;
 
-    transform-origin:
-        50%
-        100%;
+    transform-origin: 50% 100%;
 
-    border-radius: 999px;
-
-    transform:
-        translateX(-50%)
-        rotate(0deg);
+    border-radius: 99px;
 }
 
 
 .hour-hand {
-    width: 8px;
+    width: 6px;
     height: 28%;
 
-    background: #3f3b40;
+    background: #3d383d;
 }
 
 
 .minute-hand {
-    width: 7px;
-    height: 38%;
+    width: 5px;
+    height: 37%;
 
-    background: #4c474c;
+    background: #4b4449;
 }
 
 
@@ -404,7 +343,7 @@ body {
     width: 2px;
     height: 42%;
 
-    background: #b97078;
+    background: #bd707b;
 }
 
 
@@ -414,26 +353,26 @@ body {
     top: 50%;
     left: 50%;
 
-    width: 14px;
-    height: 14px;
+    width: 10px;
+    height: 10px;
 
-    transform:
-        translate(-50%, -50%);
+    transform: translate(-50%, -50%);
 
     border-radius: 50%;
 
-    background: #3f3b40;
+    background: #3d383d;
 }
 
 
-/* =========================
-   WEATHER
-========================= */
+/* WEATHER */
 
 .weather-card {
-    min-height: 340px;
+    min-height: 0;
 
-    padding: 22px;
+    padding: 13px;
+
+    display: flex;
+    flex-direction: column;
 }
 
 
@@ -441,173 +380,181 @@ body {
     display: flex;
     align-items: center;
 
-    gap: 22px;
+    gap: 15px;
 
-    margin-top: 20px;
+    flex: 1;
 }
 
 
 .weather-icon {
-    font-size: 70px;
-
-    line-height: 1;
+    font-size: clamp(42px, 5vw, 70px);
 }
 
 
 .temperature {
-    font-size:
-        clamp(52px, 6vw, 76px);
+    font-size: clamp(40px, 5vw, 70px);
 
     font-weight: 800;
 
-    line-height: 0.95;
+    line-height: 0.9;
 }
 
 
 .weather-description {
-    margin-top: 7px;
+    margin-top: 5px;
 
-    font-size: 21px;
+    font-size: clamp(14px, 1.4vw, 20px);
 
-    color: var(--text-secondary);
+    color: var(--secondary);
 }
 
 
 .weather-details {
     display: grid;
 
-    grid-template-columns:
-        repeat(3, 1fr);
+    grid-template-columns: repeat(3, 1fr);
 
-    gap: 12px;
-
-    margin-top: 18px;
+    gap: 7px;
 }
 
 
 .weather-details > div {
-    min-height: 74px;
+    padding: 7px 10px;
 
-    padding: 12px 14px;
+    border-radius: 14px;
 
-    border-radius: 18px;
+    background: var(--item);
 
-    background:
-        var(--bg-item);
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    min-width: 0;
 }
 
 
 .weather-details span {
-    margin-bottom: 3px;
+    display: block;
 
-    font-size: 15px;
+    font-size: 11px;
 
-    color: var(--text-secondary);
+    color: var(--secondary);
 }
 
 
 .weather-details strong {
-    font-size: 23px;
+    display: block;
+
+    margin-top: 2px;
+
+    font-size: clamp(14px, 1.5vw, 21px);
+
+    white-space: nowrap;
 }
 
 
-/* =========================
-   FORECAST
-========================= */
+/* FORECAST */
 
 .forecast-card {
-    padding: 16px;
+    min-height: 0;
+
+    padding: 10px 12px;
 }
 
 
 .forecast {
+    height: calc(100% - 30px);
+
     display: grid;
 
-    grid-template-columns:
-        repeat(8, minmax(0, 1fr));
+    grid-template-columns: repeat(8, 1fr);
 
-    gap: 10px;
+    gap: 6px;
 
-    margin-top: 12px;
+    margin-top: 5px;
 }
 
 
 .forecast-hour {
     min-width: 0;
 
-    padding:
-        10px
-        6px
-        9px;
+    padding: 5px 3px;
 
     text-align: center;
 
-    border-radius: 18px;
+    border-radius: 13px;
 
-    background:
-        var(--bg-item);
+    background: var(--item);
 }
 
 
 .forecast-time {
-    font-size: 15px;
+    font-size: 11px;
 
-    color: var(--text-secondary);
+    color: var(--secondary);
 }
 
 
 .forecast-icon {
-    margin: 6px 0 3px;
+    margin: 2px 0;
 
-    font-size: 28px;
+    font-size: clamp(17px, 2vw, 26px);
 }
 
 
 .forecast-temp {
-    font-size: 21px;
+    font-size: clamp(13px, 1.5vw, 19px);
+
     font-weight: 800;
 }
 
 
 .forecast-rain {
-    margin-top: 3px;
+    font-size: 10px;
 
-    font-size: 14px;
-
-    color: var(--text-secondary);
+    color: var(--secondary);
 }
 
 
-/* =========================
-   MTR
-========================= */
+/* MTR + CALENDAR */
 
-.mtr-card {
-    padding: 18px;
+.middle-grid {
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-columns: 1.6fr 1fr;
+
+    gap: 8px;
+}
+
+
+.mtr-card,
+.calendar-card {
+    min-height: 0;
+
+    padding: 11px 13px;
 }
 
 
 .mtr-grid {
+    height: calc(100% - 28px);
+
     display: grid;
 
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, 1fr);
 
-    gap: 30px;
+    gap: 12px;
 
-    margin-top: 12px;
+    margin-top: 5px;
+}
+
+
+.mtr-direction {
+    min-width: 0;
 }
 
 
 .direction-title {
-    margin-bottom: 10px;
+    margin-bottom: 4px;
 
-    font-size:
-        clamp(19px, 2vw, 26px);
+    font-size: clamp(12px, 1.2vw, 17px);
 
     font-weight: 800;
 }
@@ -617,63 +564,75 @@ body {
     display: flex;
     flex-wrap: wrap;
 
-    gap: 10px;
+    gap: 5px;
 
-    color: var(--text-secondary);
+    max-height: 72px;
+
+    overflow: hidden;
 }
 
 
 .train {
-    min-width: 132px;
+    min-width: 82px;
 
-    padding: 10px 14px;
+    padding: 5px 7px;
 
     text-align: center;
 
-    border-radius: 16px;
+    border-radius: 10px;
 
-    background:
-        var(--bg-item);
+    background: var(--item);
 }
 
 
 .train-time {
-    font-size: 24px;
+    font-size: clamp(13px, 1.3vw, 18px);
+
     font-weight: 800;
 }
 
 
 .train-minutes {
-    margin-top: 3px;
+    margin-top: 1px;
 
-    font-size: 14px;
+    font-size: 10px;
 
-    color: var(--text-secondary);
-
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    color: var(--secondary);
 }
 
 
-/* =========================
-   NEWS
-========================= */
+/* CALENDAR */
+
+.calendar-list {
+    height: calc(100% - 28px);
+
+    margin-top: 5px;
+
+    overflow-y: auto;
+
+    font-size: clamp(12px, 1.2vw, 17px);
+
+    color: var(--secondary);
+}
+
+
+/* NEWS */
 
 .news-grid {
+    min-height: 0;
+
     display: grid;
 
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, 1fr);
 
-    gap: 14px;
+    gap: 8px;
 }
 
 
 .news-card {
-    min-height: 190px;
+    min-height: 0;
 
-    padding: 18px;
+    padding: 11px 13px;
 
     display: flex;
     flex-direction: column;
@@ -681,45 +640,32 @@ body {
 
 
 .news-subtitle {
-    margin-top: 5px;
+    margin-top: 1px;
 
-    font-size: 14px;
+    font-size: 11px;
 
-    color: var(--text-secondary);
+    color: var(--secondary);
 }
 
 
 .news-list {
+    min-height: 0;
+
     flex: 1;
 
-    min-height: 0;
-    max-height: 125px;
-
-    margin-top: 8px;
+    margin-top: 5px;
 
     overflow-y: auto;
     overflow-x: hidden;
 
-    padding-right: 6px;
+    padding-right: 5px;
 
     scrollbar-width: thin;
-
-    scrollbar-color:
-        rgba(145, 88, 98, 0.45)
-        rgba(255, 255, 255, 0.12);
 }
 
 
 .news-list::-webkit-scrollbar {
-    width: 6px;
-}
-
-
-.news-list::-webkit-scrollbar-track {
-    border-radius: 20px;
-
-    background:
-        rgba(255, 255, 255, 0.10);
+    width: 5px;
 }
 
 
@@ -727,33 +673,25 @@ body {
     border-radius: 20px;
 
     background:
-        rgba(145, 88, 98, 0.45);
+        rgba(143, 84, 96, 0.45);
 }
 
 
 .news-item {
     display: block;
 
-    padding:
-        8px
-        3px;
+    padding: 5px 2px;
 
     color: var(--text);
 
     text-decoration: none;
 
-    line-height: 1.35;
+    font-size: clamp(11px, 1.05vw, 15px);
+
+    line-height: 1.25;
 
     border-bottom:
-        1px solid
-        rgba(145, 88, 98, 0.18);
-
-    cursor: pointer;
-}
-
-
-.news-item:last-child {
-    border-bottom: none;
+        1px solid rgba(160, 99, 110, 0.17);
 }
 
 
@@ -762,170 +700,131 @@ body {
 }
 
 
-/* =========================
-   CALENDAR
-========================= */
-
-.calendar-card {
-    min-height: 112px;
-
-    padding: 17px;
-}
-
-
-.calendar-list {
-    margin-top: 10px;
-
-    font-size: 20px;
-
-    color: var(--text-secondary);
-}
-
-
-/* =========================
-   FOOTER
-========================= */
+/* FOOTER */
 
 footer {
     display: flex;
     justify-content: space-between;
-    align-items: center;
 
-    padding:
-        2px
-        2px
-        0;
+    padding: 0 2px;
 
-    font-size: 13px;
+    font-size: 10px;
 
-    color:
-        rgba(80, 67, 72, 0.58);
+    color: rgba(70, 55, 60, 0.58);
 }
 
 
-/* =========================
-   TABLET
-========================= */
+/* iPAD PORTRAIT / NARROW */
 
 @media (max-width: 900px) {
 
     .dashboard {
-        padding:
-            18px
-            16px
-            18px;
-
-        gap: 12px;
+        padding: 10px 12px 6px;
     }
 
 
     .refresh-button {
-        top: 16px;
-        right: 16px;
+        top: 10px;
+        right: 12px;
     }
 
 
-    .header {
-        padding:
-            0
-            58px;
+    .dashboard-content {
+        grid-template-rows:
+            minmax(170px, 1.25fr)
+            minmax(85px, 0.65fr)
+            minmax(125px, 0.9fr)
+            minmax(130px, 1fr);
     }
 
 
     .top-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns:
+            0.9fr 1.4fr;
     }
 
 
     .clock-card {
-        min-height: 300px;
+        padding: 9px;
+    }
+
+
+    .analog-clock {
+        max-height: 130px;
     }
 
 
     .weather-card {
-        min-height: auto;
+        padding: 10px;
     }
 
 
-    .forecast {
-        overflow-x: auto;
-
-        grid-template-columns:
-            repeat(8, minmax(105px, 1fr));
+    .weather-icon {
+        font-size: 45px;
     }
 
 
-    .mtr-grid {
-        grid-template-columns: 1fr;
-        gap: 18px;
+    .middle-grid {
+        grid-template-columns: 1.45fr 1fr;
+    }
+
+
+    .train-list {
+        max-height: 58px;
     }
 
 }
 
 
-/* =========================
-   MOBILE
-========================= */
+/* VERY NARROW */
 
-@media (max-width: 620px) {
+@media (max-width: 600px) {
+
+    html,
+    body {
+        overflow: auto;
+    }
+
 
     .dashboard {
-        padding:
-            12px
-            10px
-            14px;
+        height: auto;
+        min-height: 100vh;
+
+        overflow: visible;
+
+        grid-template-rows: auto auto auto;
     }
 
 
-    .refresh-button {
-        width: 42px;
-        height: 42px;
+    .dashboard-content {
+        display: flex;
+        flex-direction: column;
 
-        top: 12px;
-        right: 12px;
-
-        font-size: 25px;
+        overflow: visible;
     }
 
 
-    .header {
-        padding:
-            0
-            52px;
-    }
-
-
-    .date-time-bubble {
-        padding:
-            12px
-            14px;
-    }
-
-
-    .time {
-        letter-spacing: -1px;
-    }
-
-
-    .weather-details {
-        grid-template-columns: 1fr;
-    }
-
-
+    .top-grid,
+    .middle-grid,
     .news-grid {
         grid-template-columns: 1fr;
     }
 
 
+    .clock-card,
+    .weather-card,
+    .forecast-card,
+    .mtr-card,
+    .calendar-card,
     .news-card {
         min-height: 180px;
     }
 
 
-    footer {
-        gap: 8px;
+    .forecast {
+        grid-template-columns: repeat(8, minmax(70px, 1fr));
 
-        font-size: 11px;
+        overflow-x: auto;
     }
 
 }
