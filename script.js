@@ -1,6 +1,5 @@
 /* =====================================================
-   TAI WO DASHBOARD
-   Current Location Dashboard
+   DASHBOARD
 ===================================================== */
 
 
@@ -17,60 +16,53 @@ const WEATHER_API =
 const MTR_API =
     "https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php";
 
+const BBC_RSS =
+    "https://feeds.bbci.co.uk/news/world/rss.xml";
+
 
 /* =====================================================
-   CURRENT LOCATION
+   LOCATION
 ===================================================== */
 
 let currentLatitude = FALLBACK_LATITUDE;
 let currentLongitude = FALLBACK_LONGITUDE;
 
-let locationLoaded = false;
+let usingFallbackLocation = true;
 
 
 /* =====================================================
-   WEATHER CODE
+   WEATHER
 ===================================================== */
 
 function weatherInfo(code) {
 
     const weather = {
 
-        0:  ["☀️", "晴"],
-        1:  ["🌤️", "大致晴朗"],
-        2:  ["⛅", "部分多雲"],
-        3:  ["☁️", "多雲"],
-
-        45: ["🌫️", "霧"],
-        48: ["🌫️", "霧"],
-
+        0: ["☀️", "晴"],
+        1: ["🌤️", "大致晴朗"],
+        2: ["⛅", "部分多雲"],
+        3: ["☁️", "多雲"],
+        45: ["🌫️", "有霧"],
+        48: ["🌫️", "有霧"],
         51: ["🌦️", "毛毛雨"],
         53: ["🌦️", "毛毛雨"],
         55: ["🌧️", "毛毛雨"],
-
         56: ["🌧️", "凍雨"],
         57: ["🌧️", "凍雨"],
-
         61: ["🌧️", "小雨"],
         63: ["🌧️", "中雨"],
         65: ["🌧️", "大雨"],
-
         66: ["🌧️", "凍雨"],
         67: ["🌧️", "凍雨"],
-
         71: ["🌨️", "小雪"],
         73: ["🌨️", "中雪"],
         75: ["❄️", "大雪"],
-
         77: ["❄️", "雪粒"],
-
         80: ["🌦️", "陣雨"],
         81: ["🌧️", "陣雨"],
         82: ["🌧️", "大驟雨"],
-
         85: ["🌨️", "陣雪"],
         86: ["❄️", "大雪"],
-
         95: ["⛈️", "雷暴"],
         96: ["⛈️", "雷暴"],
         99: ["⛈️", "強雷暴"]
@@ -92,14 +84,10 @@ function getCurrentLocation() {
 
         if (!navigator.geolocation) {
 
-            console.log(
-                "Geolocation is not supported. Using fallback location."
-            );
-
             resolve({
                 latitude: FALLBACK_LATITUDE,
                 longitude: FALLBACK_LONGITUDE,
-                isFallback: true
+                fallback: true
             });
 
             return;
@@ -114,22 +102,17 @@ function getCurrentLocation() {
                 resolve({
                     latitude: position.coords.latitude,
                     longitude: position.coords.longitude,
-                    isFallback: false
+                    fallback: false
                 });
 
             },
 
-            error => {
-
-                console.warn(
-                    "Location unavailable:",
-                    error.message
-                );
+            () => {
 
                 resolve({
                     latitude: FALLBACK_LATITUDE,
                     longitude: FALLBACK_LONGITUDE,
-                    isFallback: true
+                    fallback: true
                 });
 
             },
@@ -148,8 +131,7 @@ function getCurrentLocation() {
 
 
 /* =====================================================
-   CLOCK
-   Uses the device's current local time automatically
+   CLOCK + DATE + LUNAR CALENDAR
 ===================================================== */
 
 function updateClock() {
@@ -157,68 +139,118 @@ function updateClock() {
     const now = new Date();
 
 
-    const timeString =
-        new Intl.DateTimeFormat(
-            "en-US",
-            {
-                hour: "numeric",
-                minute: "2-digit",
-                second: "2-digit",
-                hour12: true
-            }
-        ).format(now);
+    const timeElement =
+        document.getElementById("time");
+
+    const dateElement =
+        document.getElementById("date");
+
+    const lunarElement =
+        document.getElementById("lunarDate");
 
 
-    const parts =
-        new Intl.DateTimeFormat(
-            "en-GB",
-            {
-                day: "numeric",
-                month: "numeric",
-                year: "numeric"
-            }
-        ).formatToParts(now);
+    if (timeElement) {
+
+        timeElement.textContent =
+            new Intl.DateTimeFormat(
+                "en-US",
+                {
+                    hour: "numeric",
+                    minute: "2-digit",
+                    second: "2-digit",
+                    hour12: true
+                }
+            ).format(now);
+
+    }
 
 
-    const day =
-        parts.find(
-            part => part.type === "day"
-        ).value;
+    if (dateElement) {
+
+        const parts =
+            new Intl.DateTimeFormat(
+                "en-GB",
+                {
+                    day: "numeric",
+                    month: "numeric",
+                    year: "numeric"
+                }
+            ).formatToParts(now);
 
 
-    const month =
-        parts.find(
-            part => part.type === "month"
-        ).value;
+        const day =
+            parts.find(
+                part => part.type === "day"
+            )?.value || "";
 
 
-    const year =
-        parts.find(
-            part => part.type === "year"
-        ).value;
+        const month =
+            parts.find(
+                part => part.type === "month"
+            )?.value || "";
 
 
-    const weekday =
-        new Intl.DateTimeFormat(
-            "zh-HK",
-            {
-                weekday: "long"
-            }
-        ).format(now);
+        const year =
+            parts.find(
+                part => part.type === "year"
+            )?.value || "";
 
 
-    document.getElementById(
-        "time"
-    ).textContent = timeString;
+        const weekday =
+            new Intl.DateTimeFormat(
+                "zh-HK",
+                {
+                    weekday: "long"
+                }
+            ).format(now);
 
 
-    document.getElementById(
-        "date"
-    ).textContent =
-        `${day}/${month}/${year} · ${weekday}`;
+        dateElement.textContent =
+            `${day}/${month}/${year} · ${weekday}`;
+
+    }
+
+
+    if (lunarElement) {
+
+        lunarElement.textContent =
+            getLunarDate(now);
+
+    }
 
 
     updateAnalogClock(now);
+
+}
+
+
+function getLunarDate(date) {
+
+    try {
+
+        const formatter =
+            new Intl.DateTimeFormat(
+                "zh-Hant-u-ca-chinese",
+                {
+                    day: "numeric",
+                    month: "long"
+                }
+            );
+
+
+        const lunar =
+            formatter.format(date);
+
+
+        return `農曆${lunar}`;
+
+    }
+
+    catch (error) {
+
+        return "農曆日期無法載入";
+
+    }
 
 }
 
@@ -228,6 +260,27 @@ function updateClock() {
 ===================================================== */
 
 function updateAnalogClock(now) {
+
+    const hourHand =
+        document.getElementById("hourHand");
+
+    const minuteHand =
+        document.getElementById("minuteHand");
+
+    const secondHand =
+        document.getElementById("secondHand");
+
+
+    if (
+        !hourHand ||
+        !minuteHand ||
+        !secondHand
+    ) {
+
+        return;
+
+    }
+
 
     const hour =
         now.getHours();
@@ -253,21 +306,15 @@ function updateAnalogClock(now) {
         second * 6;
 
 
-    document.getElementById(
-        "hourHand"
-    ).style.transform =
+    hourHand.style.transform =
         `rotate(${hourAngle}deg)`;
 
 
-    document.getElementById(
-        "minuteHand"
-    ).style.transform =
+    minuteHand.style.transform =
         `rotate(${minuteAngle}deg)`;
 
 
-    document.getElementById(
-        "secondHand"
-    ).style.transform =
+    secondHand.style.transform =
         `rotate(${secondAngle}deg)`;
 
 }
@@ -277,13 +324,12 @@ function updateAnalogClock(now) {
    WEATHER TITLES
 ===================================================== */
 
-function updateWeatherTitles(isFallback) {
+function updateWeatherTitles() {
 
     const weatherTitle =
         document.querySelector(
             ".weather-card .card-title"
         );
-
 
     const forecastTitle =
         document.querySelector(
@@ -294,7 +340,7 @@ function updateWeatherTitles(isFallback) {
     if (weatherTitle) {
 
         weatherTitle.textContent =
-            isFallback
+            usingFallbackLocation
                 ? "🌤️ TAI WO WEATHER"
                 : "📍 CURRENT LOCATION WEATHER";
 
@@ -304,7 +350,7 @@ function updateWeatherTitles(isFallback) {
     if (forecastTitle) {
 
         forecastTitle.textContent =
-            isFallback
+            usingFallbackLocation
                 ? "🌦️ TODAY'S FORECAST · TAI WO"
                 : "🌦️ TODAY'S FORECAST · CURRENT LOCATION";
 
@@ -317,11 +363,17 @@ function updateWeatherTitles(isFallback) {
    WEATHER
 ===================================================== */
 
-async function loadWeather() {
+async function loadWeather(refreshLocation = false) {
 
     try {
 
-        if (!locationLoaded) {
+        if (
+            refreshLocation ||
+            (
+                currentLatitude === FALLBACK_LATITUDE &&
+                currentLongitude === FALLBACK_LONGITUDE
+            )
+        ) {
 
             const location =
                 await getCurrentLocation();
@@ -335,44 +387,33 @@ async function loadWeather() {
                 location.longitude;
 
 
-            locationLoaded = true;
+            usingFallbackLocation =
+                location.fallback;
 
 
-            updateWeatherTitles(
-                location.isFallback
-            );
+            updateWeatherTitles();
 
         }
 
 
         const url =
             `${WEATHER_API}?` +
-
             `latitude=${currentLatitude}` +
-
             `&longitude=${currentLongitude}` +
-
-            `&current=` +
-            `temperature_2m,` +
-            `relative_humidity_2m,` +
-            `weather_code` +
-
-            `&hourly=` +
-            `temperature_2m,` +
-            `precipitation_probability,` +
-            `weather_code` +
-
-            `&daily=` +
-            `temperature_2m_max,` +
-            `temperature_2m_min` +
-
+            `&current=temperature_2m,relative_humidity_2m,weather_code` +
+            `&hourly=temperature_2m,precipitation_probability,weather_code` +
+            `&daily=temperature_2m_max,temperature_2m_min` +
             `&timezone=auto` +
-
             `&forecast_days=1`;
 
 
         const response =
-            await fetch(url);
+            await fetch(
+                url,
+                {
+                    cache: "no-store"
+                }
+            );
 
 
         if (!response.ok) {
@@ -387,8 +428,6 @@ async function loadWeather() {
         const data =
             await response.json();
 
-
-        /* CURRENT */
 
         const current =
             data.current;
@@ -426,8 +465,6 @@ async function loadWeather() {
             `${current.relative_humidity_2m}%`;
 
 
-        /* DAILY */
-
         const max =
             Math.round(
                 data.daily
@@ -448,8 +485,6 @@ async function loadWeather() {
             `${min}° — ${max}°`;
 
 
-        /* CURRENT RAIN */
-
         const currentHour =
             new Date().getHours();
 
@@ -458,16 +493,14 @@ async function loadWeather() {
             data.hourly
                 .precipitation_probability[
                     currentHour
-                ];
+                ] ?? 0;
 
 
         document.getElementById(
             "rainProbability"
         ).textContent =
-            `${rain ?? 0}%`;
+            `${rain}%`;
 
-
-        /* FORECAST */
 
         renderForecast(data);
 
@@ -477,26 +510,28 @@ async function loadWeather() {
         ).textContent =
             `Updated ${formatUpdateTime()}`;
 
-
-        updateLastUpdated();
-
     }
 
     catch (error) {
 
-        console.error(error);
+        console.error(
+            "Weather error:",
+            error
+        );
 
 
-        document.getElementById(
-            "weatherDescription"
-        ).textContent =
-            "Weather unavailable";
+        const description =
+            document.getElementById(
+                "weatherDescription"
+            );
 
 
-        document.getElementById(
-            "weatherUpdated"
-        ).textContent =
-            "Unable to update weather";
+        if (description) {
+
+            description.textContent =
+                "Weather unavailable";
+
+        }
 
     }
 
@@ -510,30 +545,38 @@ async function loadWeather() {
 function renderForecast(data) {
 
     const container =
-        document.getElementById(
-            "forecast"
-        );
+        document.getElementById("forecast");
+
+
+    if (!container) return;
 
 
     container.innerHTML = "";
 
 
-    const now =
-        new Date();
-
-
     const currentHour =
-        now.getHours();
+        new Date().getHours();
 
 
     for (
         let i = currentHour;
         i < Math.min(
             currentHour + 8,
-            24
+            data.hourly.time.length
         );
         i++
     ) {
+
+        const time =
+            data.hourly.time[i];
+
+
+        if (!time) continue;
+
+
+        const hour =
+            time.slice(11, 16);
+
 
         const temp =
             Math.round(
@@ -544,29 +587,17 @@ function renderForecast(data) {
 
         const rain =
             data.hourly
-                .precipitation_probability[i];
-
-
-        const code =
-            data.hourly
-                .weather_code[i];
+                .precipitation_probability[i] ?? 0;
 
 
         const info =
-            weatherInfo(code);
-
-
-        const hour =
-            `${String(i).padStart(
-                2,
-                "0"
-            )}:00`;
+            weatherInfo(
+                data.hourly.weather_code[i]
+            );
 
 
         const element =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
 
         element.className =
@@ -574,29 +605,14 @@ function renderForecast(data) {
 
 
         element.innerHTML = `
-
-            <div class="forecast-time">
-                ${hour}
-            </div>
-
-            <div class="forecast-icon">
-                ${info[0]}
-            </div>
-
-            <div class="forecast-temp">
-                ${temp}°
-            </div>
-
-            <div class="forecast-rain">
-                🌧 ${rain ?? 0}%
-            </div>
-
+            <div class="forecast-time">${hour}</div>
+            <div class="forecast-icon">${info[0]}</div>
+            <div class="forecast-temp">${temp}°</div>
+            <div class="forecast-rain">🌧 ${rain}%</div>
         `;
 
 
-        container.appendChild(
-            element
-        );
+        container.appendChild(element);
 
     }
 
@@ -612,14 +628,16 @@ async function loadMTR() {
     try {
 
         const url =
-            `${MTR_API}?` +
-            `line=EAL&` +
-            `sta=TWO&` +
-            `lang=TC`;
+            `${MTR_API}?line=EAL&sta=TWO&lang=TC`;
 
 
         const response =
-            await fetch(url);
+            await fetch(
+                url,
+                {
+                    cache: "no-store"
+                }
+            );
 
 
         if (!response.ok) {
@@ -635,10 +653,11 @@ async function loadMTR() {
             await response.json();
 
 
-        if (
-            !data.data ||
-            !data.data["EAL-TWO"]
-        ) {
+        const station =
+            data.data?.["EAL-TWO"];
+
+
+        if (!station) {
 
             throw new Error(
                 "No MTR data"
@@ -647,18 +666,14 @@ async function loadMTR() {
         }
 
 
-        const station =
-            data.data["EAL-TWO"];
-
-
         renderMTR(
-            station.DOWN,
+            station.DOWN || [],
             "mtrDown"
         );
 
 
         renderMTR(
-            station.UP,
+            station.UP || [],
             "mtrUp"
         );
 
@@ -672,28 +687,15 @@ async function loadMTR() {
 
     catch (error) {
 
-        console.error(error);
-
-
-        document.getElementById(
-            "mtrDown"
-        ).textContent =
-            "MTR data unavailable";
-
-
-        document.getElementById(
-            "mtrUp"
-        ).textContent =
-            "MTR data unavailable";
+        console.error(
+            "MTR error:",
+            error
+        );
 
     }
 
 }
 
-
-/* =====================================================
-   RENDER MTR
-===================================================== */
 
 function renderMTR(
     trains,
@@ -701,26 +703,21 @@ function renderMTR(
 ) {
 
     const container =
-        document.getElementById(
-            elementId
-        );
+        document.getElementById(elementId);
+
+
+    if (!container) return;
 
 
     container.innerHTML = "";
 
 
-    const validTrains =
+    const visibleTrains =
         (trains || [])
-            .filter(
-                train =>
-                    train.valid === "Y"
-            )
             .slice(0, 4);
 
 
-    if (
-        validTrains.length === 0
-    ) {
+    if (visibleTrains.length === 0) {
 
         container.textContent =
             "No upcoming trains";
@@ -730,12 +727,10 @@ function renderMTR(
     }
 
 
-    validTrains.forEach(train => {
+    visibleTrains.forEach(train => {
 
         const element =
-            document.createElement(
-                "div"
-            );
+            document.createElement("div");
 
 
         element.className =
@@ -743,53 +738,335 @@ function renderMTR(
 
 
         element.innerHTML = `
-
             <div class="train-time">
-                ${train.ttnt} min
+                ${train.ttnt ?? "--"} min
             </div>
 
             <div class="train-minutes">
-                ${train.dest}
+                ${formatMTRDestination(
+                    train.dest
+                )}
             </div>
-
         `;
 
 
-        container.appendChild(
-            element
-        );
+        container.appendChild(element);
 
     });
 
 }
 
 
+function formatMTRDestination(code) {
+
+    const destinations = {
+
+        ADM:
+            "金鐘 / Admiralty",
+
+        SHS:
+            "上水 / Sheung Shui",
+
+        LOW:
+            "羅湖 / Lo Wu",
+
+        LMC:
+            "落馬洲 / Lok Ma Chau"
+
+    };
+
+
+    return destinations[code] || code || "--";
+
+}
+
+
 /* =====================================================
-   NEWS
+   BBC NEWS
 ===================================================== */
 
-function loadNewsPlaceholder() {
+async function loadBBCNews() {
 
-    document.getElementById(
-        "nowNews"
-    ).innerHTML = `
-
-        <div class="news-item">
-            NOW News unavailable
-        </div>
-
-    `;
+    const container =
+        document.getElementById("bbcNews");
 
 
-    document.getElementById(
-        "bbcNews"
-    ).innerHTML = `
+    if (!container) return;
 
-        <div class="news-item">
-            BBC World News loading...
-        </div>
 
-    `;
+    try {
+
+        const url =
+            "https://api.rss2json.com/v1/api.json?rss_url=" +
+            encodeURIComponent(BBC_RSS);
+
+
+        const response =
+            await fetch(
+                url,
+                {
+                    cache: "no-store"
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            data.status !== "ok" ||
+            !Array.isArray(data.items)
+        ) {
+
+            throw new Error(
+                "BBC feed unavailable"
+            );
+
+        }
+
+
+        renderNews(
+            container,
+            data.items.slice(0, 3)
+        );
+
+    }
+
+    catch {
+
+        container.textContent =
+            "BBC News unavailable";
+
+    }
+
+}
+
+
+/* =====================================================
+   NOW NEWS
+===================================================== */
+
+async function loadNOWNews() {
+
+    const container =
+        document.getElementById("nowNews");
+
+
+    if (!container) return;
+
+
+    try {
+
+        const searchURL =
+            "https://news.google.com/rss/search?" +
+            new URLSearchParams({
+
+                q:
+                    "site:news.now.com 香港 OR 本地 OR 兩岸",
+
+                hl:
+                    "zh-HK",
+
+                gl:
+                    "HK",
+
+                ceid:
+                    "HK:zh-Hant"
+
+            }).toString();
+
+
+        const url =
+            "https://api.rss2json.com/v1/api.json?rss_url=" +
+            encodeURIComponent(searchURL);
+
+
+        const response =
+            await fetch(
+                url,
+                {
+                    cache: "no-store"
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        if (
+            data.status !== "ok" ||
+            !Array.isArray(data.items)
+        ) {
+
+            throw new Error(
+                "NOW feed unavailable"
+            );
+
+        }
+
+
+        renderNews(
+            container,
+            data.items.slice(0, 3)
+        );
+
+    }
+
+    catch {
+
+        container.textContent =
+            "NOW News unavailable";
+
+    }
+
+}
+
+
+/* =====================================================
+   RENDER NEWS
+===================================================== */
+
+function renderNews(
+    container,
+    items
+) {
+
+    container.innerHTML = "";
+
+
+    items.forEach(item => {
+
+        const link =
+            document.createElement("a");
+
+
+        link.className =
+            "news-item";
+
+
+        link.href =
+            item.link || "#";
+
+
+        link.target =
+            "_blank";
+
+
+        link.rel =
+            "noopener noreferrer";
+
+
+        link.textContent =
+            cleanNewsTitle(
+                item.title || "Untitled"
+            );
+
+
+        container.appendChild(link);
+
+    });
+
+}
+
+
+function cleanNewsTitle(title) {
+
+    const textarea =
+        document.createElement("textarea");
+
+
+    textarea.innerHTML =
+        title;
+
+
+    return textarea.value
+        .replace(
+            /\s*-\s*NOW News\s*$/i,
+            ""
+        )
+        .trim();
+
+}
+
+
+/* =====================================================
+   REFRESH
+===================================================== */
+
+async function refreshDashboard() {
+
+    const button =
+        document.getElementById(
+            "refreshButton"
+        );
+
+
+    if (button) {
+
+        button.disabled = true;
+
+        button.classList.add(
+            "refreshing"
+        );
+
+    }
+
+
+    try {
+
+        updateClock();
+
+
+        await Promise.allSettled([
+
+            loadWeather(true),
+
+            loadMTR(),
+
+            loadNOWNews(),
+
+            loadBBCNews()
+
+        ]);
+
+
+        const lastUpdated =
+            document.getElementById(
+                "lastUpdated"
+            );
+
+
+        if (lastUpdated) {
+
+            lastUpdated.textContent =
+                `Updated ${formatUpdateTime()}`;
+
+        }
+
+    }
+
+    finally {
+
+        setTimeout(
+            () => {
+
+                if (button) {
+
+                    button.classList.remove(
+                        "refreshing"
+                    );
+
+                    button.disabled = false;
+
+                }
+
+            },
+            500
+        );
+
+    }
 
 }
 
@@ -800,10 +1077,6 @@ function loadNewsPlaceholder() {
 
 function formatUpdateTime() {
 
-    const now =
-        new Date();
-
-
     return new Intl.DateTimeFormat(
         "en-US",
         {
@@ -812,24 +1085,7 @@ function formatUpdateTime() {
             second: "2-digit",
             hour12: true
         }
-    ).format(now);
-
-}
-
-
-function updateLastUpdated() {
-
-    const element =
-        document.getElementById(
-            "lastUpdated"
-        );
-
-
-    if (!element) return;
-
-
-    element.textContent =
-        `Updated ${formatUpdateTime()}`;
+    ).format(new Date());
 
 }
 
@@ -838,20 +1094,46 @@ function updateLastUpdated() {
    INITIALIZE
 ===================================================== */
 
-updateClock();
+function initializeDashboard() {
+
+    updateClock();
+
+    updateWeatherTitles();
+
+    loadWeather(true);
+
+    loadMTR();
+
+    loadNOWNews();
+
+    loadBBCNews();
 
 
-loadWeather();
+    const refreshButton =
+        document.getElementById(
+            "refreshButton"
+        );
 
 
-loadMTR();
+    if (refreshButton) {
+
+        refreshButton.addEventListener(
+            "click",
+            refreshDashboard
+        );
+
+    }
+
+}
 
 
-loadNewsPlaceholder();
+document.addEventListener(
+    "DOMContentLoaded",
+    initializeDashboard
+);
 
 
 /* CLOCK */
-
 setInterval(
     updateClock,
     1000
@@ -859,15 +1141,13 @@ setInterval(
 
 
 /* WEATHER */
-
 setInterval(
-    loadWeather,
+    () => loadWeather(false),
     10 * 60 * 1000
 );
 
 
 /* MTR */
-
 setInterval(
     loadMTR,
     30 * 1000
@@ -875,8 +1155,13 @@ setInterval(
 
 
 /* NEWS */
+setInterval(
+    loadNOWNews,
+    10 * 60 * 1000
+);
+
 
 setInterval(
-    loadNewsPlaceholder,
+    loadBBCNews,
     10 * 60 * 1000
 );
