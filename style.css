@@ -1,5 +1,6 @@
 /* =========================================
-   BASIC
+   TAI WO DASHBOARD
+   iPad Landscape
 ========================================= */
 
 * {
@@ -15,7 +16,6 @@ body {
 }
 
 body {
-
     font-family:
         -apple-system,
         BlinkMacSystemFont,
@@ -25,7 +25,6 @@ body {
         sans-serif;
 
     background: #f7f2ed;
-
     color: #303030;
 
     overflow: hidden;
@@ -33,25 +32,29 @@ body {
 
 
 /* =========================================
-   DASHBOARD
+   MAIN DASHBOARD
 ========================================= */
 
 .dashboard {
-
     width: 100vw;
-
     height: 100vh;
 
     padding: 1.2vh 2vw;
 
-    display: flex;
+    display: grid;
 
-    flex-direction: column;
+    grid-template-rows:
+        12vh
+        27vh
+        14vh
+        15vh
+        12vh
+        9vh
+        2vh;
 
     gap: 1vh;
 
     overflow: hidden;
-
 }
 
 
@@ -60,15 +63,16 @@ body {
 ========================================= */
 
 .header {
-
     text-align: center;
 
-    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
+    min-height: 0;
 }
 
 .time {
-
     font-size: clamp(42px, 5vw, 82px);
 
     font-weight: 700;
@@ -76,86 +80,79 @@ body {
     letter-spacing: 2px;
 
     line-height: 0.95;
-
 }
 
 .date {
-
-    margin-top: 4px;
+    margin-top: 5px;
 
     font-size: clamp(16px, 1.5vw, 26px);
 
     color: #777;
-
 }
 
 
 /* =========================================
-   CARD
+   CARDS
 ========================================= */
 
 .card {
-
-    background: rgba(255,255,255,0.82);
+    background: rgba(255, 255, 255, 0.9);
 
     border: 2px solid #e7b6c5;
 
     border-radius: 25px;
 
-    padding: 1.5vw;
+    padding: 1.1vh 1.5vw;
 
     box-shadow:
-        0 6px 20px rgba(0,0,0,0.06);
+        0 5px 18px rgba(0, 0, 0, 0.05);
 
+    min-height: 0;
+
+    overflow: hidden;
 }
 
 .card-title {
-
-    font-size: clamp(18px, 1.6vw, 28px);
+    font-size: clamp(18px, 1.5vw, 27px);
 
     font-weight: 700;
 
-    margin-bottom: 1vh;
+    margin-bottom: 0.7vh;
 
+    line-height: 1.1;
 }
 
 .updated {
-
     font-size: 12px;
 
     color: #999;
 
-    margin-top: 10px;
-
+    margin-top: 6px;
 }
 
 
 /* =========================================
-   TOP GRID
+   TOP AREA
 ========================================= */
 
 .top-grid {
-
     display: grid;
 
     grid-template-columns: 1fr 2fr;
 
     gap: 1.2vw;
 
-    height: 24vh;
-
     min-height: 0;
 
-    flex-shrink: 0;
-
+    height: 100%;
 }
 
+
 /* =========================================
-   CLOCK
+   CLOCK CARD
 ========================================= */
 
 .clock-card {
-
     display: flex;
 
     flex-direction: column;
@@ -167,16 +164,19 @@ body {
     min-height: 0;
 
     overflow: hidden;
-
 }
 
-.analog-clock {
 
+/* =========================================
+   ANALOG CLOCK
+========================================= */
+
+.analog-clock {
     position: relative;
 
-    width: min(17vh, 17vw);
+    width: min(20vh, 18vw);
 
-    height: min(17vh, 17vw);
+    height: min(20vh, 18vw);
 
     flex-shrink: 0;
 
@@ -186,60 +186,50 @@ body {
 
     background: #fff;
 
+    margin-top: 0.3vh;
 }
 
 .number {
-
     position: absolute;
 
     font-weight: 700;
 
-    font-size: 20px;
-
+    font-size: clamp(15px, 1.4vw, 23px);
 }
 
 .n12 {
-
-    top: 8px;
+    top: 6px;
 
     left: 50%;
 
     transform: translateX(-50%);
-
 }
 
 .n3 {
-
-    right: 10px;
+    right: 8px;
 
     top: 50%;
 
     transform: translateY(-50%);
-
 }
 
 .n6 {
-
-    bottom: 8px;
+    bottom: 6px;
 
     left: 50%;
 
     transform: translateX(-50%);
-
 }
 
 .n9 {
-
-    left: 10px;
+    left: 8px;
 
     top: 50%;
 
     transform: translateY(-50%);
-
 }
 
 .hand {
-
     position: absolute;
 
     left: 50%;
@@ -249,41 +239,33 @@ body {
     transform-origin: bottom center;
 
     border-radius: 10px;
-
 }
 
 .hour-hand {
-
     width: 7px;
 
     height: 25%;
 
     background: #333;
-
 }
 
 .minute-hand {
-
     width: 5px;
 
     height: 34%;
 
     background: #555;
-
 }
 
 .second-hand {
-
     width: 2px;
 
     height: 39%;
 
     background: #d66;
-
 }
 
 .clock-center {
-
     position: absolute;
 
     width: 12px;
@@ -299,46 +281,48 @@ body {
     top: 50%;
 
     transform: translate(-50%, -50%);
-
 }
 
 
 /* =========================================
-   WEATHER
+   WEATHER CARD
 ========================================= */
 
-.weather-main {
+.weather-card {
+    min-height: 0;
 
+    overflow: hidden;
+}
+
+.weather-main {
     display: flex;
 
     align-items: center;
 
-    gap: 20px;
-
+    gap: 18px;
 }
 
 .weather-icon {
+    font-size: clamp(45px, 5vw, 75px);
 
-    font-size: clamp(50px, 6vw, 90px);
-
+    line-height: 1;
 }
 
 .temperature {
-
-    font-size: clamp(45px, 5vw, 80px);
+    font-size: clamp(45px, 5vw, 75px);
 
     font-weight: 700;
 
+    line-height: 1;
 }
 
 .weather-description {
+    font-size: clamp(16px, 1.5vw, 25px);
 
-    font-size: clamp(16px, 1.7vw, 26px);
-
+    margin-top: 4px;
 }
 
 .weather-details {
-
     display: grid;
 
     grid-template-columns:
@@ -346,112 +330,99 @@ body {
 
     gap: 10px;
 
-    margin-top: 15px;
-
+    margin-top: 1vh;
 }
 
 .weather-details div {
-
     background: #faf6f4;
 
-    padding: 12px;
+    padding: 9px 12px;
 
-    border-radius: 15px;
+    border-radius: 14px;
 
+    min-width: 0;
 }
 
 .weather-details span {
-
     display: block;
 
     color: #888;
 
-    font-size: 14px;
-
+    font-size: 13px;
 }
 
 .weather-details strong {
-
     display: block;
 
-    font-size: 20px;
+    font-size: clamp(17px, 1.4vw, 23px);
 
-    margin-top: 4px;
-
+    margin-top: 3px;
 }
 
 
 /* =========================================
-   FORECAST
+   TODAY FORECAST
 ========================================= */
 
 .forecast-card {
-
-    height: 17vh;
+    height: 100%;
 
     min-height: 0;
 
-    flex-shrink: 0;
-
     overflow: hidden;
-
 }
 
 .forecast {
-
     display: grid;
 
     grid-template-columns:
         repeat(8, 1fr);
 
-    gap: 8px;
+    gap: 7px;
 
+    height: calc(100% - 30px);
+
+    min-height: 0;
 }
 
 .forecast-hour {
-
     text-align: center;
 
     background: #faf7f5;
 
-    border-radius: 12px;
+    border-radius: 13px;
 
     padding: 5px 3px;
 
     min-width: 0;
 
+    overflow: hidden;
 }
 
 .forecast-time {
-
     font-size: 13px;
 
     color: #777;
-
 }
 
 .forecast-icon {
+    font-size: 24px;
 
-    font-size: 25px;
-
-    margin: 8px 0;
-
+    margin: 5px 0;
 }
 
 .forecast-temp {
-
     font-weight: 700;
 
     font-size: 18px;
-
 }
 
 .forecast-rain {
-
     font-size: 12px;
 
     color: #5b8ca8;
 
+    margin-top: 2px;
 }
 
 
@@ -459,8 +430,15 @@ body {
    MTR
 ========================================= */
 
-.mtr-grid {
+.mtr-card {
+    height: 100%;
 
+    min-height: 0;
+
+    overflow: hidden;
+}
+
+.mtr-grid {
     display: grid;
 
     grid-template-columns:
@@ -468,56 +446,49 @@ body {
 
     gap: 1.5vw;
 
+    height: calc(100% - 30px);
+
+    min-height: 0;
 }
 
 .direction-title {
-
-    font-size: 20px;
+    font-size: clamp(18px, 1.5vw, 25px);
 
     font-weight: 700;
 
-    margin-bottom: 10px;
-
+    margin-bottom: 8px;
 }
 
 .train-list {
-
     display: flex;
 
-    gap: 10px;
+    gap: 9px;
 
     flex-wrap: wrap;
-
 }
 
 .train {
-
     background: #f7eeee;
 
-    border-radius: 12px;
+    border-radius: 13px;
 
     padding: 7px 12px;
 
     min-width: 85px;
 
     text-align: center;
-
 }
 
 .train-time {
-
-    font-size: 20px;
+    font-size: 19px;
 
     font-weight: 700;
-
 }
 
 .train-minutes {
-
-    font-size: 13px;
+    font-size: 12px;
 
     color: #777;
-
 }
 
 
@@ -526,7 +497,6 @@ body {
 ========================================= */
 
 .news-grid {
-
     display: grid;
 
     grid-template-columns:
@@ -534,46 +504,51 @@ body {
 
     gap: 1.5vw;
 
-    min-height: 0;
+    height: 100%;
 
+    min-height: 0;
 }
 
 .news-card {
+    height: 100%;
 
     min-height: 0;
 
+    overflow: hidden;
 }
 
 .news-subtitle {
-
     color: #999;
 
     font-size: 13px;
 
-    margin-bottom: 10px;
-
+    margin-bottom: 6px;
 }
 
 .news-list {
-
     display: flex;
 
     flex-direction: column;
 
-    gap: 8px;
+    gap: 5px;
 
+    overflow: hidden;
 }
 
 .news-item {
+    font-size: clamp(14px, 1.2vw, 20px);
 
-    font-size: clamp(14px, 1.3vw, 21px);
+    line-height: 1.25;
 
-    line-height: 1.3;
-
-    padding-bottom: 7px;
+    padding-bottom: 5px;
 
     border-bottom: 1px solid #eee;
 
+    overflow: hidden;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
 }
 
 
@@ -581,36 +556,40 @@ body {
    CALENDAR
 ========================================= */
 
-.calendar-list {
+.calendar-card {
+    height: 100%;
 
+    min-height: 0;
+
+    overflow: hidden;
+}
+
+.calendar-list {
     display: flex;
 
-    gap: 10px;
+    gap: 7px;
 
     flex-direction: column;
 
+    overflow: hidden;
 }
 
 .calendar-item {
-
     display: flex;
 
     gap: 15px;
 
-    padding: 8px;
+    padding: 6px;
 
     background: #faf7f5;
 
     border-radius: 10px;
-
 }
 
 .calendar-time {
-
     font-weight: 700;
 
     min-width: 80px;
-
 }
 
 
@@ -619,15 +598,17 @@ body {
 ========================================= */
 
 footer {
-
     display: flex;
 
     justify-content: space-between;
 
+    align-items: center;
+
     color: #aaa;
 
-    font-size: 11px;
+    font-size: 10px;
 
+    min-height: 0;
 }
 
 
@@ -638,68 +619,39 @@ footer {
 @media (orientation: landscape) {
 
     .dashboard {
-
-        gap: 1vh;
-
+        grid-template-rows:
+            12vh
+            27vh
+            14vh
+            15vh
+            12vh
+            9vh
+            2vh;
     }
 
 }
 
 
 /* =========================================
-   SMALL SCREEN
+   SMALLER LANDSCAPE
 ========================================= */
 
-@media (max-width: 900px) {
+@media (max-height: 800px) {
 
-    .forecast {
+    .dashboard {
+        grid-template-rows:
+            11vh
+            25vh
+            14vh
+            16vh
+            13vh
+            9vh
+            2vh;
+    }
 
-        grid-template-columns:
-            repeat(4, 1fr);
-
+    .analog-clock {
+        width: 17vh;
+        height: 17vh;
     }
 
 }
-
-.mtr-card {
-
-    height: 18vh;
-
-    min-height: 0;
-
-    flex-shrink: 0;
-
-    overflow: hidden;
-
-}
-
-.news-grid {
-
-    height: 14vh;
-
-    flex-shrink: 0;
-
-    min-height: 0;
-
-}
-
-.news-card {
-
-    min-height: 0;
-
-    overflow: hidden;
-
-}
-
-.calendar-card {
-
-    height: 11vh;
-
-    min-height: 0;
-
-    flex-shrink: 0;
-
-    overflow: hidden;
-
-}
-
