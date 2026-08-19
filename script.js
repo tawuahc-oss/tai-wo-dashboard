@@ -10,14 +10,8 @@
 const FALLBACK_LATITUDE = 22.4505;
 const FALLBACK_LONGITUDE = 114.1649;
 
-
-/* OPEN-METEO */
-
 const WEATHER_API =
     "https://api.open-meteo.com/v1/forecast";
-
-
-/* HONG KONG OBSERVATORY */
 
 const HKO_FORECAST_API =
     "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=flw&lang=tc";
@@ -25,23 +19,14 @@ const HKO_FORECAST_API =
 const HKO_SPECIAL_API =
     "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=swt&lang=tc";
 
-
-/* MTR */
-
 const MTR_API =
     "https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php";
-
-
-/* RSS */
 
 const RSS_TO_JSON =
     "https://api.rss2json.com/v1/api.json";
 
 const BBC_RSS =
     "https://feeds.bbci.co.uk/news/world/rss.xml";
-
-
-/* NOW NEWS */
 
 const NOW_LOCAL_RSS =
     "https://news.google.com/rss/search?q=site%3Anews.now.com%2Fhome%2Flocal&hl=zh-HK&gl=HK&ceid=HK%3Azh-Hant";
@@ -95,11 +80,10 @@ function weatherInfo(code) {
         86: ["❄️", "大雪"],
 
         95: ["⛈️", "雷暴"],
-        96: ["⛈️", "雷暴"],
+        96: ["⛈️", "強雷暴"],
         99: ["⛈️", "強雷暴"]
 
     };
-
 
     return weather[code] ||
         ["🌤️", "未知"];
@@ -116,8 +100,6 @@ function updateClock() {
     const now =
         new Date();
 
-
-    /* DIGITAL TIME */
 
     const timeString =
         new Intl.DateTimeFormat(
@@ -137,16 +119,11 @@ function updateClock() {
             "digitalTime"
         );
 
-
     if (digitalTime) {
-
         digitalTime.textContent =
             timeString;
-
     }
 
-
-    /* DATE */
 
     const dateParts =
         new Intl.DateTimeFormat(
@@ -201,7 +178,6 @@ function updateClock() {
             "dateMain"
         );
 
-
     if (dateMain) {
 
         dateMain.textContent =
@@ -210,13 +186,10 @@ function updateClock() {
     }
 
 
-    /* LUNAR DATE */
-
     const lunarDate =
         document.getElementById(
             "lunarDate"
         );
-
 
     if (lunarDate) {
 
@@ -247,8 +220,6 @@ function updateClock() {
 
     }
 
-
-    /* ANALOG CLOCK */
 
     const hkParts =
         new Intl.DateTimeFormat(
@@ -294,11 +265,9 @@ function updateClock() {
         minute * 0.5 +
         second / 120;
 
-
     const minuteAngle =
         minute * 6 +
         second * 0.1;
-
 
     const secondAngle =
         second * 6;
@@ -377,7 +346,6 @@ function getCurrentLocation() {
                 position => {
 
                     resolve({
-
                         latitude:
                             position.coords.latitude,
 
@@ -385,7 +353,6 @@ function getCurrentLocation() {
                             position.coords.longitude,
 
                         fallback: false
-
                     });
 
                 },
@@ -394,7 +361,6 @@ function getCurrentLocation() {
                 () => {
 
                     resolve({
-
                         latitude:
                             FALLBACK_LATITUDE,
 
@@ -402,7 +368,6 @@ function getCurrentLocation() {
                             FALLBACK_LONGITUDE,
 
                         fallback: true
-
                     });
 
                 },
@@ -456,7 +421,10 @@ async function fetchJSON(url) {
    HKO WEATHER TEXT
 ===================================================== */
 
-function hideHKOPanel(panelId, contentId) {
+function hideHKOPanel(
+    panelId,
+    contentId
+) {
 
     const panel =
         document.getElementById(panelId);
@@ -818,7 +786,6 @@ async function loadWeather() {
                 "weatherTitle"
             );
 
-
         if (weatherTitle) {
 
             weatherTitle.textContent =
@@ -834,7 +801,6 @@ async function loadWeather() {
                 "weatherIcon"
             );
 
-
         if (weatherIcon) {
 
             weatherIcon.textContent =
@@ -847,7 +813,6 @@ async function loadWeather() {
             document.getElementById(
                 "temperature"
             );
-
 
         if (temperature) {
 
@@ -864,7 +829,6 @@ async function loadWeather() {
                 "weatherDescription"
             );
 
-
         if (weatherDescription) {
 
             weatherDescription.textContent =
@@ -877,7 +841,6 @@ async function loadWeather() {
             document.getElementById(
                 "todayRange"
             );
-
 
         if (todayRange) {
 
@@ -895,7 +858,6 @@ async function loadWeather() {
             document.getElementById(
                 "humidity"
             );
-
 
         if (humidity) {
 
@@ -936,7 +898,6 @@ async function loadWeather() {
                 "rainProbability"
             );
 
-
         if (rainProbability) {
 
             const rain =
@@ -963,7 +924,6 @@ async function loadWeather() {
                 "weatherUpdated"
             );
 
-
         if (weatherUpdated) {
 
             weatherUpdated.textContent =
@@ -986,7 +946,6 @@ async function loadWeather() {
                 "weatherDescription"
             );
 
-
         if (description) {
 
             description.textContent =
@@ -997,11 +956,7 @@ async function loadWeather() {
     }
 
 
-    /*
-       HKO text loads separately.
-       Open-Meteo failure will not prevent
-       HKO text from loading.
-    */
+    /* HKO loads separately */
 
     try {
 
@@ -1034,7 +989,6 @@ function renderForecast(
         document.getElementById(
             "forecast"
         );
-
 
     if (!forecast) {
         return;
@@ -1167,7 +1121,6 @@ async function loadMTR() {
             "mtrDown"
         );
 
-
         renderTrains(
             station.UP || [],
             "mtrUp"
@@ -1214,10 +1167,6 @@ async function loadMTR() {
 }
 
 
-/* =====================================================
-   RENDER TRAINS
-===================================================== */
-
 function renderTrains(
     trains,
     elementId
@@ -1227,7 +1176,6 @@ function renderTrains(
         document.getElementById(
             elementId
         );
-
 
     if (!container) {
         return;
@@ -1443,10 +1391,6 @@ async function getRSSCorsProxy(rssURL) {
 }
 
 
-/* =====================================================
-   PARSE RSS XML
-===================================================== */
-
 function parseRSSXML(xml) {
 
     const parser =
@@ -1510,10 +1454,6 @@ function parseRSSXML(xml) {
 }
 
 
-/* =====================================================
-   DECODE HTML
-===================================================== */
-
 function decodeHTML(text) {
 
     const textarea =
@@ -1530,10 +1470,6 @@ function decodeHTML(text) {
 
 }
 
-
-/* =====================================================
-   TRY MULTIPLE RSS METHODS
-===================================================== */
 
 async function getRSS(rssURL) {
 
@@ -1615,7 +1551,6 @@ function renderNews(
             elementId
         );
 
-
     if (!container) {
         return;
     }
@@ -1691,7 +1626,6 @@ async function loadNowNews() {
         document.getElementById(
             "nowNews"
         );
-
 
     if (!container) {
         return;
@@ -1827,7 +1761,6 @@ async function loadNowNews() {
                 "a"
             );
 
-
         localLink.className =
             "news-item";
 
@@ -1843,7 +1776,6 @@ async function loadNowNews() {
         localLink.rel =
             "noopener noreferrer";
 
-
         container.appendChild(
             localLink
         );
@@ -1853,7 +1785,6 @@ async function loadNowNews() {
             document.createElement(
                 "a"
             );
-
 
         internationalLink.className =
             "news-item";
@@ -1870,7 +1801,6 @@ async function loadNowNews() {
         internationalLink.rel =
             "noopener noreferrer";
 
-
         container.appendChild(
             internationalLink
         );
@@ -1881,13 +1811,11 @@ async function loadNowNews() {
                 "div"
             );
 
-
         status.className =
             "news-item";
 
         status.textContent =
             "NOW News 暫時無法取得即時標題";
-
 
         container.appendChild(
             status
@@ -1908,7 +1836,6 @@ async function loadBBCNews() {
         document.getElementById(
             "bbcNews"
         );
-
 
     if (!container) {
         return;
@@ -1966,7 +1893,6 @@ function loadCalendar() {
             "calendar"
         );
 
-
     if (!calendar) {
         return;
     }
@@ -2015,7 +1941,6 @@ function updateLastUpdated() {
             "lastUpdated"
         );
 
-
     if (!element) {
         return;
     }
@@ -2037,7 +1962,6 @@ async function refreshDashboard() {
         document.getElementById(
             "refreshButton"
         );
-
 
     if (!button) {
         return;
@@ -2100,8 +2024,6 @@ document.addEventListener(
     "DOMContentLoaded",
     () => {
 
-
-        /* INITIAL LOAD */
 
         updateClock();
 
