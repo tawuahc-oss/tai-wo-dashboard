@@ -1,6 +1,5 @@
 /* =====================================================
    TAI WO DASHBOARD
-   FULL SCRIPT
 ===================================================== */
 
 
@@ -11,11 +10,29 @@
 const FALLBACK_LATITUDE = 22.4505;
 const FALLBACK_LONGITUDE = 114.1649;
 
+
+/* OPEN-METEO */
+
 const WEATHER_API =
     "https://api.open-meteo.com/v1/forecast";
 
+
+/* HONG KONG OBSERVATORY */
+
+const HKO_FORECAST_API =
+    "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=flw&lang=tc";
+
+const HKO_SPECIAL_API =
+    "https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=swt&lang=tc";
+
+
+/* MTR */
+
 const MTR_API =
     "https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php";
+
+
+/* RSS */
 
 const RSS_TO_JSON =
     "https://api.rss2json.com/v1/api.json";
@@ -27,15 +44,7 @@ const BBC_RSS =
 /*
    NOW NEWS
 
-   We use Google News RSS searches specifically
-   restricted to news.now.com.
-
-   Two separate feeds:
-   1. 港聞
-   2. 兩岸國際
-
-   Multiple fallbacks are used because browser CORS
-   behaviour can vary between iPad / Chrome / Safari.
+   Google News searches restricted to NOW News.
 */
 
 const NOW_LOCAL_RSS =
@@ -66,17 +75,28 @@ function weatherInfo(code) {
         53: ["🌦️", "毛毛雨"],
         55: ["🌧️", "毛毛雨"],
 
+        56: ["🌧️", "凍雨"],
+        57: ["🌧️", "凍雨"],
+
         61: ["🌧️", "小雨"],
         63: ["🌧️", "中雨"],
         65: ["🌧️", "大雨"],
+
+        66: ["🌧️", "凍雨"],
+        67: ["🌧️", "凍雨"],
 
         71: ["🌨️", "小雪"],
         73: ["🌨️", "中雪"],
         75: ["❄️", "大雪"],
 
+        77: ["❄️", "雪粒"],
+
         80: ["🌦️", "陣雨"],
         81: ["🌧️", "陣雨"],
         82: ["🌧️", "大驟雨"],
+
+        85: ["🌨️", "陣雪"],
+        86: ["❄️", "大雪"],
 
         95: ["⛈️", "雷暴"],
         96: ["⛈️", "雷暴"],
@@ -84,7 +104,10 @@ function weatherInfo(code) {
 
     };
 
-    return weather[code] || ["🌤️", "未知"];
+
+    return weather[code] ||
+        ["🌤️", "未知"];
+
 }
 
 
@@ -94,7 +117,8 @@ function weatherInfo(code) {
 
 function updateClock() {
 
-    const now = new Date();
+    const now =
+        new Date();
 
 
     /* DIGITAL TIME */
@@ -116,6 +140,7 @@ function updateClock() {
         document.getElementById(
             "digitalTime"
         );
+
 
     if (digitalTime) {
 
@@ -139,19 +164,20 @@ function updateClock() {
         ).formatToParts(now);
 
 
-    const getPart = type => {
+    const getPart =
+        type => {
 
-        const part =
-            dateParts.find(
-                item =>
-                    item.type === type
-            );
+            const part =
+                dateParts.find(
+                    item =>
+                        item.type === type
+                );
 
-        return part
-            ? part.value
-            : "";
+            return part
+                ? part.value
+                : "";
 
-    };
+        };
 
 
     const year =
@@ -241,19 +267,20 @@ function updateClock() {
         ).formatToParts(now);
 
 
-    const getTimePart = type => {
+    const getTimePart =
+        type => {
 
-        const part =
-            hkParts.find(
-                item =>
-                    item.type === type
-            );
+            const part =
+                hkParts.find(
+                    item =>
+                        item.type === type
+                );
 
-        return part
-            ? Number(part.value)
-            : 0;
+            return part
+                ? Number(part.value)
+                : 0;
 
-    };
+        };
 
 
     const hour =
@@ -329,47 +356,12 @@ function updateClock() {
 
 function getCurrentLocation() {
 
-    return new Promise(resolve => {
+    return new Promise(
+        resolve => {
 
-        if (!navigator.geolocation) {
-
-            resolve({
-                latitude:
-                    FALLBACK_LATITUDE,
-
-                longitude:
-                    FALLBACK_LONGITUDE,
-
-                fallback: true
-            });
-
-            return;
-
-        }
-
-
-        navigator.geolocation.getCurrentPosition(
-
-            position => {
+            if (!navigator.geolocation) {
 
                 resolve({
-
-                    latitude:
-                        position.coords.latitude,
-
-                    longitude:
-                        position.coords.longitude,
-
-                    fallback: false
-
-                });
-
-            },
-
-            () => {
-
-                resolve({
-
                     latitude:
                         FALLBACK_LATITUDE,
 
@@ -377,24 +369,362 @@ function getCurrentLocation() {
                         FALLBACK_LONGITUDE,
 
                     fallback: true
-
                 });
 
-            },
-
-            {
-
-                enableHighAccuracy: true,
-
-                timeout: 10000,
-
-                maximumAge: 300000
+                return;
 
             }
 
+
+            navigator.geolocation.getCurrentPosition(
+
+                position => {
+
+                    resolve({
+
+                        latitude:
+                            position.coords.latitude,
+
+                        longitude:
+                            position.coords.longitude,
+
+                        fallback: false
+
+                    });
+
+                },
+
+
+                () => {
+
+                    resolve({
+
+                        latitude:
+                            FALLBACK_LATITUDE,
+
+                        longitude:
+                            FALLBACK_LONGITUDE,
+
+                        fallback: true
+
+                    });
+
+                },
+
+
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 300000
+                }
+
+            );
+
+        }
+    );
+
+}
+
+
+/* =====================================================
+   FETCH JSON
+===================================================== */
+
+async function fetchJSON(url) {
+
+    const response =
+        await fetch(
+            url,
+            {
+                cache: "no-store"
+            }
         );
 
-    });
+
+    if (!response.ok) {
+
+        throw new Error(
+            `Request failed: ${response.status}`
+        );
+
+    }
+
+
+    return response.json();
+
+}
+
+
+/* =====================================================
+   HKO WEATHER FORECAST TEXT
+===================================================== */
+
+async function loadHKOWeatherText() {
+
+    const forecastElement =
+        document.getElementById(
+            "hkoForecast"
+        );
+
+    const specialElement =
+        document.getElementById(
+            "hkoSpecial"
+        );
+
+
+    /*
+       Start hidden until HKO data is received.
+    */
+
+    if (forecastElement) {
+
+        forecastElement.style.display =
+            "none";
+
+        forecastElement.textContent =
+            "";
+
+    }
+
+
+    if (specialElement) {
+
+        specialElement.style.display =
+            "none";
+
+        specialElement.textContent =
+            "";
+
+    }
+
+
+    const results =
+        await Promise.allSettled([
+
+            fetchJSON(
+                HKO_FORECAST_API
+            ),
+
+            fetchJSON(
+                HKO_SPECIAL_API
+            )
+
+        ]);
+
+
+    /* ---------------------------------------------
+       HKO 天氣預測
+    --------------------------------------------- */
+
+    if (
+        forecastElement &&
+        results[0].status === "fulfilled"
+    ) {
+
+        const data =
+            results[0].value;
+
+
+        const forecastText =
+            data.forecastDesc ||
+            data.forecastPeriod ||
+            data.generalSituation ||
+            "";
+
+
+        if (
+            forecastText &&
+            forecastText.trim()
+        ) {
+
+            forecastElement.textContent =
+                `天氣預報：${forecastText.trim()}`;
+
+            forecastElement.style.display =
+                "-webkit-box";
+
+        }
+
+    }
+
+
+    /* ---------------------------------------------
+       HKO 特別天氣提示
+    --------------------------------------------- */
+
+    if (
+        specialElement &&
+        results[1].status === "fulfilled"
+    ) {
+
+        const data =
+            results[1].value;
+
+
+        const tips =
+            extractSpecialWeatherTips(
+                data
+            );
+
+
+        if (tips.length > 0) {
+
+            specialElement.textContent =
+                `⚠️ 特別天氣提示：${tips.join("　")}`;
+
+            specialElement.style.display =
+                "-webkit-box";
+
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   EXTRACT HKO SPECIAL WEATHER TIPS
+===================================================== */
+
+function extractSpecialWeatherTips(data) {
+
+    const results =
+        [];
+
+
+    const seen =
+        new Set();
+
+
+    function addText(text) {
+
+        if (
+            typeof text !== "string"
+        ) {
+            return;
+        }
+
+
+        const cleaned =
+            text
+                .replace(/\s+/g, " ")
+                .trim();
+
+
+        if (
+            !cleaned ||
+            cleaned.length < 2 ||
+            seen.has(cleaned)
+        ) {
+            return;
+        }
+
+
+        seen.add(cleaned);
+
+        results.push(cleaned);
+
+    }
+
+
+    function walk(value, keyName = "") {
+
+        if (
+            value === null ||
+            value === undefined
+        ) {
+            return;
+        }
+
+
+        if (
+            typeof value === "string"
+        ) {
+
+            const allowedKeys = [
+
+                "swt",
+                "desc",
+                "description",
+                "content",
+                "message",
+                "text",
+                "details",
+                "detail",
+                "tip"
+
+            ];
+
+
+            if (
+                !keyName ||
+                allowedKeys.includes(
+                    keyName.toLowerCase()
+                )
+            ) {
+
+                addText(value);
+
+            }
+
+            return;
+
+        }
+
+
+        if (Array.isArray(value)) {
+
+            value.forEach(
+                item =>
+                    walk(item, keyName)
+            );
+
+            return;
+
+        }
+
+
+        if (
+            typeof value === "object"
+        ) {
+
+            Object.entries(value)
+                .forEach(
+                    ([key, item]) =>
+                        walk(item, key)
+                );
+
+        }
+
+    }
+
+
+    /*
+       HKO normally returns special tips
+       inside swt, but this also handles
+       variations in the returned structure.
+    */
+
+    if (
+        data &&
+        data.swt !== undefined
+    ) {
+
+        walk(
+            data.swt,
+            "swt"
+        );
+
+    }
+
+    else {
+
+        walk(data);
+
+    }
+
+
+    return results.slice(0, 3);
 
 }
 
@@ -549,10 +879,11 @@ async function loadWeather() {
                     {
                         hour: "numeric",
                         hourCycle: "h23",
-                        timeZone:
-                            "Asia/Hong_Kong"
+                        timeZone: "Asia/Hong_Kong"
                     }
-                ).format(new Date())
+                ).format(
+                    new Date()
+                )
             );
 
 
@@ -614,6 +945,29 @@ async function loadWeather() {
 
     }
 
+
+    /*
+       HKO text is loaded separately.
+
+       This means even if Open-Meteo has an error,
+       HKO forecast text can still load.
+    */
+
+    try {
+
+        await loadHKOWeatherText();
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "HKO text error:",
+            error
+        );
+
+    }
+
 }
 
 
@@ -633,9 +987,7 @@ function renderForecast(
 
 
     if (!forecast) {
-
         return;
-
     }
 
 
@@ -650,15 +1002,18 @@ function renderForecast(
     ) {
 
         const hour =
-            (startHour + i) % 24;
+            startHour + i;
 
+
+        /*
+           Do not wrap back to 00:00 because
+           only forecast_days=1 is requested.
+        */
 
         if (
-            !data.hourly.time[hour]
+            hour >= data.hourly.time.length
         ) {
-
-            continue;
-
+            break;
         }
 
 
@@ -680,31 +1035,35 @@ function renderForecast(
             );
 
 
+        /*
+           IMPORTANT:
+           CSS uses forecast-item.
+        */
+
         item.className =
-            "forecast-hour";
+            "forecast-item";
 
 
-        item.innerHTML = `
+        item.innerHTML =
+            `
+                <div class="forecast-time">
+                    ${time}
+                </div>
 
-            <div class="forecast-time">
-                ${time}
-            </div>
+                <div class="forecast-icon">
+                    ${info[0]}
+                </div>
 
-            <div class="forecast-icon">
-                ${info[0]}
-            </div>
+                <div class="forecast-temp">
+                    ${Math.round(
+                        data.hourly.temperature_2m[hour]
+                    )}°
+                </div>
 
-            <div class="forecast-temp">
-                ${Math.round(
-                    data.hourly.temperature_2m[hour]
-                )}°
-            </div>
-
-            <div class="forecast-rain">
-                ${data.hourly.precipitation_probability[hour] ?? 0}%
-            </div>
-
-        `;
+                <div class="forecast-rain">
+                    ${data.hourly.precipitation_probability[hour] ?? 0}%
+                </div>
+            `;
 
 
         forecast.appendChild(
@@ -759,6 +1118,11 @@ async function loadMTR() {
         }
 
 
+        /*
+           DOWN = towards Admiralty
+           UP   = towards Sheung Shui
+        */
+
         renderTrains(
             station.DOWN || [],
             "mtrDown"
@@ -812,7 +1176,9 @@ async function loadMTR() {
 }
 
 
-/* ONLY TWO UPCOMING TRAINS */
+/* =====================================================
+   RENDER TRAINS
+===================================================== */
 
 function renderTrains(
     trains,
@@ -826,9 +1192,7 @@ function renderTrains(
 
 
     if (!container) {
-
         return;
-
     }
 
 
@@ -842,10 +1206,7 @@ function renderTrains(
                 train =>
                     train.valid === "Y"
             )
-            .slice(
-                0,
-                2
-            );
+            .slice(0, 2);
 
 
     if (
@@ -873,17 +1234,21 @@ function renderTrains(
                 "train";
 
 
-            item.innerHTML = `
+            /*
+               IMPORTANT:
+               CSS uses train-destination.
+            */
 
-                <div class="train-time">
-                    ${train.ttnt} min
-                </div>
+            item.innerHTML =
+                `
+                    <div class="train-time">
+                        ${train.ttnt} min
+                    </div>
 
-                <div class="train-minutes">
-                    ${train.dest || ""}
-                </div>
-
-            `;
+                    <div class="train-destination">
+                        ${train.dest || ""}
+                    </div>
+                `;
 
 
             container.appendChild(
@@ -901,14 +1266,9 @@ function renderTrains(
 ===================================================== */
 
 
-/*
-   METHOD 1
-   RSS2JSON
-*/
+/* RSS2JSON */
 
-async function getRSS2JSON(
-    rssURL
-) {
+async function getRSS2JSON(rssURL) {
 
     const url =
         `${RSS_TO_JSON}?rss_url=` +
@@ -957,14 +1317,9 @@ async function getRSS2JSON(
 }
 
 
-/*
-   METHOD 2
-   AllOrigins raw proxy
-*/
+/* ALLORIGINS */
 
-async function getRSSAllOrigins(
-    rssURL
-) {
+async function getRSSAllOrigins(rssURL) {
 
     const url =
         "https://api.allorigins.win/raw?url=" +
@@ -1014,14 +1369,9 @@ async function getRSSAllOrigins(
 }
 
 
-/*
-   METHOD 3
-   CorsProxy fallback
-*/
+/* CORSPROXY */
 
-async function getRSSCorsProxy(
-    rssURL
-) {
+async function getRSSCorsProxy(rssURL) {
 
     const url =
         "https://corsproxy.io/?" +
@@ -1071,13 +1421,11 @@ async function getRSSCorsProxy(
 }
 
 
-/*
-   Parse RSS XML
-*/
+/* =====================================================
+   PARSE RSS XML
+===================================================== */
 
-function parseRSSXML(
-    xml
-) {
+function parseRSSXML(xml) {
 
     const parser =
         new DOMParser();
@@ -1142,13 +1490,11 @@ function parseRSSXML(
 }
 
 
-/*
-   Decode HTML entities
-*/
+/* =====================================================
+   DECODE HTML
+===================================================== */
 
-function decodeHTML(
-    text
-) {
+function decodeHTML(text) {
 
     const textarea =
         document.createElement(
@@ -1165,13 +1511,11 @@ function decodeHTML(
 }
 
 
-/*
-   Try multiple RSS methods
-*/
+/* =====================================================
+   TRY MULTIPLE RSS METHODS
+===================================================== */
 
-async function getRSS(
-    rssURL
-) {
+async function getRSS(rssURL) {
 
     const methods = [
 
@@ -1223,6 +1567,7 @@ async function getRSS(
             lastError =
                 error;
 
+
             console.warn(
                 "RSS method failed:",
                 error
@@ -1259,9 +1604,7 @@ function renderNews(
 
 
     if (!container) {
-
         return;
-
     }
 
 
@@ -1283,10 +1626,7 @@ function renderNews(
 
 
     items
-        .slice(
-            0,
-            30
-        )
+        .slice(0, 30)
         .forEach(
             item => {
 
@@ -1341,9 +1681,7 @@ async function loadNowNews() {
 
 
     if (!container) {
-
         return;
-
     }
 
 
@@ -1356,10 +1694,6 @@ async function loadNowNews() {
 
 
     try {
-
-        /*
-           Get both categories separately.
-        */
 
         const results =
             await Promise.allSettled([
@@ -1404,10 +1738,6 @@ async function loadNowNews() {
         }
 
 
-        /*
-           Remove duplicates.
-        */
-
         const seen =
             new Set();
 
@@ -1436,29 +1766,17 @@ async function loadNowNews() {
                         !key ||
                         seen.has(key)
                     ) {
-
                         return;
-
                     }
 
 
-                    seen.add(
-                        key
-                    );
+                    seen.add(key);
 
-
-                    combined.push(
-                        item
-                    );
+                    combined.push(item);
 
                 }
             );
 
-
-        /*
-           If we got actual news,
-           display it.
-        */
 
         if (
             combined.length > 0
@@ -1489,8 +1807,7 @@ async function loadNowNews() {
 
 
         /*
-           Never show the old misleading
-           "browser cannot load" message.
+           Fallback direct links.
         */
 
         container.innerHTML =
@@ -1506,18 +1823,14 @@ async function loadNowNews() {
         localLink.className =
             "news-item";
 
-
         localLink.textContent =
             "港聞｜NOW News";
-
 
         localLink.href =
             "https://news.now.com/home/local";
 
-
         localLink.target =
             "_blank";
-
 
         localLink.rel =
             "noopener noreferrer";
@@ -1537,18 +1850,14 @@ async function loadNowNews() {
         internationalLink.className =
             "news-item";
 
-
         internationalLink.textContent =
             "兩岸國際｜NOW News";
-
 
         internationalLink.href =
             "https://news.now.com/home/international";
 
-
         internationalLink.target =
             "_blank";
-
 
         internationalLink.rel =
             "noopener noreferrer";
@@ -1567,7 +1876,6 @@ async function loadNowNews() {
 
         status.className =
             "news-item";
-
 
         status.textContent =
             "NOW News 暫時無法取得即時標題";
@@ -1595,9 +1903,7 @@ async function loadBBCNews() {
 
 
     if (!container) {
-
         return;
-
     }
 
 
@@ -1654,9 +1960,7 @@ function loadCalendar() {
 
 
     if (!calendar) {
-
         return;
-
     }
 
 
@@ -1705,9 +2009,7 @@ function updateLastUpdated() {
 
 
     if (!element) {
-
         return;
-
     }
 
 
@@ -1730,9 +2032,7 @@ async function refreshDashboard() {
 
 
     if (!button) {
-
         return;
-
     }
 
 
@@ -1795,7 +2095,7 @@ document.addEventListener(
     () => {
 
 
-        /* INITIAL */
+        /* INITIAL LOAD */
 
         updateClock();
 
@@ -1820,7 +2120,7 @@ document.addEventListener(
         );
 
 
-        /* WEATHER */
+        /* WEATHER + HKO TEXT */
 
         setInterval(
             loadWeather,
@@ -1844,7 +2144,7 @@ document.addEventListener(
         );
 
 
-        /* BBC */
+        /* BBC NEWS */
 
         setInterval(
             loadBBCNews,
