@@ -496,7 +496,11 @@ body {
 
 /* =====================================================
    WEATHER DETAILS
-   LANDSCAPE: 今日 / 濕度 / 降雨 HORIZONTAL
+   ALWAYS VERTICAL
+
+   今日
+   濕度
+   降雨
 ===================================================== */
 
 .weather-details {
@@ -504,21 +508,30 @@ body {
 
     display: grid;
 
-    grid-template-columns:
-        repeat(3, minmax(0, 1fr));
+    grid-template-columns: 1fr;
 
-    gap: 7px;
+    gap: 4px;
 
     margin-top: 7px;
+
+    width: 100%;
 }
 
 
 .weather-detail {
     min-width: 0;
 
-    padding: 6px 8px;
+    padding: 5px 8px;
 
-    border-radius: 13px;
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 8px;
+
+    border-radius: 12px;
 
     background: var(--item);
 }
@@ -527,9 +540,13 @@ body {
 .weather-detail-label {
     display: block;
 
+    flex: 0 0 auto;
+
     font-size: 11px;
 
     color: var(--secondary);
+
+    white-space: nowrap;
 }
 
 
@@ -538,21 +555,20 @@ body {
 
     min-width: 0;
 
-    margin-top: 2px;
+    margin-top: 0;
 
     font-size: clamp(13px, 1.35vw, 20px);
 
     white-space: nowrap;
+
+    text-align: right;
 }
 
 
 /* =====================================================
    HKO TEXT AREA
 
-   IMPORTANT:
-   天氣預測及特別天氣提示各自固定高度
-   各自獨立捲動
-   一段文字過長不會推走另一段
+   TWO COMPLETELY INDEPENDENT SCROLL AREAS
 ===================================================== */
 
 .weather-hko-text {
@@ -575,9 +591,17 @@ body {
 }
 
 
+/* =====================================================
+   EACH HKO PANEL
+
+   Neither panel can push the other
+===================================================== */
+
 .weather-hko-section {
     min-width: 0;
     min-height: 0;
+
+    height: 100%;
 
     display: flex;
     flex-direction: column;
@@ -599,8 +623,14 @@ body {
 }
 
 
+/* =====================================================
+   HKO TITLE
+===================================================== */
+
 .weather-hko-label {
     flex: 0 0 auto;
+
+    min-height: 0;
 
     margin-bottom: 3px;
 
@@ -612,13 +642,19 @@ body {
 }
 
 
-/* EACH HKO TEXT SCROLLS SEPARATELY */
+/* =====================================================
+   HKO CONTENT
+
+   THIS is the actual independent scroll area
+===================================================== */
 
 .weather-hko-content {
     min-width: 0;
     min-height: 0;
 
     flex: 1 1 0;
+
+    height: 0;
 
     overflow-y: auto;
     overflow-x: hidden;
@@ -639,10 +675,6 @@ body {
     scrollbar-width: thin;
 
     overscroll-behavior: contain;
-
-    scrollbar-color:
-        rgba(143, 84, 96, 0.45)
-        transparent;
 }
 
 
@@ -750,7 +782,11 @@ body {
 }
 
 
-/* MTR */
+/* =====================================================
+   MTR
+
+   SAME LAYOUT IN BOTH LANDSCAPE + PORTRAIT
+===================================================== */
 
 .mtr-card {
     min-width: 0;
@@ -796,6 +832,7 @@ body {
 
 .train-list {
     display: flex;
+
     flex-direction: column;
 
     gap: 3px;
@@ -833,7 +870,9 @@ body {
 }
 
 
-/* CALENDAR */
+/* =====================================================
+   CALENDAR
+===================================================== */
 
 .calendar-card {
     min-width: 0;
@@ -1049,13 +1088,6 @@ footer {
     }
 
 
-    .weather-details {
-
-        gap: 5px;
-
-    }
-
-
     .weather-detail {
 
         padding: 5px 6px;
@@ -1096,9 +1128,11 @@ footer {
 
 
 /* =====================================================
-   IPAD PORTRAIT
+   PORTRAIT
 
-   今日 / 濕度 / 降雨 VERTICAL
+   IMPORTANT:
+   DO NOT CHANGE MTR/CALENDAR LAYOUT
+   DO NOT CHANGE WEATHER DETAILS LAYOUT
 ===================================================== */
 
 @media (orientation: portrait) and (min-width: 601px) {
@@ -1117,88 +1151,6 @@ footer {
         grid-template-columns:
             minmax(190px, 0.72fr)
             minmax(0, 1.95fr);
-
-    }
-
-
-    .mtr-grid {
-
-        grid-template-columns:
-            1fr;
-
-        gap: 4px;
-
-    }
-
-
-    .train-list {
-
-        flex-direction: row;
-
-    }
-
-
-    .train {
-
-        flex: 1;
-
-    }
-
-
-    /* ================================================
-       ONLY PORTRAIT:
-       今日 / 濕度 / 降雨 VERTICAL
-    ================================================ */
-
-    .weather-details {
-
-        grid-template-columns: 1fr;
-
-        gap: 4px;
-
-        width: 105px;
-
-        align-self: flex-end;
-
-    }
-
-
-    .weather-detail {
-
-        padding: 4px 7px;
-
-        display: flex;
-
-        align-items: center;
-        justify-content: space-between;
-
-        gap: 5px;
-
-        border-radius: 10px;
-
-    }
-
-
-    .weather-detail-label {
-
-        display: inline;
-
-        font-size: 10px;
-
-        white-space: nowrap;
-
-    }
-
-
-    .weather-detail-value {
-
-        display: inline;
-
-        margin-top: 0;
-
-        font-size: 14px;
-
-        white-space: nowrap;
 
     }
 
