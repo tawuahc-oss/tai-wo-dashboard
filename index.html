@@ -1,344 +1,3221 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
+
 <head>
-    <meta charset="UTF-8">
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-    >
+<meta charset="UTF-8">
 
-    <meta
-        name="apple-mobile-web-app-capable"
-        content="yes"
-    >
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+>
 
-    <meta
-        name="apple-mobile-web-app-status-bar-style"
-        content="black-translucent"
-    >
+<meta
+    name="apple-mobile-web-app-capable"
+    content="yes"
+>
 
-    <title>Tai Wo Dashboard</title>
+<meta
+    name="apple-mobile-web-app-status-bar-style"
+    content="black-translucent"
+>
 
-    <link rel="stylesheet" href="style.css?v=10">
+<title>Tai Wo Dashboard</title>
+
+
+<style>
+
+/* =========================================================
+   TAI WO DASHBOARD
+   VERSION 11
+   ========================================================= */
+
+
+/* =========================
+   COLOURS
+   ========================= */
+
+:root {
+
+    --pink-background: #efb0b7;
+
+    --pink-background-2: #f3c1c6;
+
+    --card-background: rgba(
+        255,
+        244,
+        246,
+        0.82
+    );
+
+    --small-card: rgba(
+        230,
+        173,
+        181,
+        0.30
+    );
+
+    --text: #39353a;
+
+    --secondary: #766a70;
+
+    --muted: #998a90;
+
+    --border: rgba(
+        180,
+        103,
+        117,
+        0.28
+    );
+
+    --shadow:
+        0 5px 18px
+        rgba(
+            120,
+            60,
+            72,
+            0.08
+        );
+
+}
+
+
+/* =========================
+   RESET
+   ========================= */
+
+* {
+
+    box-sizing: border-box;
+
+}
+
+
+html,
+body {
+
+    width: 100%;
+    height: 100%;
+
+    margin: 0;
+
+    padding: 0;
+
+    overflow: hidden;
+
+}
+
+
+body {
+
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "PingFang TC",
+        "Noto Sans TC",
+        sans-serif;
+
+    color: var(--text);
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--pink-background),
+            var(--pink-background-2)
+        );
+
+}
+
+
+/* =========================
+   MAIN DASHBOARD
+   ========================= */
+
+.dashboard {
+
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+
+    padding:
+        max(8px, env(safe-area-inset-top))
+        max(14px, env(safe-area-inset-right))
+        max(6px, env(safe-area-inset-bottom))
+        max(14px, env(safe-area-inset-left));
+
+    display: grid;
+
+    grid-template-rows:
+        auto
+        minmax(0, 1fr)
+        auto;
+
+    gap: 7px;
+
+    overflow: hidden;
+
+}
+
+
+/* =========================
+   TOP DATE BUBBLE
+   ========================= */
+
+.header {
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    min-height: 0;
+
+}
+
+
+.date-bubble {
+
+    padding:
+        7px
+        42px;
+
+    min-width: 300px;
+
+    text-align: center;
+
+    background:
+        rgba(
+            255,
+            226,
+            230,
+            0.55
+        );
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 24px;
+
+    box-shadow:
+        0 2px 8px
+        rgba(
+            130,
+            70,
+            80,
+            0.04
+        );
+
+}
+
+
+.date-main {
+
+    font-size:
+        clamp(
+            16px,
+            1.8vw,
+            25px
+        );
+
+    line-height: 1.1;
+
+    font-weight: 800;
+
+}
+
+
+.date-lunar {
+
+    margin-top: 2px;
+
+    font-size:
+        clamp(
+            12px,
+            1.15vw,
+            16px
+        );
+
+    color: var(--secondary);
+
+}
+
+
+/* =========================
+   REFRESH BUTTON
+   ========================= */
+
+.refresh-button {
+
+    position: absolute;
+
+    top:
+        max(
+            10px,
+            env(safe-area-inset-top)
+        );
+
+    right:
+        max(
+            12px,
+            env(safe-area-inset-right)
+        );
+
+    z-index: 100;
+
+    width: 43px;
+    height: 43px;
+
+    border-radius: 50%;
+
+    border:
+        1px solid
+        var(--border);
+
+    background:
+        rgba(
+            255,
+            245,
+            247,
+            0.78
+        );
+
+    color: var(--text);
+
+    font-size: 27px;
+
+    line-height: 1;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 3px 8px
+        rgba(
+            100,
+            50,
+            60,
+            0.06
+        );
+
+}
+
+
+.refresh-button:active {
+
+    transform: scale(0.94);
+
+}
+
+
+.refresh-button.loading {
+
+    animation:
+        dashboardSpin
+        0.8s
+        linear
+        infinite;
+
+}
+
+
+@keyframes dashboardSpin {
+
+    to {
+
+        transform: rotate(360deg);
+
+    }
+
+}
+
+
+/* =========================
+   CONTENT
+   ========================= */
+
+.dashboard-content {
+
+    min-height: 0;
+
+    display: grid;
+
+    gap: 7px;
+
+    overflow: hidden;
+
+}
+
+
+/* =========================
+   CARDS
+   ========================= */
+
+.card {
+
+    min-height: 0;
+
+    overflow: hidden;
+
+    background:
+        var(--card-background);
+
+    border:
+        1px solid
+        var(--border);
+
+    border-radius: 22px;
+
+    box-shadow:
+        var(--shadow);
+
+    backdrop-filter:
+        blur(8px);
+
+    -webkit-backdrop-filter:
+        blur(8px);
+
+}
+
+
+.card-title {
+
+    font-size:
+        clamp(
+            14px,
+            1.35vw,
+            20px
+        );
+
+    font-weight: 800;
+
+    line-height: 1.15;
+
+}
+
+
+/* =========================
+   TOP AREA
+   ========================= */
+
+.top-grid {
+
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(270px, 0.85fr)
+        minmax(430px, 1.6fr);
+
+    gap: 7px;
+
+}
+
+
+/* =========================
+   DIGITAL CLOCK CARD
+   ========================= */
+
+.clock-card {
+
+    padding:
+        8px
+        12px;
+
+    display: grid;
+
+    grid-template-rows:
+        auto
+        minmax(0, 1fr);
+
+    justify-items: center;
+
+}
+
+
+.digital-time {
+
+    font-size:
+        clamp(
+            25px,
+            3vw,
+            43px
+        );
+
+    font-weight: 800;
+
+    line-height: 1;
+
+    margin-top: 1px;
+
+}
+
+
+/* =========================
+   ANALOG CLOCK
+   ========================= */
+
+.analog-clock {
+
+    position: relative;
+
+    width:
+        min(
+            72%,
+            190px
+        );
+
+    aspect-ratio: 1 / 1;
+
+    align-self: center;
+
+    border:
+        3px solid
+        rgba(
+            92,
+            71,
+            77,
+            0.55
+        );
+
+    border-radius: 50%;
+
+    background:
+        rgba(
+            255,
+            250,
+            251,
+            0.20
+        );
+
+}
+
+
+.clock-number {
+
+    position: absolute;
+
+    font-size:
+        clamp(
+            12px,
+            1.3vw,
+            17px
+        );
+
+    font-weight: 800;
+
+}
+
+
+.clock-12 {
+
+    top: 7px;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+}
+
+
+.clock-3 {
+
+    right: 9px;
+
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+}
+
+
+.clock-6 {
+
+    bottom: 7px;
+
+    left: 50%;
+
+    transform:
+        translateX(-50%);
+
+}
+
+
+.clock-9 {
+
+    left: 9px;
+
+    top: 50%;
+
+    transform:
+        translateY(-50%);
+
+}
+
+
+.clock-hand {
+
+    position: absolute;
+
+    left: 50%;
+
+    bottom: 50%;
+
+    transform-origin:
+        50% 100%;
+
+    border-radius: 99px;
+
+}
+
+
+.clock-hour {
+
+    width: 6px;
+
+    height: 29%;
+
+    background: #3e393d;
+
+}
+
+
+.clock-minute {
+
+    width: 5px;
+
+    height: 38%;
+
+    background: #4b4449;
+
+}
+
+
+.clock-second {
+
+    width: 2px;
+
+    height: 43%;
+
+    background: #c46f7a;
+
+}
+
+
+.clock-center {
+
+    position: absolute;
+
+    width: 11px;
+    height: 11px;
+
+    top: 50%;
+    left: 50%;
+
+    transform:
+        translate(
+            -50%,
+            -50%
+        );
+
+    border-radius: 50%;
+
+    background: #39353a;
+
+}
+
+
+/* =========================
+   WEATHER
+   ========================= */
+
+.weather-card {
+
+    padding:
+        10px
+        14px;
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+.weather-main {
+
+    flex: 1;
+
+    min-height: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+
+}
+
+
+.weather-icon {
+
+    font-size:
+        clamp(
+            45px,
+            5vw,
+            70px
+        );
+
+}
+
+
+.temperature {
+
+    font-size:
+        clamp(
+            43px,
+            5.2vw,
+            70px
+        );
+
+    font-weight: 800;
+
+    line-height: 0.95;
+
+}
+
+
+.weather-description {
+
+    margin-top: 5px;
+
+    font-size:
+        clamp(
+            14px,
+            1.4vw,
+            20px
+        );
+
+    color:
+        var(--secondary);
+
+}
+
+
+.weather-details {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            1fr
+        );
+
+    gap: 8px;
+
+}
+
+
+.weather-detail {
+
+    padding:
+        6px
+        10px;
+
+    border-radius: 14px;
+
+    background:
+        var(--small-card);
+
+}
+
+
+.weather-detail-label {
+
+    display: block;
+
+    font-size: 11px;
+
+    color:
+        var(--secondary);
+
+}
+
+
+.weather-detail-value {
+
+    display: block;
+
+    margin-top: 1px;
+
+    font-size:
+        clamp(
+            14px,
+            1.45vw,
+            20px
+        );
+
+    font-weight: 800;
+
+}
+
+
+.updated {
+
+    margin-top: 4px;
+
+    font-size: 10px;
+
+    color:
+        var(--muted);
+
+}
+
+
+/* =========================
+   FORECAST
+   ========================= */
+
+.forecast-card {
+
+    padding:
+        9px
+        12px;
+
+}
+
+
+.forecast {
+
+    height:
+        calc(
+            100% - 25px
+        );
+
+    margin-top: 4px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            8,
+            minmax(0, 1fr)
+        );
+
+    gap: 6px;
+
+}
+
+
+.forecast-item {
+
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    justify-content: center;
+
+    align-items: center;
+
+    padding:
+        3px;
+
+    border-radius: 13px;
+
+    background:
+        var(--small-card);
+
+}
+
+
+.forecast-time {
+
+    font-size:
+        clamp(
+            10px,
+            1.0vw,
+            14px
+        );
+
+    color:
+        var(--secondary);
+
+}
+
+
+.forecast-icon {
+
+    margin:
+        2px 0;
+
+    font-size:
+        clamp(
+            18px,
+            2vw,
+            28px
+        );
+
+}
+
+
+.forecast-temp {
+
+    font-size:
+        clamp(
+            13px,
+            1.4vw,
+            19px
+        );
+
+    font-weight: 800;
+
+}
+
+
+.forecast-rain {
+
+    font-size:
+        clamp(
+            9px,
+            0.9vw,
+            12px
+        );
+
+    color:
+        var(--secondary);
+
+}
+
+
+/* =========================
+   MTR + CALENDAR
+   ========================= */
+
+.middle-grid {
+
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        1.55fr
+        1fr;
+
+    gap: 7px;
+
+}
+
+
+.mtr-card,
+.calendar-card {
+
+    padding:
+        10px
+        13px;
+
+}
+
+
+.mtr-grid {
+
+    height:
+        calc(
+            100% - 26px
+        );
+
+    margin-top: 5px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            1fr
+        );
+
+    gap: 14px;
+
+}
+
+
+.direction-title {
+
+    margin-bottom: 4px;
+
+    font-size:
+        clamp(
+            12px,
+            1.2vw,
+            17px
+        );
+
+    font-weight: 800;
+
+}
+
+
+.train-list {
+
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(65px, 1fr)
+        );
+
+    gap: 5px;
+
+    overflow-y: auto;
+
+    padding-right: 2px;
+
+}
+
+
+.train {
+
+    min-width: 0;
+
+    padding:
+        5px
+        4px;
+
+    border-radius: 11px;
+
+    text-align: center;
+
+    background:
+        var(--small-card);
+
+}
+
+
+.train-time {
+
+    font-size:
+        clamp(
+            12px,
+            1.3vw,
+            18px
+        );
+
+    font-weight: 800;
+
+}
+
+
+.train-destination {
+
+    margin-top: 1px;
+
+    font-size:
+        9px;
+
+    color:
+        var(--secondary);
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+}
+
+
+/* =========================
+   CALENDAR
+   ========================= */
+
+.calendar-list {
+
+    height:
+        calc(
+            100% - 25px
+        );
+
+    margin-top: 5px;
+
+    overflow-y: auto;
+
+}
+
+
+.calendar-empty {
+
+    font-size:
+        clamp(
+            12px,
+            1.15vw,
+            16px
+        );
+
+    color:
+        var(--secondary);
+
+}
+
+
+.calendar-event {
+
+    padding:
+        6px
+        8px;
+
+    margin-bottom: 5px;
+
+    border-radius: 10px;
+
+    background:
+        var(--small-card);
+
+}
+
+
+.calendar-event-time {
+
+    font-size: 11px;
+
+    color:
+        var(--secondary);
+
+}
+
+
+.calendar-event-title {
+
+    font-size:
+        clamp(
+            12px,
+            1.15vw,
+            16px
+        );
+
+    font-weight: 700;
+
+}
+
+
+/* =========================
+   NEWS
+   ========================= */
+
+.news-grid {
+
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            1fr
+        );
+
+    gap: 7px;
+
+}
+
+
+.news-card {
+
+    min-height: 0;
+
+    padding:
+        9px
+        13px;
+
+    display: flex;
+
+    flex-direction: column;
+
+}
+
+
+.news-subtitle {
+
+    margin-top: 2px;
+
+    font-size: 11px;
+
+    color:
+        var(--secondary);
+
+}
+
+
+.news-list {
+
+    min-height: 0;
+
+    flex: 1;
+
+    margin-top: 4px;
+
+    overflow-y: auto;
+
+    overflow-x: hidden;
+
+    padding-right: 5px;
+
+    scrollbar-width: thin;
+
+}
+
+
+.news-list::-webkit-scrollbar {
+
+    width: 5px;
+
+}
+
+
+.news-list::-webkit-scrollbar-thumb {
+
+    background:
+        rgba(
+            130,
+            76,
+            87,
+            0.40
+        );
+
+    border-radius: 20px;
+
+}
+
+
+.news-item {
+
+    display: block;
+
+    padding:
+        4px
+        2px;
+
+    border-bottom:
+        1px solid
+        rgba(
+            140,
+            85,
+            95,
+            0.16
+        );
+
+    color:
+        var(--text);
+
+    text-decoration: none;
+
+    font-size:
+        clamp(
+            11px,
+            1.05vw,
+            15px
+        );
+
+    line-height: 1.25;
+
+}
+
+
+.news-item:hover {
+
+    text-decoration: underline;
+
+}
+
+
+/* =========================
+   FOOTER
+   ========================= */
+
+footer {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    font-size: 10px;
+
+    color:
+        rgba(
+            70,
+            55,
+            60,
+            0.55
+        );
+
+}
+
+
+/* =========================================================
+   LANDSCAPE
+   ========================================================= */
+
+@media
+    (orientation: landscape)
+    and (min-width: 700px) {
+
+    .dashboard-content {
+
+        grid-template-rows:
+            minmax(190px, 1.35fr)
+            minmax(105px, 0.65fr)
+            minmax(135px, 0.80fr)
+            minmax(145px, 1fr);
+
+    }
+
+}
+
+
+/* =========================================================
+   PORTRAIT
+   ========================================================= */
+
+@media
+    (orientation: portrait)
+    and (min-width: 600px) {
+
+    .dashboard {
+
+        padding-left: 14px;
+        padding-right: 14px;
+
+    }
+
+
+    .dashboard-content {
+
+        grid-template-rows:
+            minmax(205px, 1.15fr)
+            minmax(110px, 0.60fr)
+            minmax(155px, 0.82fr)
+            minmax(190px, 1fr);
+
+    }
+
+
+    .top-grid {
+
+        grid-template-columns:
+            0.95fr
+            1.55fr;
+
+    }
+
+
+    .analog-clock {
+
+        width:
+            min(
+                68%,
+                185px
+            );
+
+    }
+
+
+    .middle-grid {
+
+        grid-template-columns:
+            1.5fr
+            1fr;
+
+    }
+
+
+    .train-list {
+
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(
+                    60px,
+                    1fr
+                )
+            );
+
+    }
+
+}
+
+
+/* =========================================================
+   SMALL SCREENS
+   ========================================================= */
+
+@media
+    (max-width: 599px) {
+
+    html,
+    body {
+
+        overflow: auto;
+
+    }
+
+
+    .dashboard {
+
+        height: auto;
+
+        min-height: 100vh;
+
+        overflow: visible;
+
+    }
+
+
+    .dashboard-content {
+
+        display: flex;
+
+        flex-direction: column;
+
+        overflow: visible;
+
+    }
+
+
+    .top-grid,
+    .middle-grid,
+    .news-grid {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .card {
+
+        min-height: 180px;
+
+    }
+
+
+    .forecast {
+
+        overflow-x: auto;
+
+        grid-template-columns:
+            repeat(
+                8,
+                75px
+            );
+
+    }
+
+}
+
+</style>
+
 </head>
+
 
 <body>
 
+
 <div class="dashboard">
 
-    <button
-        id="refreshButton"
-        class="refresh-button"
-        type="button"
-        aria-label="Refresh dashboard"
+
+<!-- =====================================================
+     REFRESH
+     ===================================================== -->
+
+<button
+    id="refreshButton"
+    class="refresh-button"
+    title="Refresh"
+>
+
+    ↻
+
+</button>
+
+
+<!-- =====================================================
+     DATE / DAY / LUNAR
+     ===================================================== -->
+
+<header class="header">
+
+    <div class="date-bubble">
+
+        <div
+            id="dateMain"
+            class="date-main"
+        >
+            2026年8月19日 星期三
+        </div>
+
+        <div
+            id="lunarDate"
+            class="date-lunar"
+        >
+            農曆 七月初七
+        </div>
+
+    </div>
+
+</header>
+
+
+<!-- =====================================================
+     MAIN CONTENT
+     ===================================================== -->
+
+<main class="dashboard-content">
+
+
+<!-- =====================================================
+     CLOCK + WEATHER
+     ===================================================== -->
+
+<section class="top-grid">
+
+
+<!-- CLOCK -->
+
+<div class="card clock-card">
+
+
+    <div
+        id="digitalTime"
+        class="digital-time"
     >
-        ↻
-    </button>
+        2:12:00 PM
+    </div>
 
 
-    <!-- TOP DATE BUBBLE -->
+    <div class="analog-clock">
 
-    <header class="header">
 
-        <div class="date-time-bubble">
+        <div class="clock-number clock-12">
+            12
+        </div>
+
+        <div class="clock-number clock-3">
+            3
+        </div>
+
+        <div class="clock-number clock-6">
+            6
+        </div>
+
+        <div class="clock-number clock-9">
+            9
+        </div>
+
+
+        <div
+            id="hourHand"
+            class="clock-hand clock-hour"
+        ></div>
+
+
+        <div
+            id="minuteHand"
+            class="clock-hand clock-minute"
+        ></div>
+
+
+        <div
+            id="secondHand"
+            class="clock-hand clock-second"
+        ></div>
+
+
+        <div class="clock-center"></div>
+
+
+    </div>
+
+</div>
+
+
+<!-- WEATHER -->
+
+<div class="card weather-card">
+
+
+    <div
+        id="weatherTitle"
+        class="card-title"
+    >
+        📍 CURRENT WEATHER
+    </div>
+
+
+    <div class="weather-main">
+
+
+        <div
+            id="weatherIcon"
+            class="weather-icon"
+        >
+            ☁️
+        </div>
+
+
+        <div>
 
             <div
-                id="topDate"
-                class="top-date"
+                id="temperature"
+                class="temperature"
             >
-                2026年8月19日 星期三
+                --°
             </div>
 
+
             <div
-                id="lunar"
-                class="lunar"
+                id="weatherDescription"
+                class="weather-description"
             >
-                農曆載入中...
+                Loading...
             </div>
 
         </div>
 
-    </header>
+
+    </div>
 
 
-    <main class="dashboard-content">
+    <div class="weather-details">
 
 
-        <!-- CLOCK + WEATHER -->
+        <div class="weather-detail">
 
-        <section class="top-grid">
+            <span class="weather-detail-label">
+                今日
+            </span>
 
-            <div class="card clock-card">
-
-                <div
-                    id="clockTime"
-                    class="clock-time"
-                >
-                    1:00:00 PM
-                </div>
-
-                <div class="analog-clock">
-
-                    <div class="number n12">12</div>
-                    <div class="number n3">3</div>
-                    <div class="number n6">6</div>
-                    <div class="number n9">9</div>
-
-                    <div
-                        id="hourHand"
-                        class="hand hour-hand"
-                    ></div>
-
-                    <div
-                        id="minuteHand"
-                        class="hand minute-hand"
-                    ></div>
-
-                    <div
-                        id="secondHand"
-                        class="hand second-hand"
-                    ></div>
-
-                    <div class="clock-center"></div>
-
-                </div>
-
-            </div>
-
-
-            <div class="card weather-card">
-
-                <div
-                    id="weatherTitle"
-                    class="card-title"
-                >
-                    📍 CURRENT WEATHER
-                </div>
-
-
-                <div class="weather-main">
-
-                    <div
-                        id="weatherIcon"
-                        class="weather-icon"
-                    >
-                        ☁️
-                    </div>
-
-                    <div>
-
-                        <div
-                            id="temperature"
-                            class="temperature"
-                        >
-                            --°
-                        </div>
-
-                        <div
-                            id="weatherDescription"
-                            class="weather-description"
-                        >
-                            Loading...
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="weather-details">
-
-                    <div>
-                        <span>今日</span>
-                        <strong id="todayRange">--° — --°</strong>
-                    </div>
-
-                    <div>
-                        <span>💧 濕度</span>
-                        <strong id="humidity">--%</strong>
-                    </div>
-
-                    <div>
-                        <span>🌧️ 降雨</span>
-                        <strong id="rainProbability">--%</strong>
-                    </div>
-
-                </div>
-
-
-                <div
-                    id="weatherUpdated"
-                    class="updated"
-                >
-                    Weather updating...
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- FORECAST -->
-
-        <section class="card forecast-card">
-
-            <div
-                id="forecastTitle"
-                class="card-title"
+            <strong
+                id="todayRange"
+                class="weather-detail-value"
             >
-                🌦️ TODAY'S FORECAST
-            </div>
+                --° — --°
+            </strong>
 
-            <div
-                id="forecast"
-                class="forecast"
-            ></div>
-
-        </section>
+        </div>
 
 
-        <!-- MTR + CALENDAR -->
+        <div class="weather-detail">
 
-        <section class="middle-grid">
+            <span class="weather-detail-label">
+                💧 濕度
+            </span>
 
-            <div class="card mtr-card">
+            <strong
+                id="humidity"
+                class="weather-detail-value"
+            >
+                --%
+            </strong>
 
-                <div class="card-title">
-                    🚆 MTR · TAI WO 太和站
-                </div>
-
-                <div class="mtr-grid">
-
-                    <div class="mtr-direction">
-
-                        <div class="direction-title">
-                            往金鐘
-                        </div>
-
-                        <div
-                            id="mtrDown"
-                            class="train-list"
-                        >
-                            Loading...
-                        </div>
-
-                    </div>
+        </div>
 
 
-                    <div class="mtr-direction">
+        <div class="weather-detail">
 
-                        <div class="direction-title">
-                            往上水
-                        </div>
+            <span class="weather-detail-label">
+                🌧️ 降雨
+            </span>
 
-                        <div
-                            id="mtrUp"
-                            class="train-list"
-                        >
-                            Loading...
-                        </div>
+            <strong
+                id="rainProbability"
+                class="weather-detail-value"
+            >
+                --%
+            </strong>
 
-                    </div>
-
-                </div>
-
-            </div>
+        </div>
 
 
-            <div class="card calendar-card">
-
-                <div class="card-title">
-                    📅 CALENDAR
-                </div>
-
-                <div
-                    id="calendar"
-                    class="calendar-list"
-                >
-                    iCloud Calendar
-                </div>
-
-            </div>
-
-        </section>
+    </div>
 
 
-        <!-- NEWS -->
+    <div
+        id="weatherUpdated"
+        class="updated"
+    >
+        Weather updating...
+    </div>
 
-        <section class="news-grid">
-
-            <div class="card news-card">
-
-                <div class="news-header">
-
-                    <div>
-                        <div class="card-title">
-                            🇭🇰 NOW NEWS
-                        </div>
-
-                        <div class="news-subtitle">
-                            本地 · 兩岸
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div
-                    id="nowNews"
-                    class="news-list"
-                >
-                    Loading...
-                </div>
-
-            </div>
-
-
-            <div class="card news-card">
-
-                <div class="news-header">
-
-                    <div>
-                        <div class="card-title">
-                            🌍 BBC NEWS
-                        </div>
-
-                        <div class="news-subtitle">
-                            WORLD
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div
-                    id="bbcNews"
-                    class="news-list"
-                >
-                    Loading...
-                </div>
-
-            </div>
-
-        </section>
-
-    </main>
-
-
-    <footer>
-
-        <span>Tai Wo Dashboard</span>
-
-        <span id="lastUpdated">--</span>
-
-    </footer>
 
 </div>
 
-<script src="script.js?v=10"></script>
+
+</section>
+
+
+<!-- =====================================================
+     FORECAST
+     ===================================================== -->
+
+<section class="card forecast-card">
+
+
+    <div
+        id="forecastTitle"
+        class="card-title"
+    >
+        🌦️ TODAY'S FORECAST
+    </div>
+
+
+    <div
+        id="forecast"
+        class="forecast"
+    ></div>
+
+
+</section>
+
+
+<!-- =====================================================
+     MTR + CALENDAR
+     ===================================================== -->
+
+<section class="middle-grid">
+
+
+<!-- MTR -->
+
+<div class="card mtr-card">
+
+
+    <div class="card-title">
+        🚆 MTR · TAI WO 太和站
+    </div>
+
+
+    <div class="mtr-grid">
+
+
+        <div>
+
+
+            <div class="direction-title">
+                往金鐘
+            </div>
+
+
+            <div
+                id="mtrDown"
+                class="train-list"
+            >
+                Loading...
+            </div>
+
+
+        </div>
+
+
+        <div>
+
+
+            <div class="direction-title">
+                往上水
+            </div>
+
+
+            <div
+                id="mtrUp"
+                class="train-list"
+            >
+                Loading...
+            </div>
+
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+<!-- CALENDAR -->
+
+<div class="card calendar-card">
+
+
+    <div class="card-title">
+        📅 CALENDAR
+    </div>
+
+
+    <div
+        id="calendar"
+        class="calendar-list"
+    >
+
+        <div class="calendar-empty">
+            iCloud Calendar
+        </div>
+
+    </div>
+
+
+</div>
+
+
+</section>
+
+
+<!-- =====================================================
+     NEWS
+     ===================================================== -->
+
+<section class="news-grid">
+
+
+<!-- NOW -->
+
+<div class="card news-card">
+
+
+    <div class="card-title">
+        🇭🇰 NOW NEWS
+    </div>
+
+
+    <div class="news-subtitle">
+        本地 · 兩岸
+    </div>
+
+
+    <div
+        id="nowNews"
+        class="news-list"
+    >
+
+        Loading...
+
+    </div>
+
+
+</div>
+
+
+<!-- BBC -->
+
+<div class="card news-card">
+
+
+    <div class="card-title">
+        🌍 BBC NEWS
+    </div>
+
+
+    <div class="news-subtitle">
+        WORLD
+    </div>
+
+
+    <div
+        id="bbcNews"
+        class="news-list"
+    >
+
+        Loading...
+
+    </div>
+
+
+</div>
+
+
+</section>
+
+
+</main>
+
+
+<footer>
+
+    <span>
+        Tai Wo Dashboard
+    </span>
+
+
+    <span
+        id="lastUpdated"
+    >
+        Updated --
+    </span>
+
+</footer>
+
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   SETTINGS
+   ========================================================= */
+
+
+/*
+   Tai Wo fallback location.
+
+   If iPad location permission is denied,
+   weather will use Tai Wo.
+*/
+
+const TAI_WO_LAT =
+    22.4505;
+
+const TAI_WO_LON =
+    114.1649;
+
+
+/* Open-Meteo */
+
+const WEATHER_API =
+    "https://api.open-meteo.com/v1/forecast";
+
+
+/* Hong Kong MTR open data */
+
+const MTR_API =
+    "https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php";
+
+
+/*
+   RSSHub is used to convert NOW News
+   into RSS that the browser can read.
+
+   Local = 港聞
+   International = 兩岸國際
+*/
+
+const NOW_LOCAL_RSS =
+    "https://rsshub.app/now/news/local";
+
+const NOW_INTERNATIONAL_RSS =
+    "https://rsshub.app/now/news/international";
+
+
+/* BBC World */
+
+const BBC_RSS =
+    "https://feeds.bbci.co.uk/news/world/rss.xml";
+
+
+/*
+   RSS2JSON converts RSS into JSON
+   so GitHub Pages can read it.
+*/
+
+const RSS2JSON =
+    "https://api.rss2json.com/v1/api.json";
+
+
+/* =========================================================
+   CURRENT LOCATION
+   ========================================================= */
+
+let latitude =
+    TAI_WO_LAT;
+
+let longitude =
+    TAI_WO_LON;
+
+let usingTaiWo =
+    true;
+
+
+function getLocation() {
+
+    return new Promise(resolve => {
+
+
+        if (!navigator.geolocation) {
+
+            usingTaiWo = true;
+
+            resolve();
+
+            return;
+
+        }
+
+
+        navigator.geolocation.getCurrentPosition(
+
+            position => {
+
+                latitude =
+                    position.coords.latitude;
+
+                longitude =
+                    position.coords.longitude;
+
+                usingTaiWo =
+                    false;
+
+                resolve();
+
+            },
+
+            () => {
+
+                latitude =
+                    TAI_WO_LAT;
+
+                longitude =
+                    TAI_WO_LON;
+
+                usingTaiWo =
+                    true;
+
+                resolve();
+
+            },
+
+            {
+
+                enableHighAccuracy: true,
+
+                timeout: 10000,
+
+                maximumAge: 300000
+
+            }
+
+        );
+
+    });
+
+}
+
+
+/* =========================================================
+   CLOCK
+   ========================================================= */
+
+function updateClock() {
+
+    const now =
+        new Date();
+
+
+    /* DIGITAL TIME */
+
+    const time =
+        new Intl.DateTimeFormat(
+
+            "en-US",
+
+            {
+
+                hour: "numeric",
+
+                minute: "2-digit",
+
+                second: "2-digit",
+
+                hour12: true,
+
+                timeZone:
+                    "Asia/Hong_Kong"
+
+            }
+
+        ).format(now);
+
+
+    document.getElementById(
+        "digitalTime"
+    ).textContent =
+        time;
+
+
+    /* DATE PARTS */
+
+    const parts =
+        new Intl.DateTimeFormat(
+
+            "en-GB",
+
+            {
+
+                day: "numeric",
+
+                month: "numeric",
+
+                year: "numeric",
+
+                timeZone:
+                    "Asia/Hong_Kong"
+
+            }
+
+        ).formatToParts(now);
+
+
+    const year =
+        parts.find(
+            p => p.type === "year"
+        ).value;
+
+
+    const month =
+        parts.find(
+            p => p.type === "month"
+        ).value;
+
+
+    const day =
+        parts.find(
+            p => p.type === "day"
+        ).value;
+
+
+    const weekday =
+        new Intl.DateTimeFormat(
+
+            "zh-HK",
+
+            {
+
+                weekday: "long",
+
+                timeZone:
+                    "Asia/Hong_Kong"
+
+            }
+
+        ).format(now);
+
+
+    /*
+       IMPORTANT:
+       We construct the date manually.
+
+       This prevents:
+       2026年年8月月19日日
+    */
+
+    document.getElementById(
+        "dateMain"
+    ).textContent =
+        `${year}年${month}月${day}日 ${weekday}`;
+
+
+    /* LUNAR */
+
+    try {
+
+        const lunar =
+            new Intl.DateTimeFormat(
+
+                "zh-Hant-u-ca-chinese",
+
+                {
+
+                    month: "long",
+
+                    day: "numeric",
+
+                    timeZone:
+                        "Asia/Hong_Kong"
+
+                }
+
+            ).format(now);
+
+
+        document.getElementById(
+            "lunarDate"
+        ).textContent =
+            `農曆 ${lunar}`;
+
+    }
+
+    catch {
+
+        document.getElementById(
+            "lunarDate"
+        ).textContent =
+            "農曆資料暫不可用";
+
+    }
+
+
+    /* ANALOG CLOCK */
+
+    const hkTime =
+        new Intl.DateTimeFormat(
+
+            "en-US",
+
+            {
+
+                hour: "numeric",
+
+                minute: "numeric",
+
+                second: "numeric",
+
+                hour12: false,
+
+                timeZone:
+                    "Asia/Hong_Kong"
+
+            }
+
+        ).formatToParts(now);
+
+
+    const hour =
+        Number(
+            hkTime.find(
+                p => p.type === "hour"
+            ).value
+        );
+
+
+    const minute =
+        Number(
+            hkTime.find(
+                p => p.type === "minute"
+            ).value
+        );
+
+
+    const second =
+        Number(
+            hkTime.find(
+                p => p.type === "second"
+            ).value
+        );
+
+
+    document.getElementById(
+        "hourHand"
+    ).style.transform =
+        `translateX(-50%) rotate(${(hour % 12) * 30 + minute * 0.5}deg)`;
+
+
+    document.getElementById(
+        "minuteHand"
+    ).style.transform =
+        `translateX(-50%) rotate(${minute * 6 + second * 0.1}deg)`;
+
+
+    document.getElementById(
+        "secondHand"
+    ).style.transform =
+        `translateX(-50%) rotate(${second * 6}deg)`;
+
+}
+
+
+/* =========================================================
+   WEATHER
+   ========================================================= */
+
+function weatherInfo(code) {
+
+    const weather = {
+
+        0: ["☀️", "晴"],
+
+        1: ["🌤️", "大致晴朗"],
+
+        2: ["⛅", "部分多雲"],
+
+        3: ["☁️", "多雲"],
+
+        45: ["🌫️", "有霧"],
+
+        48: ["🌫️", "有霧"],
+
+        51: ["🌦️", "毛毛雨"],
+
+        53: ["🌦️", "毛毛雨"],
+
+        55: ["🌧️", "毛毛雨"],
+
+        61: ["🌧️", "小雨"],
+
+        63: ["🌧️", "中雨"],
+
+        65: ["🌧️", "大雨"],
+
+        71: ["🌨️", "小雪"],
+
+        73: ["🌨️", "中雪"],
+
+        75: ["❄️", "大雪"],
+
+        80: ["🌦️", "陣雨"],
+
+        81: ["🌧️", "陣雨"],
+
+        82: ["🌧️", "大驟雨"],
+
+        95: ["⛈️", "雷暴"],
+
+        96: ["⛈️", "雷暴"],
+
+        99: ["⛈️", "強雷暴"]
+
+    };
+
+
+    return (
+        weather[code] ||
+        ["🌤️", "未知"]
+    );
+
+}
+
+
+/* =========================================================
+   LOAD WEATHER
+   ========================================================= */
+
+async function loadWeather() {
+
+    try {
+
+        await getLocation();
+
+
+        const weatherURL =
+
+            `${WEATHER_API}` +
+
+            `?latitude=${latitude}` +
+
+            `&longitude=${longitude}` +
+
+            `&current=temperature_2m,relative_humidity_2m,weather_code` +
+
+            `&hourly=temperature_2m,precipitation_probability,weather_code` +
+
+            `&daily=temperature_2m_max,temperature_2m_min` +
+
+            `&timezone=auto` +
+
+            `&forecast_days=1`;
+
+
+        const response =
+            await fetch(
+                weatherURL,
+                {
+                    cache: "no-store"
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Weather API failed"
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        const info =
+            weatherInfo(
+                data.current.weather_code
+            );
+
+
+        document.getElementById(
+            "weatherIcon"
+        ).textContent =
+            info[0];
+
+
+        document.getElementById(
+            "temperature"
+        ).textContent =
+            `${Math.round(data.current.temperature_2m)}°`;
+
+
+        document.getElementById(
+            "weatherDescription"
+        ).textContent =
+            info[1];
+
+
+        document.getElementById(
+            "todayRange"
+        ).textContent =
+
+            `${Math.round(data.daily.temperature_2m_min[0])}° — ` +
+
+            `${Math.round(data.daily.temperature_2m_max[0])}°`;
+
+
+        document.getElementById(
+            "humidity"
+        ).textContent =
+            `${data.current.relative_humidity_2m}%`;
+
+
+        const currentHour =
+            new Date().getHours();
+
+
+        const rain =
+            data.hourly
+                .precipitation_probability[
+                    currentHour
+                ] ?? 0;
+
+
+        document.getElementById(
+            "rainProbability"
+        ).textContent =
+            `${rain}%`;
+
+
+        document.getElementById(
+            "weatherTitle"
+        ).textContent =
+
+            usingTaiWo
+                ? "🌤️ TAI WO WEATHER"
+                : "📍 CURRENT LOCATION WEATHER";
+
+
+        document.getElementById(
+            "forecastTitle"
+        ).textContent =
+
+            usingTaiWo
+                ? "🌦️ TODAY'S FORECAST · TAI WO"
+                : "🌦️ TODAY'S FORECAST · CURRENT LOCATION";
+
+
+        renderForecast(
+            data,
+            currentHour
+        );
+
+
+        document.getElementById(
+            "weatherUpdated"
+        ).textContent =
+            `Updated ${formatTime()}`;
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "Weather error:",
+            error
+        );
+
+
+        document.getElementById(
+            "weatherDescription"
+        ).textContent =
+            "Weather unavailable";
+
+    }
+
+}
+
+
+/* =========================================================
+   FORECAST
+   ========================================================= */
+
+function renderForecast(
+    data,
+    startHour
+) {
+
+    const container =
+        document.getElementById(
+            "forecast"
+        );
+
+
+    container.innerHTML = "";
+
+
+    for (
+        let i = startHour;
+        i < Math.min(
+            startHour + 8,
+            24
+        );
+        i++
+    ) {
+
+
+        const time =
+            data.hourly.time[i]
+                .split("T")[1]
+                .substring(0, 5);
+
+
+        const info =
+            weatherInfo(
+                data.hourly.weather_code[i]
+            );
+
+
+        const item =
+            document.createElement(
+                "div"
+            );
+
+
+        item.className =
+            "forecast-item";
+
+
+        item.innerHTML = `
+
+            <div class="forecast-time">
+                ${time}
+            </div>
+
+            <div class="forecast-icon">
+                ${info[0]}
+            </div>
+
+            <div class="forecast-temp">
+                ${Math.round(
+                    data.hourly.temperature_2m[i]
+                )}°
+            </div>
+
+            <div class="forecast-rain">
+                ${data.hourly.precipitation_probability[i] ?? 0}%
+            </div>
+
+        `;
+
+
+        container.appendChild(
+            item
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   MTR
+   ========================================================= */
+
+async function loadMTR() {
+
+    try {
+
+        const url =
+            `${MTR_API}?line=EAL&sta=TWO&lang=TC`;
+
+
+        const response =
+            await fetch(
+                url,
+                {
+                    cache: "no-store"
+                }
+            );
+
+
+        const data =
+            await response.json();
+
+
+        const station =
+            data.data[
+                "EAL-TWO"
+            ];
+
+
+        if (!station) {
+
+            throw new Error(
+                "MTR station unavailable"
+            );
+
+        }
+
+
+        renderTrains(
+            station.DOWN || [],
+            "mtrDown"
+        );
+
+
+        renderTrains(
+            station.UP || [],
+            "mtrUp"
+        );
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "MTR error:",
+            error
+        );
+
+
+        document.getElementById(
+            "mtrDown"
+        ).innerHTML =
+            `<div class="train">暫無資料</div>`;
+
+
+        document.getElementById(
+            "mtrUp"
+        ).innerHTML =
+            `<div class="train">暫無資料</div>`;
+
+    }
+
+}
+
+
+function renderTrains(
+    trains,
+    elementId
+) {
+
+    const container =
+        document.getElementById(
+            elementId
+        );
+
+
+    container.innerHTML = "";
+
+
+    const validTrains =
+        trains
+            .filter(
+                train =>
+                    train.valid === "Y"
+            )
+            .slice(
+                0,
+                8
+            );
+
+
+    if (
+        validTrains.length === 0
+    ) {
+
+        container.innerHTML =
+            `<div class="train">暫無班次</div>`;
+
+        return;
+
+    }
+
+
+    validTrains.forEach(
+        train => {
+
+            const item =
+                document.createElement(
+                    "div"
+                );
+
+
+            item.className =
+                "train";
+
+
+            item.innerHTML = `
+
+                <div class="train-time">
+                    ${train.ttnt} min
+                </div>
+
+                <div class="train-destination">
+                    ${train.dest || ""}
+                </div>
+
+            `;
+
+
+            container.appendChild(
+                item
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   RSS LOADER
+   ========================================================= */
+
+async function getRSS(
+    rssURL
+) {
+
+    const url =
+        `${RSS2JSON}?rss_url=` +
+        encodeURIComponent(
+            rssURL
+        );
+
+
+    const response =
+        await fetch(
+            url,
+            {
+                cache: "no-store"
+            }
+        );
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            "RSS failed"
+        );
+
+    }
+
+
+    return await response.json();
+
+}
+
+
+/* =========================================================
+   NOW NEWS
+   ========================================================= */
+
+async function loadNowNews() {
+
+    const container =
+        document.getElementById(
+            "nowNews"
+        );
+
+
+    container.innerHTML = "";
+
+
+    try {
+
+        const results =
+            await Promise.all([
+
+                getRSS(
+                    NOW_LOCAL_RSS
+                ),
+
+                getRSS(
+                    NOW_INTERNATIONAL_RSS
+                )
+
+            ]);
+
+
+        const allItems = [];
+
+
+        results.forEach(
+            result => {
+
+                if (
+                    result.items
+                ) {
+
+                    result.items.forEach(
+                        item => {
+
+                            allItems.push(
+                                item
+                            );
+
+                        }
+                    );
+
+                }
+
+            }
+        );
+
+
+        /*
+           Remove duplicates.
+        */
+
+        const seen =
+            new Set();
+
+
+        const unique =
+            allItems.filter(
+                item => {
+
+                    if (
+                        seen.has(
+                            item.title
+                        )
+                    ) {
+
+                        return false;
+
+                    }
+
+
+                    seen.add(
+                        item.title
+                    );
+
+
+                    return true;
+
+                }
+            );
+
+
+        unique
+            .slice(
+                0,
+                30
+            )
+            .forEach(
+                item => {
+
+                    addNewsItem(
+                        container,
+                        item.title,
+                        item.link
+                    );
+
+                }
+            );
+
+
+        if (
+            container.children.length === 0
+        ) {
+
+            throw new Error(
+                "No NOW news"
+            );
+
+        }
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "NOW News error:",
+            error
+        );
+
+
+        container.innerHTML = `
+
+            <a
+                class="news-item"
+                href="https://news.now.com/home/local"
+                target="_blank"
+                rel="noopener"
+            >
+                NOW 港聞新聞
+            </a>
+
+            <a
+                class="news-item"
+                href="https://news.now.com/home/international"
+                target="_blank"
+                rel="noopener"
+            >
+                NOW 兩岸國際新聞
+            </a>
+
+        `;
+
+    }
+
+}
+
+
+/* =========================================================
+   BBC NEWS
+   ========================================================= */
+
+async function loadBBCNews() {
+
+    const container =
+        document.getElementById(
+            "bbcNews"
+        );
+
+
+    container.innerHTML = "";
+
+
+    try {
+
+        const data =
+            await getRSS(
+                BBC_RSS
+            );
+
+
+        (data.items || [])
+            .slice(
+                0,
+                30
+            )
+            .forEach(
+                item => {
+
+                    addNewsItem(
+                        container,
+                        item.title,
+                        item.link
+                    );
+
+                }
+            );
+
+
+    }
+
+    catch(error) {
+
+        console.error(
+            "BBC error:",
+            error
+        );
+
+
+        container.innerHTML = `
+
+            <a
+                class="news-item"
+                href="https://www.bbc.com/news/world"
+                target="_blank"
+                rel="noopener"
+            >
+                BBC World News
+            </a>
+
+        `;
+
+    }
+
+}
+
+
+/* =========================================================
+   NEWS ITEM
+   ========================================================= */
+
+function addNewsItem(
+    container,
+    title,
+    link
+) {
+
+    const item =
+        document.createElement(
+            "a"
+        );
+
+
+    item.className =
+        "news-item";
+
+
+    item.textContent =
+        title;
+
+
+    item.href =
+        link || "#";
+
+
+    item.target =
+        "_blank";
+
+
+    item.rel =
+        "noopener noreferrer";
+
+
+    container.appendChild(
+        item
+    );
+
+}
+
+
+/* =========================================================
+   CALENDAR
+   ========================================================= */
+
+/*
+   iCloud private calendars cannot be read directly
+   from GitHub Pages without authentication/server-side
+   access.
+
+   The card is therefore kept ready for a public
+   iCloud Calendar subscription URL.
+*/
+
+function loadCalendar() {
+
+    const calendar =
+        document.getElementById(
+            "calendar"
+        );
+
+
+    calendar.innerHTML = `
+
+        <div class="calendar-empty">
+
+            iCloud Calendar
+
+            <br><br>
+
+            尚未連接
+
+        </div>
+
+    `;
+
+}
+
+
+/* =========================================================
+   TIME FORMAT
+   ========================================================= */
+
+function formatTime() {
+
+    return new Intl.DateTimeFormat(
+
+        "en-US",
+
+        {
+
+            hour: "numeric",
+
+            minute: "2-digit",
+
+            second: "2-digit",
+
+            hour12: true,
+
+            timeZone:
+                "Asia/Hong_Kong"
+
+        }
+
+    ).format(
+        new Date()
+    );
+
+}
+
+
+/* =========================================================
+   LAST UPDATED
+   ========================================================= */
+
+function updateLastUpdated() {
+
+    document.getElementById(
+        "lastUpdated"
+    ).textContent =
+        `Updated ${formatTime()}`;
+
+}
+
+
+/* =========================================================
+   REFRESH EVERYTHING
+   ========================================================= */
+
+async function refreshDashboard() {
+
+    const button =
+        document.getElementById(
+            "refreshButton"
+        );
+
+
+    button.classList.add(
+        "loading"
+    );
+
+
+    button.disabled =
+        true;
+
+
+    try {
+
+        await Promise.allSettled([
+
+            loadWeather(),
+
+            loadMTR(),
+
+            loadNowNews(),
+
+            loadBBCNews()
+
+        ]);
+
+
+        updateLastUpdated();
+
+    }
+
+    finally {
+
+        setTimeout(
+            () => {
+
+                button.classList.remove(
+                    "loading"
+                );
+
+                button.disabled =
+                    false;
+
+            },
+
+            500
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   START
+   ========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
+
+
+        updateClock();
+
+
+        loadWeather();
+
+
+        loadMTR();
+
+
+        loadNowNews();
+
+
+        loadBBCNews();
+
+
+        loadCalendar();
+
+
+        updateLastUpdated();
+
+
+        /* Clock */
+
+        setInterval(
+            updateClock,
+            1000
+        );
+
+
+        /* Weather */
+
+        setInterval(
+            loadWeather,
+            10 * 60 * 1000
+        );
+
+
+        /* MTR */
+
+        setInterval(
+            loadMTR,
+            30 * 1000
+        );
+
+
+        /* News */
+
+        setInterval(
+            loadNowNews,
+            10 * 60 * 1000
+        );
+
+
+        setInterval(
+            loadBBCNews,
+            10 * 60 * 1000
+        );
+
+
+        /* Refresh button */
+
+        document
+            .getElementById(
+                "refreshButton"
+            )
+            .addEventListener(
+                "click",
+                refreshDashboard
+            );
+
+    }
+);
+
+</script>
+
 
 </body>
+
 </html>
