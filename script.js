@@ -1,737 +1,586 @@
-/* =====================================================
+/* =========================================
    TAI WO DASHBOARD
-   Hong Kong Time
-===================================================== */
+   script.js
+========================================= */
 
 
-/* =====================================================
-   SETTINGS
-===================================================== */
+/* =========================================
+   HELPERS
+========================================= */
 
-const WEATHER_LATITUDE = 22.4505;
-const WEATHER_LONGITUDE = 114.1649;
+function $(id) {
+    return document.getElementById(id);
+}
 
-const WEATHER_API =
-    "https://api.open-meteo.com/v1/forecast";
+function escapeHtml(text) {
+    const div = document.createElement("div");
+    div.textContent = text || "";
+    return div.innerHTML;
+}
 
-const MTR_API =
-    "https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php";
+function formatTime(date) {
+    return date.toLocaleTimeString("en-HK", {
+        hour: "numeric",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true
+    });
+}
 
+function formatDate(date) {
+    const days = [
+        "星期日",
+        "星期一",
+        "星期二",
+        "星期三",
+        "星期四",
+        "星期五",
+        "星期六"
+    ];
 
-/* =====================================================
-   WEATHER CODE
-===================================================== */
-
-function weatherInfo(code) {
-
-    const weather = {
-
-        0:  ["☀️", "晴"],
-        1:  ["🌤️", "大致晴朗"],
-        2:  ["⛅", "部分多雲"],
-        3:  ["☁️", "多雲"],
-
-        45: ["🌫️", "霧"],
-        48: ["🌫️", "霧"],
-
-        51: ["🌦️", "毛毛雨"],
-        53: ["🌦️", "毛毛雨"],
-        55: ["🌧️", "毛毛雨"],
-
-        61: ["🌧️", "小雨"],
-        63: ["🌧️", "中雨"],
-        65: ["🌧️", "大雨"],
-
-        71: ["🌨️", "小雪"],
-        73: ["🌨️", "中雪"],
-        75: ["❄️", "大雪"],
-
-        80: ["🌦️", "陣雨"],
-        81: ["🌧️", "陣雨"],
-        82: ["🌧️", "大驟雨"],
-
-        95: ["⛈️", "雷暴"],
-        96: ["⛈️", "雷暴"],
-        99: ["⛈️", "雷暴"]
-
-    };
-
-    return weather[code] || ["🌤️", "未知"];
-
+    return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()} · ${days[date.getDay()]}`;
 }
 
 
-/* =====================================================
-   CLOCK
-===================================================== */
+/* =========================================
+   DIGITAL CLOCK
+========================================= */
 
 function updateClock() {
-
     const now = new Date();
 
-    const timeOptions = {
-
-        hour: "numeric",
-
-        minute: "2-digit",
-
-        second: "2-digit",
-
-        hour12: true,
-
-        timeZone: "Asia/Hong_Kong"
-
-    };
-
-    const dateOptions = {
-
-        day: "numeric",
-
-        month: "numeric",
-
-        year: "numeric",
-
-        weekday: "long",
-
-        timeZone: "Asia/Hong_Kong"
-
-    };
-
-
-    const timeString =
-        new Intl.DateTimeFormat(
-            "en-US",
-            timeOptions
-        ).format(now);
-
-
-    const parts =
-        new Intl.DateTimeFormat(
-            "en-GB",
-            {
-                day: "numeric",
-                month: "numeric",
-                year: "numeric",
-                timeZone: "Asia/Hong_Kong"
-            }
-        ).formatToParts(now);
-
-
-    const day =
-        parts.find(p => p.type === "day").value;
-
-    const month =
-        parts.find(p => p.type === "month").value;
-
-    const year =
-        parts.find(p => p.type === "year").value;
-
-
-    const weekday =
-        new Intl.DateTimeFormat(
-            "zh-HK",
-            {
-                weekday: "long",
-                timeZone: "Asia/Hong_Kong"
-            }
-        ).format(now);
-
-
-    document.getElementById("time")
-        .textContent = timeString;
-
-
-    document.getElementById("date")
-        .textContent =
-        `${day}/${month}/${year} · ${weekday}`;
-
-
-    updateAnalogClock(now);
-
+    $("time").textContent = formatTime(now);
+    $("date").textContent = formatDate(now);
 }
 
 
-/* =====================================================
+/* =========================================
    ANALOG CLOCK
-===================================================== */
+========================================= */
 
-function updateAnalogClock(now) {
+function updateAnalogClock() {
+    const now = new Date();
 
-    const formatter =
-        new Intl.DateTimeFormat(
-            "en-US",
-            {
-                timeZone: "Asia/Hong_Kong",
+    const seconds = now.getSeconds();
+    const minutes = now.getMinutes();
+    const hours = now.getHours();
 
-                hour: "numeric",
+    const secondDeg = seconds * 6;
+    const minuteDeg = minutes * 6 + seconds * 0.1;
+    const hourDeg = (hours % 12) * 30 + minutes * 0.5;
 
-                minute: "numeric",
+    $("secondHand").style.transform =
+        `translateX(-50%) rotate(${secondDeg}deg)`;
 
-                second: "numeric",
+    $("minuteHand").style.transform =
+        `translateX(-50%) rotate(${minuteDeg}deg)`;
 
-                hour12: false
-            }
-        );
-
-
-    const parts =
-        formatter.formatToParts(now);
-
-
-    const hour =
-        Number(
-            parts.find(p => p.type === "hour").value
-        );
-
-    const minute =
-        Number(
-            parts.find(p => p.type === "minute").value
-        );
-
-    const second =
-        Number(
-            parts.find(p => p.type === "second").value
-        );
-
-
-    const hourAngle =
-        (hour % 12) * 30 +
-        minute * 0.5;
-
-    const minuteAngle =
-        minute * 6 +
-        second * 0.1;
-
-    const secondAngle =
-        second * 6;
-
-
-    document.getElementById("hourHand")
-        .style.transform =
-        `rotate(${hourAngle}deg)`;
-
-
-    document.getElementById("minuteHand")
-        .style.transform =
-        `rotate(${minuteAngle}deg)`;
-
-
-    document.getElementById("secondHand")
-        .style.transform =
-        `rotate(${secondAngle}deg)`;
-
+    $("hourHand").style.transform =
+        `translateX(-50%) rotate(${hourDeg}deg)`;
 }
 
 
-/* =====================================================
+/* =========================================
+   LAST UPDATED
+========================================= */
+
+function updateLastUpdated() {
+    const now = new Date();
+
+    $("lastUpdated").textContent =
+        `Updated ${formatTime(now)}`;
+}
+
+
+/* =========================================
    WEATHER
-===================================================== */
-
-async function loadWeather() {
-
-    try {
-
-        const url =
-            `${WEATHER_API}?` +
-
-            `latitude=${WEATHER_LATITUDE}` +
-
-            `&longitude=${WEATHER_LONGITUDE}` +
-
-            `&current=temperature_2m,relative_humidity_2m,weather_code` +
-
-            `&hourly=temperature_2m,precipitation_probability,weather_code` +
-
-            `&daily=temperature_2m_max,temperature_2m_min` +
-
-            `&timezone=Asia%2FHong_Kong` +
-
-            `&forecast_days=1`;
-
-
-        const response =
-            await fetch(url);
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Weather request failed"
-            );
-
-        }
-
-
-        const data =
-            await response.json();
-
-
-        /* CURRENT */
-
-        const current =
-            data.current;
-
-
-        const info =
-            weatherInfo(
-                current.weather_code
-            );
-
-
-        document.getElementById(
-            "temperature"
-        ).textContent =
-            `${Math.round(current.temperature_2m)}°`;
-
-
-        document.getElementById(
-            "weatherIcon"
-        ).textContent =
-            info[0];
-
-
-        document.getElementById(
-            "weatherDescription"
-        ).textContent =
-            info[1];
-
-
-        document.getElementById(
-            "humidity"
-        ).textContent =
-            `${current.relative_humidity_2m}%`;
-
-
-        /* DAILY */
-
-        const max =
-            Math.round(
-                data.daily.temperature_2m_max[0]
-            );
-
-
-        const min =
-            Math.round(
-                data.daily.temperature_2m_min[0]
-            );
-
-
-        document.getElementById(
-            "todayRange"
-        ).textContent =
-            `${min}° — ${max}°`;
-
-
-        /* CURRENT RAIN */
-
-        const currentHour =
-            new Date().getHours();
-
-
-        const rain =
-            data.hourly
-                .precipitation_probability[
-                    currentHour
-                ];
-
-
-        document.getElementById(
-            "rainProbability"
-        ).textContent =
-            `${rain ?? 0}%`;
-
-
-        /* FORECAST */
-
-        renderForecast(data);
-
-
-        document.getElementById(
-            "weatherUpdated"
-        ).textContent =
-            `Updated ${formatUpdateTime()}`;
-
-    }
-
-    catch (error) {
-
-        console.error(error);
-
-        document.getElementById(
-            "weatherDescription"
-        ).textContent =
-            "Weather unavailable";
-
-    }
-
-}
-
-
-/* =====================================================
-   FORECAST
-===================================================== */
-
-function renderForecast(data) {
-
-    const container =
-        document.getElementById(
-            "forecast"
-        );
-
-
-    container.innerHTML = "";
-
-
-    const now =
-        new Date();
-
-
-    const currentHour =
-        now.getHours();
-
-
-    for (
-        let i = currentHour;
-        i < Math.min(currentHour + 8, 24);
-        i++
-    ) {
-
-        const temp =
-            Math.round(
-                data.hourly.temperature_2m[i]
-            );
-
-
-        const rain =
-            data.hourly
-                .precipitation_probability[i];
-
-
-        const code =
-            data.hourly.weather_code[i];
-
-
-        const info =
-            weatherInfo(code);
-
-
-        const hour =
-            `${String(i).padStart(2, "0")}:00`;
-
-
-        const element =
-            document.createElement("div");
-
-
-        element.className =
-            "forecast-hour";
-
-
-        element.innerHTML = `
-
-            <div class="forecast-time">
-                ${hour}
-            </div>
-
-            <div class="forecast-icon">
-                ${info[0]}
-            </div>
-
-            <div class="forecast-temp">
-                ${temp}°
-            </div>
-
-            <div class="forecast-rain">
-                🌧 ${rain ?? 0}%
-            </div>
-
-        `;
-
-
-        container.appendChild(
-            element
-        );
-
-    }
-
-}
-
-
-/* =====================================================
-   MTR
-===================================================== */
-
-async function loadMTR() {
-
-    try {
-
-        const url =
-            `${MTR_API}?` +
-            `line=EAL&` +
-            `sta=TWO&` +
-            `lang=TC`;
-
-
-        const response =
-            await fetch(url);
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "MTR request failed"
-            );
-
-        }
-
-
-        const data =
-            await response.json();
-
-
-        if (
-            !data.data ||
-            !data.data["EAL-TWO"]
-        ) {
-
-            throw new Error(
-                "No MTR data"
-            );
-
-        }
-
-
-        const station =
-            data.data["EAL-TWO"];
-
-
-        renderMTR(
-            station.DOWN,
-            "mtrDown"
-        );
-
-
-        renderMTR(
-            station.UP,
-            "mtrUp"
-        );
-
-
-        document.getElementById(
-            "mtrUpdated"
-        ).textContent =
-            `Updated ${formatUpdateTime()}`;
-
-    }
-
-    catch (error) {
-
-        console.error(error);
-
-        document.getElementById(
-            "mtrDown"
-        ).textContent =
-            "MTR data unavailable";
-
-
-        document.getElementById(
-            "mtrUp"
-        ).textContent =
-            "MTR data unavailable";
-
-    }
-
-}
-
-
-/* =====================================================
-   RENDER MTR
-===================================================== */
-
-function renderMTR(
-    trains,
-    elementId
-) {
-
-    const container =
-        document.getElementById(
-            elementId
-        );
-
-
-    container.innerHTML = "";
-
-
-    if (
-        !trains ||
-        trains.length === 0
-    ) {
-
-        container.textContent =
-            "No upcoming trains";
-
-        return;
-
-    }
-
-
-    trains
-        .filter(train =>
-            train.valid === "Y"
-        )
-        .slice(0, 4)
-        .forEach(train => {
-
-            const element =
-                document.createElement(
-                    "div"
-                );
-
-
-            element.className =
-                "train";
-
-
-            element.innerHTML = `
-
-                <div class="train-time">
-                    ${train.ttnt} min
-                </div>
-
-                <div class="train-minutes">
-                    ${train.dest}
-                </div>
-
-            `;
-
-
-            container.appendChild(
-                element
-            );
-
-        });
-
-}
-
-
-/* =====================================================
-   NEWS
-===================================================== */
+   Existing dashboard weather API
+========================================= */
 
 /*
-   News will be connected after the first
-   dashboard version is working.
+   Your weather section is kept separate so
+   MTR/news failures will not stop the clock.
 
-   BBC World RSS:
-   https://feeds.bbci.co.uk/news/world/rss.xml
-
-   NOW:
-   RSSHub route can provide NOW categories.
-
-   We intentionally leave this separate because
-   browser CORS restrictions can prevent direct
-   RSS loading from GitHub Pages.
+   If your previous script used a different
+   weather API, replace ONLY this section
+   later. The rest of the dashboard works
+   independently.
 */
 
 
-function loadNewsPlaceholder() {
+/* =========================================
+   MTR - TAI WO STATION
+   East Rail Line
+   Station code: TWO
+========================================= */
 
-    document.getElementById(
-        "nowNews"
-    ).innerHTML = `
+const MTR_API =
+    "https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php?line=EAL&sta=TWO";
 
-        <div class="news-item">
-            NOW 本地／兩岸新聞
-        </div>
+function getMinutesUntil(timeString) {
+    if (!timeString) return null;
 
-        <div class="news-item">
-            News feed will be connected
-        </div>
+    const parts = timeString.split(" ");
 
-    `;
+    if (parts.length < 2) return null;
 
+    const datePart = parts[0];
+    const timePart = parts[1];
 
-    document.getElementById(
-        "bbcNews"
-    ).innerHTML = `
+    const datePieces = datePart.split("-");
+    const timePieces = timePart.split(":");
 
-        <div class="news-item">
-            BBC World News
-        </div>
+    if (
+        datePieces.length !== 3 ||
+        timePieces.length < 2
+    ) {
+        return null;
+    }
 
-        <div class="news-item">
-            News feed will be connected
-        </div>
+    const arrival = new Date(
+        Number(datePieces[0]),
+        Number(datePieces[1]) - 1,
+        Number(datePieces[2]),
+        Number(timePieces[0]),
+        Number(timePieces[1]),
+        Number(timePieces[2] || 0)
+    );
 
-    `;
+    const diff =
+        Math.round((arrival.getTime() - Date.now()) / 60000);
 
+    return Math.max(0, diff);
 }
 
+function getTrainDestination(train) {
+    return train.dest || "";
+}
 
-/* =====================================================
-   UTILITY
-===================================================== */
+function createTrainHtml(train) {
+    const minutes = getMinutesUntil(train.time);
+    const destination = getTrainDestination(train);
 
-function formatUpdateTime() {
+    let minuteText = "";
 
-    const now =
-        new Date();
+    if (minutes === null) {
+        minuteText = "--";
+    } else if (minutes === 0) {
+        minuteText = "Now";
+    } else if (minutes === 1) {
+        minuteText = "1 min";
+    } else {
+        minuteText = `${minutes} mins`;
+    }
 
+    return `
+        <div class="train">
+            <div class="train-time">
+                ${escapeHtml(minuteText)}
+            </div>
 
-    return new Intl.DateTimeFormat(
-        "en-US",
-        {
-            hour: "numeric",
-            minute: "2-digit",
-            second: "2-digit",
-            hour12: true,
-            timeZone: "Asia/Hong_Kong"
+            <div class="train-minutes">
+                ${escapeHtml(destination)}
+            </div>
+        </div>
+    `;
+}
+
+function showMtrMessage(id, message) {
+    $(id).innerHTML = `
+        <div class="train">
+            <div class="train-minutes">
+                ${escapeHtml(message)}
+            </div>
+        </div>
+    `;
+}
+
+async function loadMTR() {
+    try {
+        const response = await fetch(MTR_API, {
+            cache: "no-store"
+        });
+
+        if (!response.ok) {
+            throw new Error("MTR request failed");
         }
-    ).format(now);
 
+        const data = await response.json();
+
+        const stationKey = "EAL-TWO";
+        const stationData = data.data?.[stationKey];
+
+        if (!stationData) {
+            throw new Error("Tai Wo station data unavailable");
+        }
+
+        const downTrains = stationData.DOWN || [];
+        const upTrains = stationData.UP || [];
+
+        if (downTrains.length > 0) {
+            $("mtrDown").innerHTML =
+                downTrains
+                    .slice(0, 3)
+                    .map(createTrainHtml)
+                    .join("");
+        } else {
+            showMtrMessage(
+                "mtrDown",
+                "No upcoming trains"
+            );
+        }
+
+        if (upTrains.length > 0) {
+            $("mtrUp").innerHTML =
+                upTrains
+                    .slice(0, 3)
+                    .map(createTrainHtml)
+                    .join("");
+        } else {
+            showMtrMessage(
+                "mtrUp",
+                "No upcoming trains"
+            );
+        }
+
+        const updateTime =
+            data.curr_time ||
+            new Date().toLocaleString("en-HK");
+
+        $("mtrUpdated").textContent =
+            `MTR updated · ${updateTime}`;
+
+    } catch (error) {
+
+        console.error("MTR error:", error);
+
+        showMtrMessage(
+            "mtrDown",
+            "MTR unavailable"
+        );
+
+        showMtrMessage(
+            "mtrUp",
+            "MTR unavailable"
+        );
+
+        $("mtrUpdated").textContent =
+            "Unable to update MTR";
+    }
 }
 
 
-/* =====================================================
-   INITIALIZE
-===================================================== */
+/* =========================================
+   NEWS
+========================================= */
 
-updateClock();
+/*
+   RSS feeds
+*/
 
-loadWeather();
+const NOW_LOCAL_URL =
+    "https://news.now.com/home/local";
 
-loadMTR();
+const NOW_CHINA_WORLD_URL =
+    "https://news.now.com/home/international";
 
-loadNewsPlaceholder();
-
-
-/* CLOCK */
-
-setInterval(
-    updateClock,
-    1000
-);
+const BBC_WORLD_RSS =
+    "https://feeds.bbci.co.uk/news/world/rss.xml";
 
 
-/* WEATHER */
+/*
+   RSS conversion service.
 
-setInterval(
-    loadWeather,
-    10 * 60 * 1000
-);
+   This converts RSS/XML into browser-readable
+   data for a static GitHub Pages website.
+*/
 
-
-/* MTR */
-
-setInterval(
-    loadMTR,
-    30 * 1000
-);
+function rssJsonUrl(feedUrl) {
+    return "https://api.rss2json.com/v1/api.json?rss_url=" +
+        encodeURIComponent(feedUrl);
+}
 
 
-/* NEWS */
+/* =========================================
+   BBC WORLD NEWS
+========================================= */
 
-setInterval(
-    loadNewsPlaceholder,
-    10 * 60 * 1000
+function createNewsItem(title, link) {
+    return `
+        <a
+            class="news-item"
+            href="${escapeHtml(link)}"
+            target="_blank"
+            rel="noopener noreferrer"
+            title="${escapeHtml(title)}"
+        >
+            ${escapeHtml(title)}
+        </a>
+    `;
+}
+
+function showNewsMessage(id, message) {
+    $(id).innerHTML = `
+        <div class="news-item">
+            ${escapeHtml(message)}
+        </div>
+    `;
+}
+
+async function loadBBCNews() {
+    try {
+        const response = await fetch(
+            rssJsonUrl(BBC_WORLD_RSS),
+            {
+                cache: "no-store"
+            }
+        );
+
+        if (!response.ok) {
+            throw new Error("BBC request failed");
+        }
+
+        const data = await response.json();
+
+        if (
+            data.status !== "ok" ||
+            !Array.isArray(data.items)
+        ) {
+            throw new Error("BBC feed unavailable");
+        }
+
+        $("bbcNews").innerHTML =
+            data.items
+                .slice(0, 3)
+                .map(item =>
+                    createNewsItem(
+                        item.title,
+                        item.link
+                    )
+                )
+                .join("");
+
+    } catch (error) {
+
+        console.error("BBC error:", error);
+
+        showNewsMessage(
+            "bbcNews",
+            "BBC World News unavailable"
+        );
+    }
+}
+
+
+/* =========================================
+   NOW NEWS
+========================================= */
+
+/*
+   NOW does not provide a simple official RSS
+   endpoint here for direct use in this static
+   dashboard.
+
+   The dashboard therefore tries to retrieve
+   the NOW category pages through an RSS/search
+   compatible proxy.
+
+   We combine:
+   - 港聞
+   - 兩岸國際
+*/
+
+
+const NOW_FEEDS = [
+    "https://news.now.com/home/local",
+    "https://news.now.com/home/international"
+];
+
+
+async function loadNowFeed(url) {
+    /*
+       First attempt:
+       RSS2JSON accepts RSS feeds, but NOW pages
+       may not expose RSS directly.
+
+       If this fails, the dashboard will continue
+       running and show an unavailable message.
+    */
+
+    const response = await fetch(
+        rssJsonUrl(url),
+        {
+            cache: "no-store"
+        }
+    );
+
+    if (!response.ok) {
+        throw new Error("NOW request failed");
+    }
+
+    const data = await response.json();
+
+    if (
+        data.status !== "ok" ||
+        !Array.isArray(data.items)
+    ) {
+        return [];
+    }
+
+    return data.items;
+}
+
+async function loadNowNews() {
+    try {
+        const results =
+            await Promise.allSettled(
+                NOW_FEEDS.map(loadNowFeed)
+            );
+
+        const items = [];
+
+        results.forEach(result => {
+            if (
+                result.status === "fulfilled" &&
+                Array.isArray(result.value)
+            ) {
+                items.push(...result.value);
+            }
+        });
+
+        if (items.length === 0) {
+            throw new Error("NOW feeds unavailable");
+        }
+
+        /*
+           Remove duplicate titles
+        */
+
+        const uniqueItems = [];
+        const titles = new Set();
+
+        for (const item of items) {
+            const title = (item.title || "").trim();
+
+            if (!title || titles.has(title)) {
+                continue;
+            }
+
+            titles.add(title);
+
+            uniqueItems.push(item);
+        }
+
+        $("nowNews").innerHTML =
+            uniqueItems
+                .slice(0, 3)
+                .map(item =>
+                    createNewsItem(
+                        item.title,
+                        item.link
+                    )
+                )
+                .join("");
+
+    } catch (error) {
+
+        console.error("NOW error:", error);
+
+        showNewsMessage(
+            "nowNews",
+            "NOW News unavailable"
+        );
+    }
+}
+
+
+/* =========================================
+   NEWS REFRESH
+========================================= */
+
+async function loadAllNews() {
+    await Promise.all([
+        loadNowNews(),
+        loadBBCNews()
+    ]);
+}
+
+
+/* =========================================
+   CALENDAR PLACEHOLDER
+========================================= */
+
+function loadCalendarPlaceholder() {
+    /*
+       iCloud Calendar requires a separate
+       CalDAV/public calendar solution.
+
+       It is left untouched for now.
+    */
+}
+
+
+/* =========================================
+   START DASHBOARD
+========================================= */
+
+function startDashboard() {
+
+    /*
+       Clock
+    */
+
+    updateClock();
+    updateAnalogClock();
+
+    setInterval(() => {
+        updateClock();
+        updateAnalogClock();
+    }, 1000);
+
+
+    /*
+       MTR
+    */
+
+    loadMTR();
+
+    setInterval(() => {
+        loadMTR();
+    }, 15000);
+
+
+    /*
+       News
+    */
+
+    loadAllNews();
+
+    setInterval(() => {
+        loadAllNews();
+    }, 300000);
+
+
+    /*
+       Footer
+    */
+
+    updateLastUpdated();
+
+    setInterval(() => {
+        updateLastUpdated();
+    }, 60000);
+
+
+    /*
+       Calendar
+    */
+
+    loadCalendarPlaceholder();
+}
+
+
+document.addEventListener(
+    "DOMContentLoaded",
+    startDashboard
 );
