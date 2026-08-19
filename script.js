@@ -1,152 +1,105 @@
-const TAI_WO_LAT = 22.4505;
-const TAI_WO_LON = 114.1649;
-
-const WEATHER_API = "https://api.open-meteo.com/v1/forecast";
-const MTR_API = "https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php";
-
-const HKO_API =
-    "https://data.weather.gov.hk/weatherAPI/opendata/weather.php";
+/* =====================================================
+   TAI WO DASHBOARD
+   FULL SCRIPT
+===================================================== */
 
 
-// =========================================================
-// NOW NEWS
-// Use multiple RSSHub servers so NOW News does not disappear
-// when one RSSHub server is unavailable.
-// =========================================================
+/* =====================================================
+   SETTINGS
+===================================================== */
 
-const NOW_LOCAL_RSS_LIST = [
-    "https://rsshub.app/now/news/local",
-    "https://rsshub.umzzz.com/now/news/local"
-];
+const FALLBACK_LATITUDE = 22.4505;
+const FALLBACK_LONGITUDE = 114.1649;
 
-const NOW_INTERNATIONAL_RSS_LIST = [
-    "https://rsshub.app/now/news/international",
-    "https://rsshub.umzzz.com/now/news/international"
-];
+const WEATHER_API =
+    "https://api.open-meteo.com/v1/forecast";
 
+const MTR_API =
+    "https://rt.data.gov.hk/v1/transport/mtr/getSchedule.php";
 
-// =========================================================
-// BBC
-// =========================================================
+const RSS_TO_JSON =
+    "https://api.rss2json.com/v1/api.json";
 
 const BBC_RSS =
     "https://feeds.bbci.co.uk/news/world/rss.xml";
 
-const RSS2JSON =
-    "https://api.rss2json.com/v1/api.json";
+
+/*
+   NOW NEWS
+
+   We use Google News RSS searches specifically
+   restricted to news.now.com.
+
+   Two separate feeds:
+   1. 港聞
+   2. 兩岸國際
+
+   Multiple fallbacks are used because browser CORS
+   behaviour can vary between iPad / Chrome / Safari.
+*/
+
+const NOW_LOCAL_RSS =
+    "https://news.google.com/rss/search?q=site%3Anews.now.com%2Fhome%2Flocal&hl=zh-HK&gl=HK&ceid=HK%3Azh-Hant";
+
+const NOW_INTERNATIONAL_RSS =
+    "https://news.google.com/rss/search?q=site%3Anews.now.com%2Fhome%2Finternational&hl=zh-HK&gl=HK&ceid=HK%3Azh-Hant";
 
 
-// =========================================================
-// LOCATION
-// =========================================================
+/* =====================================================
+   WEATHER CODE
+===================================================== */
 
-let latitude = TAI_WO_LAT;
-let longitude = TAI_WO_LON;
-let usingTaiWo = true;
+function weatherInfo(code) {
 
+    const weather = {
 
-// =========================================================
-// LOCATION
-// =========================================================
+        0: ["☀️", "晴"],
 
-function getLocation() {
-    return new Promise(resolve => {
+        1: ["🌤️", "大致晴朗"],
+        2: ["⛅", "部分多雲"],
+        3: ["☁️", "多雲"],
 
-        if (!navigator.geolocation) {
-            latitude = TAI_WO_LAT;
-            longitude = TAI_WO_LON;
-            usingTaiWo = true;
-            resolve();
-            return;
-        }
+        45: ["🌫️", "有霧"],
+        48: ["🌫️", "有霧"],
 
-        navigator.geolocation.getCurrentPosition(
+        51: ["🌦️", "毛毛雨"],
+        53: ["🌦️", "毛毛雨"],
+        55: ["🌧️", "毛毛雨"],
 
-            position => {
+        61: ["🌧️", "小雨"],
+        63: ["🌧️", "中雨"],
+        65: ["🌧️", "大雨"],
 
-                latitude =
-                    position.coords.latitude;
+        71: ["🌨️", "小雪"],
+        73: ["🌨️", "中雪"],
+        75: ["❄️", "大雪"],
 
-                longitude =
-                    position.coords.longitude;
+        80: ["🌦️", "陣雨"],
+        81: ["🌧️", "陣雨"],
+        82: ["🌧️", "大驟雨"],
 
-                usingTaiWo = false;
+        95: ["⛈️", "雷暴"],
+        96: ["⛈️", "雷暴"],
+        99: ["⛈️", "強雷暴"]
 
-                resolve();
-            },
+    };
 
-            () => {
-
-                latitude = TAI_WO_LAT;
-                longitude = TAI_WO_LON;
-                usingTaiWo = true;
-
-                resolve();
-            },
-
-            {
-                enableHighAccuracy: true,
-                timeout: 10000,
-                maximumAge: 300000
-            }
-        );
-    });
+    return weather[code] || ["🌤️", "未知"];
 }
 
 
-// =========================================================
-// CLOCK
-// =========================================================
-
-function resizeClock() {
-
-    const clockArea =
-        document.querySelector(".clock-area");
-
-    const analogClock =
-        document.getElementById("analogClock");
-
-    if (!clockArea || !analogClock) return;
-
-    const availableWidth =
-        Math.max(
-            80,
-            clockArea.clientWidth - 10
-        );
-
-    const availableHeight =
-        Math.max(
-            80,
-            clockArea.clientHeight - 10
-        );
-
-    const size =
-        Math.max(
-            80,
-            Math.min(
-                availableWidth,
-                availableHeight,
-                190
-            )
-        );
-
-    analogClock.style.width =
-        `${size}px`;
-
-    analogClock.style.height =
-        `${size}px`;
-}
-
+/* =====================================================
+   CLOCK + DATE
+===================================================== */
 
 function updateClock() {
 
     const now = new Date();
 
 
-    // DIGITAL TIME
-    document
-        .getElementById("digitalTime")
-        .textContent =
+    /* DIGITAL TIME */
+
+    const timeString =
         new Intl.DateTimeFormat(
             "en-US",
             {
@@ -159,33 +112,56 @@ function updateClock() {
         ).format(now);
 
 
-    // DATE
+    const digitalTime =
+        document.getElementById(
+            "digitalTime"
+        );
+
+    if (digitalTime) {
+
+        digitalTime.textContent =
+            timeString;
+
+    }
+
+
+    /* DATE */
+
     const dateParts =
         new Intl.DateTimeFormat(
             "en-GB",
             {
-                day: "numeric",
-                month: "numeric",
                 year: "numeric",
+                month: "numeric",
+                day: "numeric",
                 timeZone: "Asia/Hong_Kong"
             }
         ).formatToParts(now);
 
 
+    const getPart = type => {
+
+        const part =
+            dateParts.find(
+                item =>
+                    item.type === type
+            );
+
+        return part
+            ? part.value
+            : "";
+
+    };
+
+
     const year =
-        dateParts.find(
-            p => p.type === "year"
-        ).value;
+        getPart("year");
 
     const month =
-        dateParts.find(
-            p => p.type === "month"
-        ).value;
+        getPart("month");
 
     const day =
-        dateParts.find(
-            p => p.type === "day"
-        ).value;
+        getPart("day");
 
 
     const weekday =
@@ -198,536 +174,247 @@ function updateClock() {
         ).format(now);
 
 
-    document
-        .getElementById("dateMain")
-        .textContent =
-        `${year}年${month}月${day}日 ${weekday}`;
+    const dateMain =
+        document.getElementById(
+            "dateMain"
+        );
 
 
-    // LUNAR
-    try {
+    if (dateMain) {
 
-        const lunar =
-            new Intl.DateTimeFormat(
-                "zh-Hant-u-ca-chinese",
-                {
-                    month: "long",
-                    day: "numeric",
-                    timeZone: "Asia/Hong_Kong"
-                }
-            ).format(now);
+        dateMain.textContent =
+            `${year}年${month}月${day}日 ${weekday}`;
 
-        document
-            .getElementById("lunarDate")
-            .textContent =
-            `農曆 ${lunar}`;
-
-    } catch {
-
-        document
-            .getElementById("lunarDate")
-            .textContent =
-            "農曆資料暫不可用";
     }
 
 
-    // ANALOG CLOCK
-    const hkTime =
+    /* LUNAR DATE */
+
+    const lunarDate =
+        document.getElementById(
+            "lunarDate"
+        );
+
+
+    if (lunarDate) {
+
+        try {
+
+            const lunar =
+                new Intl.DateTimeFormat(
+                    "zh-Hant-u-ca-chinese",
+                    {
+                        month: "long",
+                        day: "numeric",
+                        timeZone: "Asia/Hong_Kong"
+                    }
+                ).format(now);
+
+
+            lunarDate.textContent =
+                `農曆 ${lunar}`;
+
+        }
+
+        catch {
+
+            lunarDate.textContent =
+                "農曆資料暫不可用";
+
+        }
+
+    }
+
+
+    /* ANALOG CLOCK */
+
+    const hkParts =
         new Intl.DateTimeFormat(
-            "en-US",
+            "en-GB",
             {
                 hour: "numeric",
                 minute: "numeric",
                 second: "numeric",
-                hour12: false,
+                hourCycle: "h23",
                 timeZone: "Asia/Hong_Kong"
             }
         ).formatToParts(now);
 
 
-    const hour =
-        Number(
-            hkTime.find(
-                p => p.type === "hour"
-            ).value
-        );
+    const getTimePart = type => {
 
-    const minute =
-        Number(
-            hkTime.find(
-                p => p.type === "minute"
-            ).value
-        );
+        const part =
+            hkParts.find(
+                item =>
+                    item.type === type
+            );
 
-    const second =
-        Number(
-            hkTime.find(
-                p => p.type === "second"
-            ).value
-        );
+        return part
+            ? Number(part.value)
+            : 0;
 
-
-    document
-        .getElementById("hourHand")
-        .style.transform =
-        `translateX(-50%) rotate(${
-            (hour % 12) * 30 +
-            minute * 0.5
-        }deg)`;
-
-
-    document
-        .getElementById("minuteHand")
-        .style.transform =
-        `translateX(-50%) rotate(${
-            minute * 6 +
-            second * 0.1
-        }deg)`;
-
-
-    document
-        .getElementById("secondHand")
-        .style.transform =
-        `translateX(-50%) rotate(${
-            second * 6
-        }deg)`;
-}
-
-
-// =========================================================
-// WEATHER ICON / DESCRIPTION
-// =========================================================
-
-function weatherInfo(code) {
-
-    const weather = {
-
-        0: ["☀️", "晴"],
-
-        1: ["🌤️", "大致晴朗"],
-
-        2: ["⛅", "部分多雲"],
-
-        3: ["☁️", "多雲"],
-
-        45: ["🌫️", "有霧"],
-
-        48: ["🌫️", "有霧"],
-
-        51: ["🌦️", "毛毛雨"],
-
-        53: ["🌦️", "毛毛雨"],
-
-        55: ["🌧️", "毛毛雨"],
-
-        56: ["🌧️", "凍雨"],
-
-        57: ["🌧️", "凍雨"],
-
-        61: ["🌧️", "小雨"],
-
-        63: ["🌧️", "中雨"],
-
-        65: ["🌧️", "大雨"],
-
-        66: ["🌧️", "凍雨"],
-
-        67: ["🌧️", "凍雨"],
-
-        71: ["🌨️", "小雪"],
-
-        73: ["🌨️", "中雪"],
-
-        75: ["❄️", "大雪"],
-
-        77: ["❄️", "雪粒"],
-
-        80: ["🌦️", "陣雨"],
-
-        81: ["🌧️", "陣雨"],
-
-        82: ["🌧️", "大驟雨"],
-
-        85: ["🌨️", "陣雪"],
-
-        86: ["❄️", "大雪"],
-
-        95: ["⛈️", "雷暴"],
-
-        96: ["⛈️", "雷暴"],
-
-        99: ["⛈️", "強雷暴"]
     };
 
-    return (
-        weather[code] ||
-        ["🌤️", "未知"]
-    );
+
+    const hour =
+        getTimePart("hour");
+
+    const minute =
+        getTimePart("minute");
+
+    const second =
+        getTimePart("second");
+
+
+    const hourAngle =
+        (hour % 12) * 30 +
+        minute * 0.5 +
+        second / 120;
+
+
+    const minuteAngle =
+        minute * 6 +
+        second * 0.1;
+
+
+    const secondAngle =
+        second * 6;
+
+
+    const hourHand =
+        document.getElementById(
+            "hourHand"
+        );
+
+    const minuteHand =
+        document.getElementById(
+            "minuteHand"
+        );
+
+    const secondHand =
+        document.getElementById(
+            "secondHand"
+        );
+
+
+    if (hourHand) {
+
+        hourHand.style.transform =
+            `translateX(-50%) rotate(${hourAngle}deg)`;
+
+    }
+
+
+    if (minuteHand) {
+
+        minuteHand.style.transform =
+            `translateX(-50%) rotate(${minuteAngle}deg)`;
+
+    }
+
+
+    if (secondHand) {
+
+        secondHand.style.transform =
+            `translateX(-50%) rotate(${secondAngle}deg)`;
+
+    }
+
 }
 
 
-// =========================================================
-// FIX WEATHER LAYOUT
-//
-// This is the important fix for the portrait view.
-// The HKO text is kept BELOW the weather details,
-// never allowed to overlap the temperature.
-// =========================================================
+/* =====================================================
+   LOCATION
+===================================================== */
 
-function fixWeatherLayout() {
+function getCurrentLocation() {
 
-    const weatherCard =
-        document.querySelector(
-            ".weather-card"
+    return new Promise(resolve => {
+
+        if (!navigator.geolocation) {
+
+            resolve({
+                latitude:
+                    FALLBACK_LATITUDE,
+
+                longitude:
+                    FALLBACK_LONGITUDE,
+
+                fallback: true
+            });
+
+            return;
+
+        }
+
+
+        navigator.geolocation.getCurrentPosition(
+
+            position => {
+
+                resolve({
+
+                    latitude:
+                        position.coords.latitude,
+
+                    longitude:
+                        position.coords.longitude,
+
+                    fallback: false
+
+                });
+
+            },
+
+            () => {
+
+                resolve({
+
+                    latitude:
+                        FALLBACK_LATITUDE,
+
+                    longitude:
+                        FALLBACK_LONGITUDE,
+
+                    fallback: true
+
+                });
+
+            },
+
+            {
+
+                enableHighAccuracy: true,
+
+                timeout: 10000,
+
+                maximumAge: 300000
+
+            }
+
         );
 
-    const weatherMain =
-        document.querySelector(
-            ".weather-main"
-        );
+    });
 
-    const weatherDetails =
-        document.querySelector(
-            ".weather-details"
-        );
-
-    const hkoForecast =
-        document.getElementById(
-            "hkoForecast"
-        );
-
-    const hkoSpecial =
-        document.getElementById(
-            "hkoSpecial"
-        );
-
-    if (!weatherCard) return;
-
-
-    // Weather card becomes a controlled vertical layout.
-    weatherCard.style.display =
-        "grid";
-
-    weatherCard.style.gridTemplateRows =
-        "auto minmax(0, 1fr) auto auto auto";
-
-    weatherCard.style.alignItems =
-        "stretch";
-
-
-    // Main temperature area.
-    if (weatherMain) {
-
-        weatherMain.style.minHeight =
-            "0";
-
-        weatherMain.style.flex =
-            "none";
-
-        weatherMain.style.display =
-            "flex";
-
-        weatherMain.style.alignItems =
-            "center";
-
-        weatherMain.style.overflow =
-            "hidden";
-
-        weatherMain.style.padding =
-            "2px 0";
-    }
-
-
-    // Weather details.
-    if (weatherDetails) {
-
-        weatherDetails.style.flexShrink =
-            "0";
-
-        weatherDetails.style.minHeight =
-            "0";
-    }
-
-
-    // HKO forecast text.
-    if (hkoForecast) {
-
-        hkoForecast.style.boxSizing =
-            "border-box";
-
-        hkoForecast.style.width =
-            "100%";
-
-        hkoForecast.style.minWidth =
-            "0";
-
-        hkoForecast.style.minHeight =
-            "0";
-
-        hkoForecast.style.margin =
-            "4px 0 0 0";
-
-        hkoForecast.style.padding =
-            "3px 7px";
-
-        hkoForecast.style.fontSize =
-            "clamp(8px, 0.85vw, 12px)";
-
-        hkoForecast.style.lineHeight =
-            "1.25";
-
-        hkoForecast.style.whiteSpace =
-            "normal";
-
-        hkoForecast.style.overflow =
-            "hidden";
-
-        hkoForecast.style.display =
-            "-webkit-box";
-
-        hkoForecast.style.webkitBoxOrient =
-            "vertical";
-
-        hkoForecast.style.webkitLineClamp =
-            "2";
-
-        hkoForecast.style.flexShrink =
-            "0";
-    }
-
-
-    // Special weather warning.
-    if (hkoSpecial) {
-
-        hkoSpecial.style.boxSizing =
-            "border-box";
-
-        hkoSpecial.style.width =
-            "100%";
-
-        hkoSpecial.style.minWidth =
-            "0";
-
-        hkoSpecial.style.margin =
-            "4px 0 0 0";
-
-        hkoSpecial.style.padding =
-            "3px 7px";
-
-        hkoSpecial.style.fontSize =
-            "clamp(8px, 0.85vw, 12px)";
-
-        hkoSpecial.style.lineHeight =
-            "1.25";
-
-        hkoSpecial.style.whiteSpace =
-            "normal";
-
-        hkoSpecial.style.overflow =
-            "hidden";
-
-        hkoSpecial.style.display =
-            "-webkit-box";
-
-        hkoSpecial.style.webkitBoxOrient =
-            "vertical";
-
-        hkoSpecial.style.webkitLineClamp =
-            "1";
-
-        hkoSpecial.style.flexShrink =
-            "0";
-    }
 }
 
 
-// =========================================================
-// HKO WEATHER TEXT
-// =========================================================
-
-async function loadHKOText() {
-
-    const forecastElement =
-        document.getElementById(
-            "hkoForecast"
-        );
-
-    const specialElement =
-        document.getElementById(
-            "hkoSpecial"
-        );
-
-
-    if (!forecastElement ||
-        !specialElement) {
-
-        return;
-    }
-
-
-    forecastElement.style.display =
-        "none";
-
-    specialElement.style.display =
-        "none";
-
-    forecastElement.textContent =
-        "";
-
-    specialElement.textContent =
-        "";
-
-
-    // HKO GENERAL FORECAST
-    try {
-
-        const response =
-            await fetch(
-                `${HKO_API}?dataType=flw&lang=tc`,
-                {
-                    cache: "no-store"
-                }
-            );
-
-
-        if (!response.ok) {
-            throw new Error(
-                "HKO forecast failed"
-            );
-        }
-
-
-        const data =
-            await response.json();
-
-
-        const text =
-            data.generalSituation ||
-            data.forecastDesc ||
-            "";
-
-
-        if (text) {
-
-            forecastElement.textContent =
-                `天氣預報：${text}`;
-
-            forecastElement.style.display =
-                "block";
-        }
-
-    } catch (error) {
-
-        console.warn(
-            "HKO forecast unavailable:",
-            error
-        );
-    }
-
-
-    // HKO SPECIAL WEATHER TIPS
-    try {
-
-        const response =
-            await fetch(
-                `${HKO_API}?dataType=swt&lang=tc`,
-                {
-                    cache: "no-store"
-                }
-            );
-
-
-        if (!response.ok) {
-            throw new Error(
-                "HKO special weather failed"
-            );
-        }
-
-
-        const data =
-            await response.json();
-
-
-        const raw =
-            Array.isArray(data.swt)
-                ? data.swt
-                : (
-                    Array.isArray(
-                        data.specialWeatherTips
-                    )
-                        ? data.specialWeatherTips
-                        : []
-                );
-
-
-        const tips =
-            raw
-                .map(item => {
-
-                    if (
-                        typeof item ===
-                        "string"
-                    ) {
-                        return item;
-                    }
-
-                    return (
-                        item.desc ||
-                        item.description ||
-                        item.message ||
-                        ""
-                    );
-                })
-                .filter(Boolean);
-
-
-        if (tips.length > 0) {
-
-            specialElement.textContent =
-                `⚠️ 特別天氣提示：${tips.join("　")}`;
-
-            specialElement.style.display =
-                "block";
-        }
-
-    } catch (error) {
-
-        console.warn(
-            "HKO special weather unavailable:",
-            error
-        );
-    }
-
-
-    fixWeatherLayout();
-}
-
-
-// =========================================================
-// WEATHER
-// =========================================================
+/* =====================================================
+   WEATHER
+===================================================== */
 
 async function loadWeather() {
 
-    const weatherUpdated =
-        document.getElementById(
-            "weatherUpdated"
-        );
-
-
     try {
 
-        weatherUpdated.textContent =
-            "Weather updating...";
+        const location =
+            await getCurrentLocation();
 
 
-        await getLocation();
-
-
-        const weatherURL =
+        const url =
             `${WEATHER_API}` +
-            `?latitude=${latitude}` +
-            `&longitude=${longitude}` +
+            `?latitude=${location.latitude}` +
+            `&longitude=${location.longitude}` +
             `&current=temperature_2m,relative_humidity_2m,weather_code` +
             `&hourly=temperature_2m,precipitation_probability,weather_code` +
             `&daily=temperature_2m_max,temperature_2m_min` +
@@ -737,7 +424,7 @@ async function loadWeather() {
 
         const response =
             await fetch(
-                weatherURL,
+                url,
                 {
                     cache: "no-store"
                 }
@@ -745,9 +432,11 @@ async function loadWeather() {
 
 
         if (!response.ok) {
+
             throw new Error(
-                "Weather API failed"
+                "Weather unavailable"
             );
+
         }
 
 
@@ -761,125 +450,148 @@ async function loadWeather() {
             );
 
 
-        document
-            .getElementById("weatherIcon")
-            .textContent =
-            info[0];
-
-
-        document
-            .getElementById("temperature")
-            .textContent =
-            `${Math.round(
-                data.current.temperature_2m
-            )}°`;
-
-
-        document
-            .getElementById(
-                "weatherDescription"
-            )
-            .textContent =
-            info[1];
-
-
-        document
-            .getElementById("todayRange")
-            .textContent =
-            `${Math.round(
-                data.daily.temperature_2m_min[0]
-            )}° — ${Math.round(
-                data.daily.temperature_2m_max[0]
-            )}°`;
-
-
-        document
-            .getElementById("humidity")
-            .textContent =
-            `${data.current.relative_humidity_2m}%`;
-
-
-        const hkParts =
-            new Intl.DateTimeFormat(
-                "en-US",
-                {
-                    hour: "numeric",
-                    hour12: false,
-                    timeZone: "Asia/Hong_Kong"
-                }
-            ).formatToParts(
-                new Date()
-            );
-
-
-        const currentHour =
-            Number(
-                hkParts.find(
-                    p => p.type === "hour"
-                ).value
-            );
-
-
-        const rain =
-            data
-                .hourly
-                .precipitation_probability[
-                    Math.min(
-                        currentHour,
-                        data.hourly
-                            .precipitation_probability
-                            .length - 1
-                    )
-                ] ?? 0;
-
-
-        document
-            .getElementById(
-                "rainProbability"
-            )
-            .textContent =
-            `${rain}%`;
-
-
-        document
-            .getElementById(
+        const weatherTitle =
+            document.getElementById(
                 "weatherTitle"
-            )
-            .textContent =
-            usingTaiWo
-                ? "🌤️ TAI WO WEATHER"
-                : "📍 CURRENT WEATHER";
+            );
 
 
-        document
-            .getElementById(
-                "forecastTitle"
-            )
-            .textContent =
-            "🌦️ TODAY'S FORECAST";
+        if (weatherTitle) {
+
+            weatherTitle.textContent =
+                location.fallback
+                    ? "🌤️ TAI WO WEATHER"
+                    : "📍 CURRENT WEATHER";
+
+        }
+
+
+        const weatherIcon =
+            document.getElementById(
+                "weatherIcon"
+            );
+
+
+        if (weatherIcon) {
+
+            weatherIcon.textContent =
+                info[0];
+
+        }
+
+
+        const temperature =
+            document.getElementById(
+                "temperature"
+            );
+
+
+        if (temperature) {
+
+            temperature.textContent =
+                `${Math.round(
+                    data.current.temperature_2m
+                )}°`;
+
+        }
+
+
+        const weatherDescription =
+            document.getElementById(
+                "weatherDescription"
+            );
+
+
+        if (weatherDescription) {
+
+            weatherDescription.textContent =
+                info[1];
+
+        }
+
+
+        const todayRange =
+            document.getElementById(
+                "todayRange"
+            );
+
+
+        if (todayRange) {
+
+            todayRange.textContent =
+                `${Math.round(
+                    data.daily.temperature_2m_min[0]
+                )}° — ${Math.round(
+                    data.daily.temperature_2m_max[0]
+                )}°`;
+
+        }
+
+
+        const humidity =
+            document.getElementById(
+                "humidity"
+            );
+
+
+        if (humidity) {
+
+            humidity.textContent =
+                `${data.current.relative_humidity_2m}%`;
+
+        }
+
+
+        const hkHour =
+            Number(
+                new Intl.DateTimeFormat(
+                    "en-GB",
+                    {
+                        hour: "numeric",
+                        hourCycle: "h23",
+                        timeZone:
+                            "Asia/Hong_Kong"
+                    }
+                ).format(new Date())
+            );
+
+
+        const rainProbability =
+            document.getElementById(
+                "rainProbability"
+            );
+
+
+        if (rainProbability) {
+
+            rainProbability.textContent =
+                `${data.hourly.precipitation_probability[hkHour] ?? 0}%`;
+
+        }
 
 
         renderForecast(
             data,
-            currentHour
+            hkHour
         );
 
 
-        await loadHKOText();
+        const weatherUpdated =
+            document.getElementById(
+                "weatherUpdated"
+            );
 
 
-        weatherUpdated.textContent =
-            `Updated ${formatTime()}`;
+        if (weatherUpdated) {
 
+            weatherUpdated.textContent =
+                `Updated ${formatTime()}`;
 
-        updateLastUpdated();
+        }
 
+    }
 
-        // Apply again after all content has loaded.
-        fixWeatherLayout();
-
-
-    } catch (error) {
+    catch (error) {
 
         console.error(
             "Weather error:",
@@ -887,67 +599,78 @@ async function loadWeather() {
         );
 
 
-        document
-            .getElementById(
+        const description =
+            document.getElementById(
                 "weatherDescription"
-            )
-            .textContent =
-            "Weather unavailable";
+            );
 
 
-        weatherUpdated.textContent =
-            "Unable to update weather";
+        if (description) {
 
+            description.textContent =
+                "Weather unavailable";
 
-        fixWeatherLayout();
+        }
+
     }
+
 }
 
 
-// =========================================================
-// HOURLY FORECAST
-// =========================================================
+/* =====================================================
+   FORECAST
+===================================================== */
 
 function renderForecast(
     data,
     startHour
 ) {
 
-    const container =
+    const forecast =
         document.getElementById(
             "forecast"
         );
 
 
-    container.innerHTML =
+    if (!forecast) {
+
+        return;
+
+    }
+
+
+    forecast.innerHTML =
         "";
 
 
-    const total =
-        Math.min(
-            startHour + 8,
-            data.hourly.time.length
-        );
-
-
     for (
-        let i = startHour;
-        i < total;
+        let i = 0;
+        i < 8;
         i++
     ) {
 
+        const hour =
+            (startHour + i) % 24;
+
+
+        if (
+            !data.hourly.time[hour]
+        ) {
+
+            continue;
+
+        }
+
+
         const time =
-            data
-                .hourly
-                .time[i]
+            data.hourly.time[hour]
                 .split("T")[1]
-                .substring(0, 5);
+                .slice(0, 5);
 
 
         const info =
             weatherInfo(
-                data.hourly
-                    .weather_code[i]
+                data.hourly.weather_code[hour]
             );
 
 
@@ -958,10 +681,11 @@ function renderForecast(
 
 
         item.className =
-            "forecast-item";
+            "forecast-hour";
 
 
         item.innerHTML = `
+
             <div class="forecast-time">
                 ${time}
             </div>
@@ -972,31 +696,29 @@ function renderForecast(
 
             <div class="forecast-temp">
                 ${Math.round(
-                    data.hourly
-                        .temperature_2m[i]
+                    data.hourly.temperature_2m[hour]
                 )}°
             </div>
 
             <div class="forecast-rain">
-                ${
-                    data.hourly
-                        .precipitation_probability[i]
-                    ?? 0
-                }%
+                ${data.hourly.precipitation_probability[hour] ?? 0}%
             </div>
+
         `;
 
 
-        container.appendChild(
+        forecast.appendChild(
             item
         );
+
     }
+
 }
 
 
-// =========================================================
-// MTR
-// =========================================================
+/* =====================================================
+   MTR
+===================================================== */
 
 async function loadMTR() {
 
@@ -1012,9 +734,11 @@ async function loadMTR() {
 
 
         if (!response.ok) {
+
             throw new Error(
-                "MTR API failed"
+                "MTR unavailable"
             );
+
         }
 
 
@@ -1027,9 +751,11 @@ async function loadMTR() {
 
 
         if (!station) {
+
             throw new Error(
-                "MTR station unavailable"
+                "Tai Wo unavailable"
             );
+
         }
 
 
@@ -1044,8 +770,9 @@ async function loadMTR() {
             "mtrUp"
         );
 
+    }
 
-    } catch (error) {
+    catch (error) {
 
         console.error(
             "MTR error:",
@@ -1053,27 +780,39 @@ async function loadMTR() {
         );
 
 
-        document
-            .getElementById(
+        const down =
+            document.getElementById(
                 "mtrDown"
-            )
-            .innerHTML =
-            `<div class="train">
-                暫無資料
-            </div>`;
+            );
 
 
-        document
-            .getElementById(
+        const up =
+            document.getElementById(
                 "mtrUp"
-            )
-            .innerHTML =
-            `<div class="train">
-                暫無資料
-            </div>`;
+            );
+
+
+        if (down) {
+
+            down.innerHTML =
+                `<div class="train">暫無資料</div>`;
+
+        }
+
+
+        if (up) {
+
+            up.innerHTML =
+                `<div class="train">暫無資料</div>`;
+
+        }
+
     }
+
 }
 
+
+/* ONLY TWO UPCOMING TRAINS */
 
 function renderTrains(
     trains,
@@ -1086,33 +825,42 @@ function renderTrains(
         );
 
 
+    if (!container) {
+
+        return;
+
+    }
+
+
     container.innerHTML =
         "";
 
 
-    const validTrains =
+    const upcoming =
         trains
             .filter(
                 train =>
                     train.valid === "Y"
             )
-            .slice(0, 2);
+            .slice(
+                0,
+                2
+            );
 
 
     if (
-        validTrains.length === 0
+        upcoming.length === 0
     ) {
 
         container.innerHTML =
-            `<div class="train">
-                暫無班次
-            </div>`;
+            `<div class="train">暫無班次</div>`;
 
         return;
+
     }
 
 
-    validTrains.forEach(
+    upcoming.forEach(
         train => {
 
             const item =
@@ -1126,214 +874,463 @@ function renderTrains(
 
 
             item.innerHTML = `
+
                 <div class="train-time">
                     ${train.ttnt} min
                 </div>
 
-                <div class="train-destination">
+                <div class="train-minutes">
                     ${train.dest || ""}
                 </div>
+
             `;
 
 
             container.appendChild(
                 item
             );
+
         }
     );
+
 }
 
 
-// =========================================================
-// RSS
-// =========================================================
+/* =====================================================
+   RSS HELPERS
+===================================================== */
 
-async function getRSS(
+
+/*
+   METHOD 1
+   RSS2JSON
+*/
+
+async function getRSS2JSON(
     rssURL
 ) {
 
     const url =
-        `${RSS2JSON}?rss_url=` +
+        `${RSS_TO_JSON}?rss_url=` +
         encodeURIComponent(
             rssURL
         );
 
 
-    const controller =
-        new AbortController();
-
-
-    const timeout =
-        setTimeout(
-            () => controller.abort(),
-            12000
+    const response =
+        await fetch(
+            url,
+            {
+                cache: "no-store"
+            }
         );
 
 
-    try {
+    if (!response.ok) {
 
-        const response =
-            await fetch(
-                url,
-                {
-                    cache: "no-store",
-                    signal:
-                        controller.signal
-                }
-            );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                `RSS failed: HTTP ${
-                    response.status
-                }`
-            );
-        }
-
-
-        const data =
-            await response.json();
-
-
-        if (
-            data.status &&
-            data.status !== "ok"
-        ) {
-
-            throw new Error(
-                data.message ||
-                "RSS conversion failed"
-            );
-        }
-
-
-        if (
-            !data.items ||
-            !data.items.length
-        ) {
-
-            throw new Error(
-                "RSS returned no items"
-            );
-        }
-
-
-        return data;
-
-
-    } finally {
-
-        clearTimeout(
-            timeout
+        throw new Error(
+            "RSS2JSON request failed"
         );
+
     }
+
+
+    const data =
+        await response.json();
+
+
+    if (
+        data.status &&
+        data.status !== "ok"
+    ) {
+
+        throw new Error(
+            data.message ||
+            "RSS2JSON error"
+        );
+
+    }
+
+
+    return data.items || [];
+
 }
 
 
-// =========================================================
-// Try multiple RSSHub servers
-// =========================================================
+/*
+   METHOD 2
+   AllOrigins raw proxy
+*/
 
-async function getFirstWorkingRSS(
-    urls
+async function getRSSAllOrigins(
+    rssURL
 ) {
+
+    const url =
+        "https://api.allorigins.win/raw?url=" +
+        encodeURIComponent(
+            rssURL
+        );
+
+
+    const response =
+        await fetch(
+            url,
+            {
+                cache: "no-store"
+            }
+        );
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            "AllOrigins request failed"
+        );
+
+    }
+
+
+    const xml =
+        await response.text();
+
+
+    if (
+        !xml ||
+        xml.indexOf("<item") === -1
+    ) {
+
+        throw new Error(
+            "RSS XML unavailable"
+        );
+
+    }
+
+
+    return parseRSSXML(
+        xml
+    );
+
+}
+
+
+/*
+   METHOD 3
+   CorsProxy fallback
+*/
+
+async function getRSSCorsProxy(
+    rssURL
+) {
+
+    const url =
+        "https://corsproxy.io/?" +
+        encodeURIComponent(
+            rssURL
+        );
+
+
+    const response =
+        await fetch(
+            url,
+            {
+                cache: "no-store"
+            }
+        );
+
+
+    if (!response.ok) {
+
+        throw new Error(
+            "CorsProxy request failed"
+        );
+
+    }
+
+
+    const xml =
+        await response.text();
+
+
+    if (
+        !xml ||
+        xml.indexOf("<item") === -1
+    ) {
+
+        throw new Error(
+            "RSS XML unavailable"
+        );
+
+    }
+
+
+    return parseRSSXML(
+        xml
+    );
+
+}
+
+
+/*
+   Parse RSS XML
+*/
+
+function parseRSSXML(
+    xml
+) {
+
+    const parser =
+        new DOMParser();
+
+
+    const documentXML =
+        parser.parseFromString(
+            xml,
+            "text/xml"
+        );
+
+
+    const items =
+        Array.from(
+            documentXML.querySelectorAll(
+                "item"
+            )
+        );
+
+
+    return items.map(
+        item => {
+
+            const title =
+                item.querySelector(
+                    "title"
+                )?.textContent
+                ?.trim() ||
+                "";
+
+
+            const link =
+                item.querySelector(
+                    "link"
+                )?.textContent
+                ?.trim() ||
+                "";
+
+
+            const pubDate =
+                item.querySelector(
+                    "pubDate"
+                )?.textContent
+                ?.trim() ||
+                "";
+
+
+            return {
+
+                title:
+                    decodeHTML(title),
+
+                link,
+
+                pubDate
+
+            };
+
+        }
+    );
+
+}
+
+
+/*
+   Decode HTML entities
+*/
+
+function decodeHTML(
+    text
+) {
+
+    const textarea =
+        document.createElement(
+            "textarea"
+        );
+
+
+    textarea.innerHTML =
+        text;
+
+
+    return textarea.value;
+
+}
+
+
+/*
+   Try multiple RSS methods
+*/
+
+async function getRSS(
+    rssURL
+) {
+
+    const methods = [
+
+        () =>
+            getRSS2JSON(
+                rssURL
+            ),
+
+        () =>
+            getRSSAllOrigins(
+                rssURL
+            ),
+
+        () =>
+            getRSSCorsProxy(
+                rssURL
+            )
+
+    ];
+
 
     let lastError =
         null;
 
 
     for (
-        const url of urls
+        const method of methods
     ) {
 
         try {
 
-            const data =
-                await getRSS(
-                    url
-                );
+            const items =
+                await method();
 
 
             if (
-                data.items &&
-                data.items.length
+                Array.isArray(items) &&
+                items.length > 0
             ) {
 
-                return data;
+                return items;
+
             }
 
-        } catch (error) {
+        }
+
+        catch (error) {
 
             lastError =
                 error;
 
             console.warn(
-                "RSS source failed:",
-                url,
+                "RSS method failed:",
                 error
             );
+
         }
+
     }
 
 
     throw (
         lastError ||
         new Error(
-            "All RSS sources failed"
+            "All RSS methods failed"
         )
     );
+
 }
 
 
-// =========================================================
-// NEWS ITEM
-// =========================================================
+/* =====================================================
+   NEWS RENDERING
+===================================================== */
 
-function addNewsItem(
-    container,
-    title,
-    link
+function renderNews(
+    elementId,
+    items
 ) {
 
-    const item =
-        document.createElement(
-            "a"
+    const container =
+        document.getElementById(
+            elementId
         );
 
 
-    item.className =
-        "news-item";
+    if (!container) {
+
+        return;
+
+    }
 
 
-    item.textContent =
-        title ||
-        "Untitled";
+    container.innerHTML =
+        "";
 
 
-    item.href =
-        link ||
-        "#";
+    if (
+        !items ||
+        !items.length
+    ) {
+
+        container.textContent =
+            "暫時沒有新聞";
+
+        return;
+
+    }
 
 
-    item.target =
-        "_blank";
+    items
+        .slice(
+            0,
+            30
+        )
+        .forEach(
+            item => {
+
+                const link =
+                    document.createElement(
+                        "a"
+                    );
 
 
-    item.rel =
-        "noopener noreferrer";
+                link.className =
+                    "news-item";
 
 
-    container.appendChild(
-        item
-    );
+                link.textContent =
+                    item.title ||
+                    "Untitled";
+
+
+                link.href =
+                    item.link ||
+                    "#";
+
+
+                link.target =
+                    "_blank";
+
+
+                link.rel =
+                    "noopener noreferrer";
+
+
+                container.appendChild(
+                    link
+                );
+
+            }
+        );
+
 }
 
 
-// =========================================================
-// NOW NEWS
-// =========================================================
+/* =====================================================
+   NOW NEWS
+===================================================== */
 
 async function loadNowNews() {
 
@@ -1343,91 +1340,147 @@ async function loadNowNews() {
         );
 
 
+    if (!container) {
+
+        return;
+
+    }
+
+
     container.innerHTML =
-        `<div class="news-item">
-            NOW 新聞載入中…
-        </div>`;
+        `
+            <div class="news-item">
+                載入 NOW News...
+            </div>
+        `;
 
 
     try {
 
+        /*
+           Get both categories separately.
+        */
+
         const results =
-            await Promise.all([
-                getFirstWorkingRSS(
-                    NOW_LOCAL_RSS_LIST
+            await Promise.allSettled([
+
+                getRSS(
+                    NOW_LOCAL_RSS
                 ),
 
-                getFirstWorkingRSS(
-                    NOW_INTERNATIONAL_RSS_LIST
+                getRSS(
+                    NOW_INTERNATIONAL_RSS
                 )
+
             ]);
 
 
-        const allItems =
-            results.flatMap(
-                result =>
-                    result.items || []
-            );
+        let localItems =
+            [];
 
+        let internationalItems =
+            [];
+
+
+        if (
+            results[0].status ===
+            "fulfilled"
+        ) {
+
+            localItems =
+                results[0].value;
+
+        }
+
+
+        if (
+            results[1].status ===
+            "fulfilled"
+        ) {
+
+            internationalItems =
+                results[1].value;
+
+        }
+
+
+        /*
+           Remove duplicates.
+        */
 
         const seen =
             new Set();
 
 
-        const unique =
-            allItems.filter(
+        const combined =
+            [];
+
+
+        [
+            ...localItems,
+            ...internationalItems
+        ]
+            .forEach(
                 item => {
 
-                    const title =
+                    const key =
                         (
+                            item.link ||
                             item.title ||
                             ""
-                        ).trim();
+                        )
+                        .trim();
 
 
                     if (
-                        !title ||
-                        seen.has(title)
+                        !key ||
+                        seen.has(key)
                     ) {
 
-                        return false;
+                        return;
+
                     }
 
 
-                    seen.add(title);
+                    seen.add(
+                        key
+                    );
 
-                    return true;
+
+                    combined.push(
+                        item
+                    );
+
                 }
             );
 
 
-        container.innerHTML =
-            "";
-
-
-        unique
-            .slice(0, 30)
-            .forEach(
-                item =>
-                    addNewsItem(
-                        container,
-                        item.title,
-                        item.link
-                    )
-            );
-
+        /*
+           If we got actual news,
+           display it.
+        */
 
         if (
-            !container.children.length
+            combined.length > 0
         ) {
 
-            throw new Error(
-                "No NOW news items"
+            renderNews(
+                "nowNews",
+                combined
             );
+
+            return;
+
         }
 
 
-    } catch (error) {
+        throw new Error(
+            "No NOW News items"
+        );
+
+    }
+
+    catch (error) {
 
         console.error(
             "NOW News error:",
@@ -1435,45 +1488,103 @@ async function loadNowNews() {
         );
 
 
-        // Keep useful clickable links instead
-        // of showing a fake "Loading" state.
-        container.innerHTML = `
+        /*
+           Never show the old misleading
+           "browser cannot load" message.
+        */
 
-            <a
-                class="news-item"
-                href="https://news.now.com/home/local"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                NOW 港聞新聞
-            </a>
+        container.innerHTML =
+            "";
 
-            <a
-                class="news-item"
-                href="https://news.now.com/home/international"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                NOW 兩岸國際新聞
-            </a>
 
-            <div
-                class="news-item"
-                style="
-                    color:var(--muted);
-                    cursor:default;
-                "
-            >
-                NOW 即時標題暫時無法載入。
-            </div>
-        `;
+        const localLink =
+            document.createElement(
+                "a"
+            );
+
+
+        localLink.className =
+            "news-item";
+
+
+        localLink.textContent =
+            "港聞｜NOW News";
+
+
+        localLink.href =
+            "https://news.now.com/home/local";
+
+
+        localLink.target =
+            "_blank";
+
+
+        localLink.rel =
+            "noopener noreferrer";
+
+
+        container.appendChild(
+            localLink
+        );
+
+
+        const internationalLink =
+            document.createElement(
+                "a"
+            );
+
+
+        internationalLink.className =
+            "news-item";
+
+
+        internationalLink.textContent =
+            "兩岸國際｜NOW News";
+
+
+        internationalLink.href =
+            "https://news.now.com/home/international";
+
+
+        internationalLink.target =
+            "_blank";
+
+
+        internationalLink.rel =
+            "noopener noreferrer";
+
+
+        container.appendChild(
+            internationalLink
+        );
+
+
+        const status =
+            document.createElement(
+                "div"
+            );
+
+
+        status.className =
+            "news-item";
+
+
+        status.textContent =
+            "NOW News 暫時無法取得即時標題";
+
+
+        container.appendChild(
+            status
+        );
+
     }
+
 }
 
 
-// =========================================================
-// BBC NEWS
-// =========================================================
+/* =====================================================
+   BBC NEWS
+===================================================== */
 
 async function loadBBCNews() {
 
@@ -1483,83 +1594,85 @@ async function loadBBCNews() {
         );
 
 
-    container.innerHTML =
-        "";
+    if (!container) {
+
+        return;
+
+    }
 
 
     try {
 
-        const data =
+        const items =
             await getRSS(
                 BBC_RSS
             );
 
 
-        (data.items || [])
-            .slice(0, 30)
-            .forEach(
-                item =>
-                    addNewsItem(
-                        container,
-                        item.title,
-                        item.link
-                    )
-            );
+        renderNews(
+            "bbcNews",
+            items
+        );
 
+    }
 
-        if (
-            !container.children.length
-        ) {
-
-            throw new Error(
-                "No BBC news"
-            );
-        }
-
-
-    } catch (error) {
+    catch (error) {
 
         console.error(
-            "BBC error:",
+            "BBC News error:",
             error
         );
 
 
-        container.innerHTML = `
-            <a
-                class="news-item"
-                href="https://www.bbc.com/news/world"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                BBC World News
-            </a>
-        `;
+        container.innerHTML =
+            `
+                <a
+                    class="news-item"
+                    href="https://www.bbc.com/news/world"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                >
+                    BBC World News
+                </a>
+            `;
+
     }
+
 }
 
 
-// =========================================================
-// CALENDAR
-// =========================================================
+/* =====================================================
+   CALENDAR
+===================================================== */
 
 function loadCalendar() {
 
-    document
-        .getElementById(
+    const calendar =
+        document.getElementById(
             "calendar"
-        )
-        .innerHTML = `
+        );
+
+
+    if (!calendar) {
+
+        return;
+
+    }
+
+
+    calendar.innerHTML =
+        `
             <div class="calendar-empty">
                 iCloud Calendar 尚未連接
             </div>
         `;
+
 }
 
 
-// =========================================================
-// TIME
-// =========================================================
+/* =====================================================
+   TIME FORMAT
+===================================================== */
 
 function formatTime() {
 
@@ -1575,23 +1688,38 @@ function formatTime() {
     ).format(
         new Date()
     );
+
 }
 
+
+/* =====================================================
+   LAST UPDATED
+===================================================== */
 
 function updateLastUpdated() {
 
-    document
-        .getElementById(
+    const element =
+        document.getElementById(
             "lastUpdated"
-        )
-        .textContent =
+        );
+
+
+    if (!element) {
+
+        return;
+
+    }
+
+
+    element.textContent =
         `Updated ${formatTime()}`;
+
 }
 
 
-// =========================================================
-// REFRESH
-// =========================================================
+/* =====================================================
+   REFRESH
+===================================================== */
 
 async function refreshDashboard() {
 
@@ -1599,6 +1727,13 @@ async function refreshDashboard() {
         document.getElementById(
             "refreshButton"
         );
+
+
+    if (!button) {
+
+        return;
+
+    }
 
 
     button.classList.add(
@@ -1613,19 +1748,23 @@ async function refreshDashboard() {
     try {
 
         await Promise.allSettled([
+
             loadWeather(),
+
             loadMTR(),
+
             loadNowNews(),
+
             loadBBCNews()
+
         ]);
 
 
-        fixWeatherLayout();
-
         updateLastUpdated();
 
+    }
 
-    } finally {
+    finally {
 
         setTimeout(
             () => {
@@ -1634,29 +1773,31 @@ async function refreshDashboard() {
                     "loading"
                 );
 
+
                 button.disabled =
                     false;
 
             },
             500
         );
+
     }
+
 }
 
 
-// =========================================================
-// INITIALISE
-// =========================================================
+/* =====================================================
+   START DASHBOARD
+===================================================== */
 
 document.addEventListener(
     "DOMContentLoaded",
     () => {
 
-        resizeClock();
+
+        /* INITIAL */
 
         updateClock();
-
-        fixWeatherLayout();
 
         loadWeather();
 
@@ -1671,116 +1812,48 @@ document.addEventListener(
         updateLastUpdated();
 
 
-        // Clock
+        /* CLOCK */
+
         setInterval(
             updateClock,
             1000
         );
 
 
-        // Weather + HKO
+        /* WEATHER */
+
         setInterval(
             loadWeather,
             10 * 60 * 1000
         );
 
 
-        // MTR
+        /* MTR */
+
         setInterval(
             loadMTR,
             30 * 1000
         );
 
 
-        // NOW
+        /* NOW NEWS */
+
         setInterval(
             loadNowNews,
             10 * 60 * 1000
         );
 
 
-        // BBC
+        /* BBC */
+
         setInterval(
             loadBBCNews,
             10 * 60 * 1000
         );
 
 
-        // Resize
-        window.addEventListener(
-            "resize",
-            () => {
+        /* REFRESH BUTTON */
 
-                resizeClock();
-
-                fixWeatherLayout();
-            }
-        );
-
-
-        // Orientation change
-        window.addEventListener(
-            "orientationchange",
-            () => {
-
-                setTimeout(
-                    () => {
-
-                        resizeClock();
-
-                        fixWeatherLayout();
-
-                    },
-                    300
-                );
-            }
-        );
-
-
-        // ResizeObserver
-        if (
-            window.ResizeObserver
-        ) {
-
-            const observer =
-                new ResizeObserver(
-                    () => {
-
-                        resizeClock();
-
-                        fixWeatherLayout();
-                    }
-                );
-
-
-            const clockArea =
-                document.querySelector(
-                    ".clock-area"
-                );
-
-
-            const weatherCard =
-                document.querySelector(
-                    ".weather-card"
-                );
-
-
-            if (clockArea) {
-                observer.observe(
-                    clockArea
-                );
-            }
-
-
-            if (weatherCard) {
-                observer.observe(
-                    weatherCard
-                );
-            }
-        }
-
-
-        // Refresh button
         const refreshButton =
             document.getElementById(
                 "refreshButton"
@@ -1793,6 +1866,8 @@ document.addEventListener(
                 "click",
                 refreshDashboard
             );
+
         }
+
     }
 );
