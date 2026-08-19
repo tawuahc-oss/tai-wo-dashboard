@@ -27,7 +27,9 @@ html,
 body {
     width: 100%;
     height: 100%;
+
     margin: 0;
+
     overflow: hidden;
 }
 
@@ -131,28 +133,31 @@ body {
 
 
 .date-time-bubble {
-    padding: 8px 28px;
+    min-width: 420px;
+
+    padding: 10px 38px;
 
     text-align: center;
 
     border: 1px solid var(--border);
-    border-radius: 22px;
+    border-radius: 24px;
 
     background:
-        rgba(255, 237, 240, 0.36);
+        rgba(255, 237, 240, 0.42);
 }
 
 
 .top-date {
-    font-size: clamp(17px, 1.8vw, 25px);
+    font-size: clamp(20px, 2vw, 28px);
+
     font-weight: 800;
 }
 
 
 .lunar {
-    margin-top: 2px;
+    margin-top: 3px;
 
-    font-size: clamp(13px, 1.2vw, 17px);
+    font-size: clamp(14px, 1.3vw, 18px);
 
     color: var(--secondary);
 }
@@ -166,10 +171,10 @@ body {
     display: grid;
 
     grid-template-rows:
-        minmax(170px, 1.35fr)
-        minmax(95px, 0.7fr)
-        minmax(120px, 0.95fr)
-        minmax(130px, 1fr);
+        minmax(170px, 1.25fr)
+        minmax(95px, 0.62fr)
+        minmax(125px, 0.82fr)
+        minmax(160px, 1.15fr);
 
     gap: 8px;
 
@@ -192,11 +197,14 @@ body {
     box-shadow: var(--shadow);
 
     backdrop-filter: blur(10px);
+
+    -webkit-backdrop-filter: blur(10px);
 }
 
 
 .card-title {
     font-size: clamp(14px, 1.35vw, 20px);
+
     font-weight: 800;
 }
 
@@ -230,7 +238,7 @@ body {
 .clock-card {
     min-height: 0;
 
-    padding: 12px;
+    padding: 10px;
 
     display: grid;
 
@@ -239,6 +247,8 @@ body {
         minmax(0, 1fr);
 
     justify-items: center;
+
+    align-items: center;
 }
 
 
@@ -250,24 +260,29 @@ body {
     line-height: 1;
 
     margin-bottom: 4px;
+
+    white-space: nowrap;
 }
 
 
 .analog-clock {
     position: relative;
 
-    height: 100%;
-    max-height: 160px;
+    width: min(100%, 155px);
+    height: auto;
 
-    aspect-ratio: 1;
+    aspect-ratio: 1 / 1;
 
     align-self: center;
+    justify-self: center;
 
     border: 3px solid rgba(96, 71, 76, 0.60);
     border-radius: 50%;
 
     background:
         rgba(255, 250, 251, 0.25);
+
+    flex-shrink: 0;
 }
 
 
@@ -369,7 +384,7 @@ body {
 .weather-card {
     min-height: 0;
 
-    padding: 13px;
+    padding: 12px;
 
     display: flex;
     flex-direction: column;
@@ -380,19 +395,21 @@ body {
     display: flex;
     align-items: center;
 
-    gap: 15px;
+    gap: 14px;
 
     flex: 1;
+
+    min-height: 0;
 }
 
 
 .weather-icon {
-    font-size: clamp(42px, 5vw, 70px);
+    font-size: clamp(40px, 4.5vw, 62px);
 }
 
 
 .temperature {
-    font-size: clamp(40px, 5vw, 70px);
+    font-size: clamp(38px, 4.6vw, 64px);
 
     font-weight: 800;
 
@@ -401,9 +418,9 @@ body {
 
 
 .weather-description {
-    margin-top: 5px;
+    margin-top: 4px;
 
-    font-size: clamp(14px, 1.4vw, 20px);
+    font-size: clamp(14px, 1.35vw, 19px);
 
     color: var(--secondary);
 }
@@ -419,13 +436,13 @@ body {
 
 
 .weather-details > div {
-    padding: 7px 10px;
+    min-width: 0;
+
+    padding: 6px 9px;
 
     border-radius: 14px;
 
     background: var(--item);
-
-    min-width: 0;
 }
 
 
@@ -443,7 +460,7 @@ body {
 
     margin-top: 2px;
 
-    font-size: clamp(14px, 1.5vw, 21px);
+    font-size: clamp(14px, 1.4vw, 19px);
 
     white-space: nowrap;
 }
@@ -454,12 +471,12 @@ body {
 .forecast-card {
     min-height: 0;
 
-    padding: 10px 12px;
+    padding: 9px 12px;
 }
 
 
 .forecast {
-    height: calc(100% - 30px);
+    height: calc(100% - 29px);
 
     display: grid;
 
@@ -467,14 +484,14 @@ body {
 
     gap: 6px;
 
-    margin-top: 5px;
+    margin-top: 4px;
 }
 
 
 .forecast-hour {
     min-width: 0;
 
-    padding: 5px 3px;
+    padding: 4px 3px;
 
     text-align: center;
 
@@ -494,12 +511,12 @@ body {
 .forecast-icon {
     margin: 2px 0;
 
-    font-size: clamp(17px, 2vw, 26px);
+    font-size: clamp(17px, 1.9vw, 25px);
 }
 
 
 .forecast-temp {
-    font-size: clamp(13px, 1.5vw, 19px);
+    font-size: clamp(13px, 1.4vw, 18px);
 
     font-weight: 800;
 }
@@ -519,7 +536,9 @@ body {
 
     display: grid;
 
-    grid-template-columns: 1.6fr 1fr;
+    grid-template-columns:
+        minmax(280px, 0.85fr)
+        minmax(420px, 1.65fr);
 
     gap: 8px;
 }
@@ -529,9 +548,11 @@ body {
 .calendar-card {
     min-height: 0;
 
-    padding: 11px 13px;
+    padding: 10px 13px;
 }
 
+
+/* MTR */
 
 .mtr-grid {
     height: calc(100% - 28px);
@@ -540,7 +561,7 @@ body {
 
     grid-template-columns: repeat(2, 1fr);
 
-    gap: 12px;
+    gap: 9px;
 
     margin-top: 5px;
 }
@@ -554,28 +575,29 @@ body {
 .direction-title {
     margin-bottom: 4px;
 
-    font-size: clamp(12px, 1.2vw, 17px);
+    font-size: clamp(12px, 1.15vw, 16px);
 
     font-weight: 800;
 }
 
 
 .train-list {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
 
     gap: 5px;
 
-    max-height: 72px;
+    max-height: none;
 
     overflow: hidden;
 }
 
 
 .train {
-    min-width: 82px;
+    min-width: 0;
 
-    padding: 5px 7px;
+    padding: 5px 4px;
 
     text-align: center;
 
@@ -586,9 +608,11 @@ body {
 
 
 .train-time {
-    font-size: clamp(13px, 1.3vw, 18px);
+    font-size: clamp(13px, 1.25vw, 17px);
 
     font-weight: 800;
+
+    white-space: nowrap;
 }
 
 
@@ -610,9 +634,38 @@ body {
 
     overflow-y: auto;
 
-    font-size: clamp(12px, 1.2vw, 17px);
+    padding-right: 5px;
+
+    font-size: clamp(13px, 1.25vw, 18px);
 
     color: var(--secondary);
+}
+
+
+.calendar-event {
+    padding: 7px 10px;
+
+    margin-bottom: 5px;
+
+    border-radius: 11px;
+
+    background: var(--item);
+}
+
+
+.calendar-event-time {
+    font-size: 11px;
+
+    color: var(--secondary);
+}
+
+
+.calendar-event-title {
+    margin-top: 2px;
+
+    font-weight: 700;
+
+    color: var(--text);
 }
 
 
@@ -661,6 +714,8 @@ body {
     padding-right: 5px;
 
     scrollbar-width: thin;
+
+    overscroll-behavior: contain;
 }
 
 
@@ -680,15 +735,15 @@ body {
 .news-item {
     display: block;
 
-    padding: 5px 2px;
+    padding: 6px 2px;
 
     color: var(--text);
 
     text-decoration: none;
 
-    font-size: clamp(11px, 1.05vw, 15px);
+    font-size: clamp(12px, 1.08vw, 16px);
 
-    line-height: 1.25;
+    line-height: 1.28;
 
     border-bottom:
         1px solid rgba(160, 99, 110, 0.17);
@@ -714,7 +769,7 @@ footer {
 }
 
 
-/* iPAD PORTRAIT / NARROW */
+/* NARROW / PORTRAIT */
 
 @media (max-width: 900px) {
 
@@ -729,28 +784,35 @@ footer {
     }
 
 
+    .date-time-bubble {
+        min-width: 340px;
+
+        padding: 9px 25px;
+    }
+
+
     .dashboard-content {
         grid-template-rows:
-            minmax(170px, 1.25fr)
-            minmax(85px, 0.65fr)
-            minmax(125px, 0.9fr)
-            minmax(130px, 1fr);
+            minmax(160px, 1.2fr)
+            minmax(85px, 0.6fr)
+            minmax(120px, 0.82fr)
+            minmax(155px, 1.12fr);
     }
 
 
     .top-grid {
         grid-template-columns:
-            0.9fr 1.4fr;
+            0.9fr 1.35fr;
     }
 
 
     .clock-card {
-        padding: 9px;
+        padding: 8px;
     }
 
 
     .analog-clock {
-        max-height: 130px;
+        width: min(100%, 125px);
     }
 
 
@@ -759,18 +821,9 @@ footer {
     }
 
 
-    .weather-icon {
-        font-size: 45px;
-    }
-
-
     .middle-grid {
-        grid-template-columns: 1.45fr 1fr;
-    }
-
-
-    .train-list {
-        max-height: 58px;
+        grid-template-columns:
+            0.8fr 1.5fr;
     }
 
 }
@@ -788,16 +841,21 @@ footer {
 
     .dashboard {
         height: auto;
+
         min-height: 100vh;
 
         overflow: visible;
 
-        grid-template-rows: auto auto auto;
+        grid-template-rows:
+            auto
+            auto
+            auto;
     }
 
 
     .dashboard-content {
         display: flex;
+
         flex-direction: column;
 
         overflow: visible;
@@ -821,8 +879,16 @@ footer {
     }
 
 
+    .date-time-bubble {
+        min-width: 0;
+
+        width: calc(100vw - 100px);
+    }
+
+
     .forecast {
-        grid-template-columns: repeat(8, minmax(70px, 1fr));
+        grid-template-columns:
+            repeat(8, minmax(70px, 1fr));
 
         overflow-x: auto;
     }
