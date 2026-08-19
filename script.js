@@ -1,6 +1,6 @@
 /* =====================================================
    TAI WO DASHBOARD
-   Hong Kong Time
+   Current Location Dashboard
 ===================================================== */
 
 
@@ -8,8 +8,8 @@
    SETTINGS
 ===================================================== */
 
-const WEATHER_LATITUDE = 22.4505;
-const WEATHER_LONGITUDE = 114.1649;
+const FALLBACK_LATITUDE = 22.4505;
+const FALLBACK_LONGITUDE = 114.1649;
 
 const WEATHER_API =
     "https://api.open-meteo.com/v1/forecast";
@@ -19,36 +19,13 @@ const MTR_API =
 
 
 /* =====================================================
-   NEWS SETTINGS
+   CURRENT LOCATION
 ===================================================== */
 
-/* BBC World RSS */
+let currentLatitude = FALLBACK_LATITUDE;
+let currentLongitude = FALLBACK_LONGITUDE;
 
-const BBC_RSS =
-    "https://feeds.bbci.co.uk/news/world/rss.xml";
-
-/*
-   NOW News RSSHub feeds
-
-   港聞
-*/
-const NOW_LOCAL_RSS =
-    "https://rsshub.app/now/news/local";
-
-/*
-   兩岸國際
-*/
-const NOW_INTERNATIONAL_RSS =
-    "https://rsshub.app/now/news/international";
-
-
-/*
-   rss2json converts RSS into JSON so the browser
-   can display the news feed.
-*/
-
-const RSS2JSON_API =
-    "https://api.rss2json.com/v1/api.json?rss_url=";
+let locationLoaded = false;
 
 
 /* =====================================================
@@ -96,7 +73,7 @@ function weatherInfo(code) {
 
         95: ["⛈️", "雷暴"],
         96: ["⛈️", "雷暴"],
-        99: ["⛈️", "雷暴"]
+        99: ["⛈️", "強雷暴"]
 
     };
 
@@ -106,28 +83,89 @@ function weatherInfo(code) {
 
 
 /* =====================================================
+   LOCATION
+===================================================== */
+
+function getCurrentLocation() {
+
+    return new Promise(resolve => {
+
+        if (!navigator.geolocation) {
+
+            console.log(
+                "Geolocation is not supported. Using fallback location."
+            );
+
+            resolve({
+                latitude: FALLBACK_LATITUDE,
+                longitude: FALLBACK_LONGITUDE,
+                isFallback: true
+            });
+
+            return;
+
+        }
+
+
+        navigator.geolocation.getCurrentPosition(
+
+            position => {
+
+                resolve({
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                    isFallback: false
+                });
+
+            },
+
+            error => {
+
+                console.warn(
+                    "Location unavailable:",
+                    error.message
+                );
+
+                resolve({
+                    latitude: FALLBACK_LATITUDE,
+                    longitude: FALLBACK_LONGITUDE,
+                    isFallback: true
+                });
+
+            },
+
+            {
+                enableHighAccuracy: true,
+                timeout: 10000,
+                maximumAge: 300000
+            }
+
+        );
+
+    });
+
+}
+
+
+/* =====================================================
    CLOCK
+   Uses the device's current local time automatically
 ===================================================== */
 
 function updateClock() {
 
     const now = new Date();
 
-    const timeOptions = {
-
-        hour: "numeric",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: true,
-        timeZone: "Asia/Hong_Kong"
-
-    };
-
 
     const timeString =
         new Intl.DateTimeFormat(
             "en-US",
-            timeOptions
+            {
+                hour: "numeric",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: true
+            }
         ).format(now);
 
 
@@ -137,27 +175,26 @@ function updateClock() {
             {
                 day: "numeric",
                 month: "numeric",
-                year: "numeric",
-                timeZone: "Asia/Hong_Kong"
+                year: "numeric"
             }
         ).formatToParts(now);
 
 
     const day =
         parts.find(
-            p => p.type === "day"
+            part => part.type === "day"
         ).value;
 
 
     const month =
         parts.find(
-            p => p.type === "month"
+            part => part.type === "month"
         ).value;
 
 
     const year =
         parts.find(
-            p => p.type === "year"
+            part => part.type === "year"
         ).value;
 
 
@@ -165,16 +202,14 @@ function updateClock() {
         new Intl.DateTimeFormat(
             "zh-HK",
             {
-                weekday: "long",
-                timeZone: "Asia/Hong_Kong"
+                weekday: "long"
             }
         ).format(now);
 
 
     document.getElementById(
         "time"
-    ).textContent =
-        timeString;
+    ).textContent = timeString;
 
 
     document.getElementById(
@@ -194,45 +229,14 @@ function updateClock() {
 
 function updateAnalogClock(now) {
 
-    const formatter =
-        new Intl.DateTimeFormat(
-            "en-US",
-            {
-                timeZone: "Asia/Hong_Kong",
-                hour: "numeric",
-                minute: "numeric",
-                second: "numeric",
-                hour12: false
-            }
-        );
-
-
-    const parts =
-        formatter.formatToParts(now);
-
-
     const hour =
-        Number(
-            parts.find(
-                p => p.type === "hour"
-            ).value
-        );
-
+        now.getHours();
 
     const minute =
-        Number(
-            parts.find(
-                p => p.type === "minute"
-            ).value
-        );
-
+        now.getMinutes();
 
     const second =
-        Number(
-            parts.find(
-                p => p.type === "second"
-            ).value
-        );
+        now.getSeconds();
 
 
     const hourAngle =
@@ -270,6 +274,46 @@ function updateAnalogClock(now) {
 
 
 /* =====================================================
+   WEATHER TITLES
+===================================================== */
+
+function updateWeatherTitles(isFallback) {
+
+    const weatherTitle =
+        document.querySelector(
+            ".weather-card .card-title"
+        );
+
+
+    const forecastTitle =
+        document.querySelector(
+            ".forecast-card .card-title"
+        );
+
+
+    if (weatherTitle) {
+
+        weatherTitle.textContent =
+            isFallback
+                ? "🌤️ TAI WO WEATHER"
+                : "📍 CURRENT LOCATION WEATHER";
+
+    }
+
+
+    if (forecastTitle) {
+
+        forecastTitle.textContent =
+            isFallback
+                ? "🌦️ TODAY'S FORECAST · TAI WO"
+                : "🌦️ TODAY'S FORECAST · CURRENT LOCATION";
+
+    }
+
+}
+
+
+/* =====================================================
    WEATHER
 ===================================================== */
 
@@ -277,14 +321,53 @@ async function loadWeather() {
 
     try {
 
+        if (!locationLoaded) {
+
+            const location =
+                await getCurrentLocation();
+
+
+            currentLatitude =
+                location.latitude;
+
+
+            currentLongitude =
+                location.longitude;
+
+
+            locationLoaded = true;
+
+
+            updateWeatherTitles(
+                location.isFallback
+            );
+
+        }
+
+
         const url =
             `${WEATHER_API}?` +
-            `latitude=${WEATHER_LATITUDE}` +
-            `&longitude=${WEATHER_LONGITUDE}` +
-            `&current=temperature_2m,relative_humidity_2m,weather_code` +
-            `&hourly=temperature_2m,precipitation_probability,weather_code` +
-            `&daily=temperature_2m_max,temperature_2m_min` +
-            `&timezone=Asia%2FHong_Kong` +
+
+            `latitude=${currentLatitude}` +
+
+            `&longitude=${currentLongitude}` +
+
+            `&current=` +
+            `temperature_2m,` +
+            `relative_humidity_2m,` +
+            `weather_code` +
+
+            `&hourly=` +
+            `temperature_2m,` +
+            `precipitation_probability,` +
+            `weather_code` +
+
+            `&daily=` +
+            `temperature_2m_max,` +
+            `temperature_2m_min` +
+
+            `&timezone=auto` +
+
             `&forecast_days=1`;
 
 
@@ -305,9 +388,7 @@ async function loadWeather() {
             await response.json();
 
 
-        /* =========================
-           CURRENT WEATHER
-        ========================= */
+        /* CURRENT */
 
         const current =
             data.current;
@@ -345,9 +426,7 @@ async function loadWeather() {
             `${current.relative_humidity_2m}%`;
 
 
-        /* =========================
-           TODAY RANGE
-        ========================= */
+        /* DAILY */
 
         const max =
             Math.round(
@@ -369,18 +448,16 @@ async function loadWeather() {
             `${min}° — ${max}°`;
 
 
-        /* =========================
-           CURRENT HOUR RAIN
-        ========================= */
+        /* CURRENT RAIN */
 
-        const hkHour =
-            getHongKongHour();
+        const currentHour =
+            new Date().getHours();
 
 
         const rain =
             data.hourly
                 .precipitation_probability[
-                    hkHour
+                    currentHour
                 ];
 
 
@@ -390,14 +467,9 @@ async function loadWeather() {
             `${rain ?? 0}%`;
 
 
-        /* =========================
-           FORECAST
-        ========================= */
+        /* FORECAST */
 
-        renderForecast(
-            data,
-            hkHour
-        );
+        renderForecast(data);
 
 
         document.getElementById(
@@ -405,20 +477,26 @@ async function loadWeather() {
         ).textContent =
             `Updated ${formatUpdateTime()}`;
 
+
+        updateLastUpdated();
+
     }
 
     catch (error) {
 
-        console.error(
-            "Weather error:",
-            error
-        );
+        console.error(error);
 
 
         document.getElementById(
             "weatherDescription"
         ).textContent =
             "Weather unavailable";
+
+
+        document.getElementById(
+            "weatherUpdated"
+        ).textContent =
+            "Unable to update weather";
 
     }
 
@@ -429,10 +507,7 @@ async function loadWeather() {
    FORECAST
 ===================================================== */
 
-function renderForecast(
-    data,
-    currentHour
-) {
+function renderForecast(data) {
 
     const container =
         document.getElementById(
@@ -441,6 +516,14 @@ function renderForecast(
 
 
     container.innerHTML = "";
+
+
+    const now =
+        new Date();
+
+
+    const currentHour =
+        now.getHours();
 
 
     for (
@@ -526,17 +609,6 @@ function renderForecast(
 
 async function loadMTR() {
 
-    const downContainer =
-        document.getElementById(
-            "mtrDown"
-        );
-
-    const upContainer =
-        document.getElementById(
-            "mtrUp"
-        );
-
-
     try {
 
         const url =
@@ -547,18 +619,13 @@ async function loadMTR() {
 
 
         const response =
-            await fetch(
-                url,
-                {
-                    cache: "no-store"
-                }
-            );
+            await fetch(url);
 
 
         if (!response.ok) {
 
             throw new Error(
-                `MTR request failed: ${response.status}`
+                "MTR request failed"
             );
 
         }
@@ -568,50 +635,30 @@ async function loadMTR() {
             await response.json();
 
 
-        console.log(
-            "MTR response:",
-            data
-        );
-
-
         if (
-            data.status !== 1
+            !data.data ||
+            !data.data["EAL-TWO"]
         ) {
 
             throw new Error(
-                data.message ||
-                "MTR data unavailable"
+                "No MTR data"
             );
 
         }
 
 
         const station =
-            data.data?.["EAL-TWO"];
+            data.data["EAL-TWO"];
 
-
-        if (!station) {
-
-            throw new Error(
-                "Tai Wo station data unavailable"
-            );
-
-        }
-
-
-        /*
-           DOWN = towards Admiralty
-           UP   = towards Sheung Shui
-        */
 
         renderMTR(
-            station.DOWN || [],
+            station.DOWN,
             "mtrDown"
         );
 
 
         renderMTR(
-            station.UP || [],
+            station.UP,
             "mtrUp"
         );
 
@@ -621,34 +668,23 @@ async function loadMTR() {
         ).textContent =
             `Updated ${formatUpdateTime()}`;
 
-
-        document.getElementById(
-            "lastUpdated"
-        ).textContent =
-            `Updated ${formatUpdateTime()}`;
-
     }
 
     catch (error) {
 
-        console.error(
-            "MTR error:",
-            error
-        );
+        console.error(error);
 
 
-        downContainer.textContent =
-            "MTR data unavailable";
-
-
-        upContainer.textContent =
+        document.getElementById(
+            "mtrDown"
+        ).textContent =
             "MTR data unavailable";
 
 
         document.getElementById(
-            "mtrUpdated"
+            "mtrUp"
         ).textContent =
-            "MTR update failed";
+            "MTR data unavailable";
 
     }
 
@@ -673,49 +709,13 @@ function renderMTR(
     container.innerHTML = "";
 
 
-    if (
-        !Array.isArray(trains)
-    ) {
-
-        trains = [];
-
-    }
-
-
-    /*
-       Use valid trains first.
-       If the API does not provide valid="Y",
-       still use the returned trains rather
-       than leaving the panel blank.
-    */
-
-    let validTrains =
-        trains.filter(
-            train =>
-                train &&
-                (
-                    train.valid === "Y" ||
-                    train.valid === undefined ||
-                    train.valid === null
-                )
-        );
-
-
-    if (
-        validTrains.length === 0 &&
-        trains.length > 0
-    ) {
-
-        validTrains = trains;
-
-    }
-
-
-    validTrains =
-        validTrains.slice(
-            0,
-            4
-        );
+    const validTrains =
+        (trains || [])
+            .filter(
+                train =>
+                    train.valid === "Y"
+            )
+            .slice(0, 4);
 
 
     if (
@@ -730,84 +730,36 @@ function renderMTR(
     }
 
 
-    validTrains.forEach(
-        train => {
+    validTrains.forEach(train => {
 
-            const element =
-                document.createElement(
-                    "div"
-                );
-
-
-            element.className =
-                "train";
-
-
-            const minutes =
-                train.ttnt !== undefined &&
-                train.ttnt !== null &&
-                train.ttnt !== ""
-                    ? `${train.ttnt} min`
-                    : "--";
-
-
-            const destination =
-                formatMTRDestination(
-                    train.dest
-                );
-
-
-            element.innerHTML = `
-
-                <div class="train-time">
-                    ${escapeHTML(minutes)}
-                </div>
-
-                <div class="train-minutes">
-                    ${escapeHTML(destination)}
-                </div>
-
-            `;
-
-
-            container.appendChild(
-                element
+        const element =
+            document.createElement(
+                "div"
             );
 
-        }
-    );
 
-}
-
-
-/* =====================================================
-   MTR DESTINATION NAMES
-===================================================== */
-
-function formatMTRDestination(code) {
-
-    const destinations = {
-
-        "ADM":
-            "金鐘 / Admiralty",
-
-        "SHS":
-            "上水 / Sheung Shui",
-
-        "LOW":
-            "羅湖 / Lo Wu",
-
-        "LMC":
-            "落馬洲 / Lok Ma Chau"
-
-    };
+        element.className =
+            "train";
 
 
-    return (
-        destinations[code] ||
-        code ||
-        "--"
-    );
+        element.innerHTML = `
+
+            <div class="train-time">
+                ${train.ttnt} min
+            </div>
+
+            <div class="train-minutes">
+                ${train.dest}
+            </div>
+
+        `;
+
+
+        container.appendChild(
+            element
+        );
+
+    });
 
 }
 
@@ -816,424 +768,28 @@ function formatMTRDestination(code) {
    NEWS
 ===================================================== */
 
-async function loadNews() {
+function loadNewsPlaceholder() {
 
-    await Promise.allSettled(
-        [
+    document.getElementById(
+        "nowNews"
+    ).innerHTML = `
 
-            loadBBCNews(),
+        <div class="news-item">
+            NOW News unavailable
+        </div>
 
-            loadNOWNews()
+    `;
 
-        ]
-    );
 
-}
+    document.getElementById(
+        "bbcNews"
+    ).innerHTML = `
 
+        <div class="news-item">
+            BBC World News loading...
+        </div>
 
-/* =====================================================
-   LOAD BBC NEWS
-===================================================== */
-
-async function loadBBCNews() {
-
-    const container =
-        document.getElementById(
-            "bbcNews"
-        );
-
-
-    try {
-
-        const url =
-            RSS2JSON_API +
-            encodeURIComponent(
-                BBC_RSS
-            );
-
-
-        const response =
-            await fetch(
-                url,
-                {
-                    cache: "no-store"
-                }
-            );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "BBC request failed"
-            );
-
-        }
-
-
-        const data =
-            await response.json();
-
-
-        if (
-            data.status !== "ok" ||
-            !Array.isArray(
-                data.items
-            )
-        ) {
-
-            throw new Error(
-                data.message ||
-                "BBC feed unavailable"
-            );
-
-        }
-
-
-        renderNews(
-            container,
-            data.items,
-            3
-        );
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "BBC error:",
-            error
-        );
-
-
-        container.innerHTML = `
-
-            <div class="news-item">
-                BBC News unavailable
-            </div>
-
-        `;
-
-    }
-
-}
-
-
-/* =====================================================
-   LOAD NOW NEWS
-===================================================== */
-
-async function loadNOWNews() {
-
-    const container =
-        document.getElementById(
-            "nowNews"
-        );
-
-
-    try {
-
-        /*
-           Load 港聞 and 兩岸國際.
-           Each feed is requested separately.
-        */
-
-        const localURL =
-            RSS2JSON_API +
-            encodeURIComponent(
-                NOW_LOCAL_RSS
-            );
-
-
-        const internationalURL =
-            RSS2JSON_API +
-            encodeURIComponent(
-                NOW_INTERNATIONAL_RSS
-            );
-
-
-        const results =
-            await Promise.allSettled(
-                [
-
-                    fetch(
-                        localURL,
-                        {
-                            cache: "no-store"
-                        }
-                    ).then(
-                        response => {
-
-                            if (
-                                !response.ok
-                            ) {
-
-                                throw new Error(
-                                    "NOW local request failed"
-                                );
-
-                            }
-
-                            return response.json();
-
-                        }
-                    ),
-
-                    fetch(
-                        internationalURL,
-                        {
-                            cache: "no-store"
-                        }
-                    ).then(
-                        response => {
-
-                            if (
-                                !response.ok
-                            ) {
-
-                                throw new Error(
-                                    "NOW international request failed"
-                                );
-
-                            }
-
-                            return response.json();
-
-                        }
-                    )
-
-                ]
-            );
-
-
-        const items = [];
-
-
-        results.forEach(
-            result => {
-
-                if (
-                    result.status === "fulfilled" &&
-                    result.value?.status === "ok" &&
-                    Array.isArray(
-                        result.value.items
-                    )
-                ) {
-
-                    result.value.items
-                        .slice(
-                            0,
-                            3
-                        )
-                        .forEach(
-                            item => {
-
-                                items.push(item);
-
-                            }
-                        );
-
-                }
-
-            }
-        );
-
-
-        if (
-            items.length === 0
-        ) {
-
-            throw new Error(
-                "No NOW news available"
-            );
-
-        }
-
-
-        /*
-           Remove duplicate headlines.
-        */
-
-        const uniqueItems =
-            [];
-
-        const titles =
-            new Set();
-
-
-        items.forEach(
-            item => {
-
-                const title =
-                    (item.title || "")
-                        .trim();
-
-
-                if (
-                    title &&
-                    !titles.has(title)
-                ) {
-
-                    titles.add(title);
-
-                    uniqueItems.push(item);
-
-                }
-
-            }
-        );
-
-
-        renderNews(
-            container,
-            uniqueItems,
-            3
-        );
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "NOW error:",
-            error
-        );
-
-
-        container.innerHTML = `
-
-            <div class="news-item">
-                NOW News unavailable
-            </div>
-
-        `;
-
-    }
-
-}
-
-
-/* =====================================================
-   RENDER NEWS
-===================================================== */
-
-function renderNews(
-    container,
-    items,
-    limit = 3
-) {
-
-    container.innerHTML = "";
-
-
-    const newsItems =
-        items.slice(
-            0,
-            limit
-        );
-
-
-    if (
-        newsItems.length === 0
-    ) {
-
-        container.innerHTML = `
-
-            <div class="news-item">
-                No news available
-            </div>
-
-        `;
-
-        return;
-
-    }
-
-
-    newsItems.forEach(
-        item => {
-
-            const element =
-                document.createElement(
-                    "a"
-                );
-
-
-            element.className =
-                "news-item";
-
-
-            element.href =
-                item.link || "#";
-
-
-            element.target =
-                "_blank";
-
-
-            element.rel =
-                "noopener noreferrer";
-
-
-            element.textContent =
-                cleanNewsTitle(
-                    item.title ||
-                    "Untitled"
-                );
-
-
-            container.appendChild(
-                element
-            );
-
-        }
-    );
-
-}
-
-
-/* =====================================================
-   CLEAN NEWS TITLE
-===================================================== */
-
-function cleanNewsTitle(title) {
-
-    const textarea =
-        document.createElement(
-            "textarea"
-        );
-
-
-    textarea.innerHTML =
-        title;
-
-
-    return textarea.value
-        .replace(
-            /<[^>]*>/g,
-            ""
-        )
-        .trim();
-
-}
-
-
-/* =====================================================
-   ESCAPE HTML
-===================================================== */
-
-function escapeHTML(value) {
-
-    const div =
-        document.createElement(
-            "div"
-        );
-
-
-    div.textContent =
-        value;
-
-
-    return div.innerHTML;
+    `;
 
 }
 
@@ -1241,26 +797,6 @@ function escapeHTML(value) {
 /* =====================================================
    UTILITY
 ===================================================== */
-
-function getHongKongHour() {
-
-    const hour =
-        new Intl.DateTimeFormat(
-            "en-GB",
-            {
-                hour: "2-digit",
-                hourCycle: "h23",
-                timeZone: "Asia/Hong_Kong"
-            }
-        ).format(
-            new Date()
-        );
-
-
-    return Number(hour);
-
-}
-
 
 function formatUpdateTime() {
 
@@ -1274,10 +810,26 @@ function formatUpdateTime() {
             hour: "numeric",
             minute: "2-digit",
             second: "2-digit",
-            hour12: true,
-            timeZone: "Asia/Hong_Kong"
+            hour12: true
         }
     ).format(now);
+
+}
+
+
+function updateLastUpdated() {
+
+    const element =
+        document.getElementById(
+            "lastUpdated"
+        );
+
+
+    if (!element) return;
+
+
+    element.textContent =
+        `Updated ${formatUpdateTime()}`;
 
 }
 
@@ -1288,16 +840,17 @@ function formatUpdateTime() {
 
 updateClock();
 
+
 loadWeather();
+
 
 loadMTR();
 
-loadNews();
+
+loadNewsPlaceholder();
 
 
-/* =====================================================
-   CLOCK
-===================================================== */
+/* CLOCK */
 
 setInterval(
     updateClock,
@@ -1305,11 +858,7 @@ setInterval(
 );
 
 
-/* =====================================================
-   WEATHER
-
-   Refresh every 10 minutes
-===================================================== */
+/* WEATHER */
 
 setInterval(
     loadWeather,
@@ -1317,11 +866,7 @@ setInterval(
 );
 
 
-/* =====================================================
-   MTR
-
-   Refresh every 30 seconds
-===================================================== */
+/* MTR */
 
 setInterval(
     loadMTR,
@@ -1329,13 +874,9 @@ setInterval(
 );
 
 
-/* =====================================================
-   NEWS
-
-   Refresh every 10 minutes
-===================================================== */
+/* NEWS */
 
 setInterval(
-    loadNews,
+    loadNewsPlaceholder,
     10 * 60 * 1000
 );
