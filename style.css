@@ -1,5 +1,4 @@
 :root {
-
     --bg-main: #f4c4c8;
     --bg-top: #efb4ba;
 
@@ -16,7 +15,6 @@
         0 7px 20px rgba(125, 69, 79, 0.09);
 
     --radius: 22px;
-
 }
 
 
@@ -27,19 +25,16 @@
 
 html,
 body {
-
     width: 100%;
     height: 100%;
 
     margin: 0;
 
     overflow: hidden;
-
 }
 
 
 body {
-
     font-family:
         -apple-system,
         BlinkMacSystemFont,
@@ -57,7 +52,6 @@ body {
             var(--bg-main) 55%,
             #efbec4
         );
-
 }
 
 
@@ -66,7 +60,6 @@ body {
 ===================================================== */
 
 .dashboard {
-
     width: 100%;
     height: 100vh;
     height: 100dvh;
@@ -89,7 +82,6 @@ body {
     gap: 5px;
 
     overflow: hidden;
-
 }
 
 
@@ -98,7 +90,6 @@ body {
 ===================================================== */
 
 .dashboard-content {
-
     min-height: 0;
 
     display: grid;
@@ -112,7 +103,6 @@ body {
     gap: 8px;
 
     overflow: hidden;
-
 }
 
 
@@ -121,7 +111,6 @@ body {
 ===================================================== */
 
 .card {
-
     min-width: 0;
     min-height: 0;
 
@@ -135,22 +124,18 @@ body {
     box-shadow: var(--shadow);
 
     backdrop-filter: blur(10px);
-
 }
 
 
 .card-title {
-
     flex: 0 0 auto;
 
     font-size: clamp(14px, 1.35vw, 20px);
     font-weight: 800;
-
 }
 
 
 .updated {
-
     flex: 0 0 auto;
 
     margin-top: 4px;
@@ -158,7 +143,6 @@ body {
     font-size: 10px;
 
     color: var(--muted);
-
 }
 
 
@@ -167,7 +151,6 @@ body {
 ===================================================== */
 
 .top-grid {
-
     min-width: 0;
     min-height: 0;
 
@@ -178,7 +161,6 @@ body {
         minmax(430px, 1.72fr);
 
     gap: 8px;
-
 }
 
 
@@ -187,7 +169,6 @@ body {
 ===================================================== */
 
 .clock-card {
-
     min-height: 0;
 
     padding: 10px;
@@ -199,12 +180,10 @@ body {
         minmax(0, 1fr);
 
     justify-items: center;
-
 }
 
 
 .digital-time {
-
     font-size: clamp(26px, 3vw, 46px);
 
     font-weight: 800;
@@ -212,12 +191,10 @@ body {
     line-height: 1.05;
 
     white-space: nowrap;
-
 }
 
 
 .clock-area {
-
     min-height: 0;
     min-width: 0;
 
@@ -227,12 +204,10 @@ body {
 
     align-items: center;
     justify-content: center;
-
 }
 
 
 .analog-clock {
-
     position: relative;
 
     width: min(100%, 190px);
@@ -247,62 +222,50 @@ body {
 
     background:
         rgba(255, 250, 251, 0.25);
-
 }
 
 
 .clock-number {
-
     position: absolute;
 
     font-size: 13px;
     font-weight: 700;
-
 }
 
 
 .clock-12 {
-
     top: 7px;
     left: 50%;
 
     transform: translateX(-50%);
-
 }
 
 
 .clock-3 {
-
     top: 50%;
     right: 9px;
 
     transform: translateY(-50%);
-
 }
 
 
 .clock-6 {
-
     bottom: 7px;
     left: 50%;
 
     transform: translateX(-50%);
-
 }
 
 
 .clock-9 {
-
     top: 50%;
     left: 9px;
 
     transform: translateY(-50%);
-
 }
 
 
 .clock-hand {
-
     position: absolute;
 
     left: 50%;
@@ -312,42 +275,34 @@ body {
         50% 100%;
 
     border-radius: 99px;
-
 }
 
 
 .clock-hour {
-
     width: 6px;
     height: 27%;
 
     background: #3d383d;
-
 }
 
 
 .clock-minute {
-
     width: 5px;
     height: 37%;
 
     background: #4b4449;
-
 }
 
 
 .clock-second {
-
     width: 2px;
     height: 42%;
 
     background: #bd707b;
-
 }
 
 
 .clock-center {
-
     position: absolute;
 
     top: 50%;
@@ -362,7 +317,6 @@ body {
     border-radius: 50%;
 
     background: #3d383d;
-
 }
 
 
@@ -371,7 +325,6 @@ body {
 ===================================================== */
 
 .weather-column {
-
     min-width: 0;
     min-height: 0;
 
@@ -382,7 +335,6 @@ body {
         minmax(0, 1fr);
 
     gap: 8px;
-
 }
 
 
@@ -391,7 +343,6 @@ body {
 ===================================================== */
 
 .date-bubble {
-
     position: relative;
 
     min-width: 0;
@@ -407,19 +358,15 @@ body {
     box-shadow: var(--shadow);
 
     text-align: center;
-
 }
 
 
 .date-content {
-
     min-width: 0;
-
 }
 
 
 .date-main {
-
     font-size: clamp(24px, 2.45vw, 36px);
 
     font-weight: 900;
@@ -427,18 +374,15 @@ body {
     line-height: 1.12;
 
     white-space: nowrap;
-
 }
 
 
 .date-lunar {
-
     margin-top: 2px;
 
     font-size: clamp(13px, 1.2vw, 18px);
 
     color: var(--secondary);
-
 }
 
 
@@ -447,7 +391,6 @@ body {
 ===================================================== */
 
 .refresh-button {
-
     position: absolute;
 
     top: 50%;
@@ -471,28 +414,21 @@ body {
     font-size: 24px;
 
     cursor: pointer;
-
 }
 
 
 .refresh-button.loading {
-
     animation:
         spin 0.8s linear infinite;
-
 }
 
 
 @keyframes spin {
-
     to {
-
         transform:
             translateY(-50%)
             rotate(360deg);
-
     }
-
 }
 
 
@@ -501,7 +437,6 @@ body {
 ===================================================== */
 
 .weather-card {
-
     min-width: 0;
     min-height: 0;
 
@@ -511,12 +446,10 @@ body {
     flex-direction: column;
 
     overflow: hidden;
-
 }
 
 
 .weather-main {
-
     flex: 0 0 auto;
 
     display: flex;
@@ -526,54 +459,47 @@ body {
     gap: 14px;
 
     margin-top: 2px;
-
 }
 
 
 .weather-icon {
-
     flex: 0 0 auto;
 
     font-size: clamp(42px, 5vw, 68px);
 
     line-height: 1;
-
 }
 
 
 .weather-temperature-block {
-
     min-width: 0;
-
 }
 
 
 .temperature {
-
     font-size: clamp(40px, 5vw, 68px);
 
     font-weight: 800;
 
     line-height: 0.9;
-
 }
 
 
 .weather-description {
-
     margin-top: 5px;
 
     font-size: clamp(13px, 1.35vw, 19px);
 
     color: var(--secondary);
-
 }
 
 
-/* WEATHER DETAILS */
+/* =====================================================
+   WEATHER DETAILS
+   LANDSCAPE: 今日 / 濕度 / 降雨 HORIZONTAL
+===================================================== */
 
 .weather-details {
-
     flex: 0 0 auto;
 
     display: grid;
@@ -584,12 +510,10 @@ body {
     gap: 7px;
 
     margin-top: 7px;
-
 }
 
 
 .weather-detail {
-
     min-width: 0;
 
     padding: 6px 8px;
@@ -597,23 +521,19 @@ body {
     border-radius: 13px;
 
     background: var(--item);
-
 }
 
 
 .weather-detail-label {
-
     display: block;
 
     font-size: 11px;
 
     color: var(--secondary);
-
 }
 
 
 .weather-detail-value {
-
     display: block;
 
     min-width: 0;
@@ -623,58 +543,46 @@ body {
     font-size: clamp(13px, 1.35vw, 20px);
 
     white-space: nowrap;
-
 }
 
 
 /* =====================================================
    HKO TEXT AREA
-   THIS PART SCROLLS INSIDE WEATHER BUBBLE
+
+   IMPORTANT:
+   天氣預測及特別天氣提示各自固定高度
+   各自獨立捲動
+   一段文字過長不會推走另一段
 ===================================================== */
 
 .weather-hko-text {
-
     min-width: 0;
     min-height: 0;
 
-    flex: 1 1 auto;
+    flex: 1 1 0;
+
+    display: grid;
+
+    grid-template-rows:
+        minmax(0, 1fr)
+        minmax(0, 1fr);
+
+    gap: 6px;
 
     margin-top: 7px;
 
-    overflow-y: auto;
-    overflow-x: hidden;
-
-    padding-right: 5px;
-
-    scrollbar-width: thin;
-
-    overscroll-behavior: contain;
-
-}
-
-
-.weather-hko-text::-webkit-scrollbar {
-
-    width: 5px;
-
-}
-
-
-.weather-hko-text::-webkit-scrollbar-thumb {
-
-    border-radius: 20px;
-
-    background:
-        rgba(143, 84, 96, 0.45);
-
+    overflow: hidden;
 }
 
 
 .weather-hko-section {
-
     min-width: 0;
+    min-height: 0;
 
-    margin-top: 6px;
+    display: flex;
+    flex-direction: column;
+
+    margin: 0;
 
     padding: 6px 9px;
 
@@ -682,24 +590,17 @@ body {
 
     background: var(--item);
 
-}
-
-
-.weather-hko-section:first-child {
-
-    margin-top: 0;
-
+    overflow: hidden;
 }
 
 
 .weather-hko-section.hidden {
-
     display: none;
-
 }
 
 
 .weather-hko-label {
+    flex: 0 0 auto;
 
     margin-bottom: 3px;
 
@@ -708,13 +609,21 @@ body {
     font-weight: 800;
 
     color: var(--text);
-
 }
 
 
-.weather-hko-content {
+/* EACH HKO TEXT SCROLLS SEPARATELY */
 
+.weather-hko-content {
     min-width: 0;
+    min-height: 0;
+
+    flex: 1 1 0;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding-right: 4px;
 
     font-size: clamp(10px, 1vw, 14px);
 
@@ -727,6 +636,31 @@ body {
     overflow-wrap: anywhere;
     word-break: break-word;
 
+    scrollbar-width: thin;
+
+    overscroll-behavior: contain;
+
+    scrollbar-color:
+        rgba(143, 84, 96, 0.45)
+        transparent;
+}
+
+
+.weather-hko-content::-webkit-scrollbar {
+    width: 5px;
+}
+
+
+.weather-hko-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+
+.weather-hko-content::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+
+    background:
+        rgba(143, 84, 96, 0.45);
 }
 
 
@@ -735,17 +669,14 @@ body {
 ===================================================== */
 
 .forecast-card {
-
     min-width: 0;
     min-height: 0;
 
     padding: 9px 12px;
-
 }
 
 
 .forecast {
-
     height: calc(100% - 28px);
 
     display: grid;
@@ -756,12 +687,11 @@ body {
     gap: 6px;
 
     margin-top: 4px;
-
 }
 
 
-.forecast-hour {
-
+.forecast-hour,
+.forecast-item {
     min-width: 0;
 
     padding: 5px 3px;
@@ -771,43 +701,34 @@ body {
     border-radius: 13px;
 
     background: var(--item);
-
 }
 
 
 .forecast-time {
-
     font-size: 11px;
 
     color: var(--secondary);
-
 }
 
 
 .forecast-icon {
-
     margin: 2px 0;
 
     font-size: clamp(17px, 2vw, 26px);
-
 }
 
 
 .forecast-temp {
-
     font-size: clamp(13px, 1.5vw, 19px);
 
     font-weight: 800;
-
 }
 
 
 .forecast-rain {
-
     font-size: 10px;
 
     color: var(--secondary);
-
 }
 
 
@@ -816,7 +737,6 @@ body {
 ===================================================== */
 
 .middle-grid {
-
     min-width: 0;
     min-height: 0;
 
@@ -827,14 +747,12 @@ body {
         minmax(0, 2.22fr);
 
     gap: 8px;
-
 }
 
 
 /* MTR */
 
 .mtr-card {
-
     min-width: 0;
     min-height: 0;
 
@@ -842,12 +760,10 @@ body {
 
     display: flex;
     flex-direction: column;
-
 }
 
 
 .mtr-grid {
-
     min-width: 0;
     min-height: 0;
 
@@ -861,30 +777,24 @@ body {
     gap: 9px;
 
     margin-top: 4px;
-
 }
 
 
 .mtr-direction {
-
     min-width: 0;
-
 }
 
 
 .direction-title {
-
     margin-bottom: 3px;
 
     font-size: clamp(12px, 1.15vw, 16px);
 
     font-weight: 800;
-
 }
 
 
 .train-list {
-
     display: flex;
     flex-direction: column;
 
@@ -893,12 +803,10 @@ body {
     min-width: 0;
 
     overflow: hidden;
-
 }
 
 
 .train {
-
     min-width: 0;
 
     padding: 3px 5px;
@@ -908,32 +816,26 @@ body {
     background: var(--item);
 
     text-align: center;
-
 }
 
 
 .train-time {
-
     font-size: clamp(13px, 1.3vw, 18px);
 
     font-weight: 800;
 
     white-space: nowrap;
-
 }
 
 
 .train-minutes {
-
     display: none;
-
 }
 
 
 /* CALENDAR */
 
 .calendar-card {
-
     min-width: 0;
     min-height: 0;
 
@@ -941,12 +843,10 @@ body {
 
     display: flex;
     flex-direction: column;
-
 }
 
 
 .calendar-list {
-
     min-width: 0;
     min-height: 0;
 
@@ -963,7 +863,6 @@ body {
     color: var(--secondary);
 
     scrollbar-width: thin;
-
 }
 
 
@@ -972,7 +871,6 @@ body {
 ===================================================== */
 
 .news-grid {
-
     min-width: 0;
     min-height: 0;
 
@@ -982,12 +880,10 @@ body {
         repeat(2, minmax(0, 1fr));
 
     gap: 8px;
-
 }
 
 
 .news-card {
-
     min-width: 0;
     min-height: 0;
 
@@ -995,12 +891,10 @@ body {
 
     display: flex;
     flex-direction: column;
-
 }
 
 
 .news-subtitle {
-
     flex: 0 0 auto;
 
     margin-top: 1px;
@@ -1008,12 +902,10 @@ body {
     font-size: 11px;
 
     color: var(--secondary);
-
 }
 
 
 .news-list {
-
     min-width: 0;
     min-height: 0;
 
@@ -1029,29 +921,23 @@ body {
     scrollbar-width: thin;
 
     overscroll-behavior: contain;
-
 }
 
 
 .news-list::-webkit-scrollbar {
-
     width: 5px;
-
 }
 
 
 .news-list::-webkit-scrollbar-thumb {
-
     border-radius: 20px;
 
     background:
         rgba(143, 84, 96, 0.45);
-
 }
 
 
 .news-item {
-
     display: block;
 
     padding: 5px 2px;
@@ -1068,14 +954,11 @@ body {
 
     border-bottom:
         1px solid rgba(160, 99, 110, 0.17);
-
 }
 
 
 .news-item:hover {
-
     text-decoration: underline;
-
 }
 
 
@@ -1084,13 +967,11 @@ body {
 ===================================================== */
 
 footer {
-
     min-width: 0;
 
     display: flex;
 
     justify-content: space-between;
-
     align-items: center;
 
     padding: 0 2px;
@@ -1101,7 +982,6 @@ footer {
 
     color:
         rgba(70, 55, 60, 0.58);
-
 }
 
 
@@ -1216,7 +1096,9 @@ footer {
 
 
 /* =====================================================
-   PORTRAIT
+   IPAD PORTRAIT
+
+   今日 / 濕度 / 降雨 VERTICAL
 ===================================================== */
 
 @media (orientation: portrait) and (min-width: 601px) {
@@ -1262,6 +1144,64 @@ footer {
 
     }
 
+
+    /* ================================================
+       ONLY PORTRAIT:
+       今日 / 濕度 / 降雨 VERTICAL
+    ================================================ */
+
+    .weather-details {
+
+        grid-template-columns: 1fr;
+
+        gap: 4px;
+
+        width: 105px;
+
+        align-self: flex-end;
+
+    }
+
+
+    .weather-detail {
+
+        padding: 4px 7px;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: space-between;
+
+        gap: 5px;
+
+        border-radius: 10px;
+
+    }
+
+
+    .weather-detail-label {
+
+        display: inline;
+
+        font-size: 10px;
+
+        white-space: nowrap;
+
+    }
+
+
+    .weather-detail-value {
+
+        display: inline;
+
+        margin-top: 0;
+
+        font-size: 14px;
+
+        white-space: nowrap;
+
+    }
+
 }
 
 
@@ -1296,7 +1236,6 @@ footer {
     .dashboard-content {
 
         display: flex;
-
         flex-direction: column;
 
         overflow: visible;
