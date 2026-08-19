@@ -1,1235 +1,478 @@
-:root {
-    --bg-main: #f4c4c8;
-    --bg-top: #efb4ba;
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
 
-    --card: rgba(255, 244, 246, 0.78);
-    --item: rgba(232, 180, 187, 0.34);
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
 
-    --border: rgba(193, 120, 132, 0.36);
+    <meta
+        name="apple-mobile-web-app-capable"
+        content="yes"
+    >
 
-    --text: #39353a;
-    --secondary: #70656c;
-    --muted: #94848c;
+    <meta
+        name="apple-mobile-web-app-status-bar-style"
+        content="black-translucent"
+    >
 
-    --shadow:
-        0 7px 20px rgba(125, 69, 79, 0.09);
+    <title>Tai Wo Dashboard</title>
 
-    --radius: 22px;
-}
+    <link rel="stylesheet" href="style.css">
+</head>
 
+<body>
 
-* {
-    box-sizing: border-box;
-}
+<div class="dashboard">
 
+    <main class="dashboard-content">
 
-html,
-body {
-    width: 100%;
-    height: 100%;
+        <!-- =========================================
+             CLOCK + DATE + WEATHER
+        ========================================== -->
 
-    margin: 0;
+        <section class="top-grid">
 
-    overflow: hidden;
-}
+            <!-- CLOCK -->
 
+            <div class="card clock-card">
 
-body {
-    font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        "Noto Sans TC",
-        "PingFang TC",
-        sans-serif;
+                <div
+                    id="digitalTime"
+                    class="digital-time"
+                >
+                    --:--:-- --
+                </div>
 
-    color: var(--text);
+                <div class="clock-area">
 
-    background:
-        linear-gradient(
-            135deg,
-            var(--bg-top),
-            var(--bg-main) 55%,
-            #efbec4
-        );
-}
+                    <div
+                        id="analogClock"
+                        class="analog-clock"
+                    >
 
+                        <div class="clock-number clock-12">
+                            12
+                        </div>
 
-/* =====================================================
-   MAIN DASHBOARD
-===================================================== */
+                        <div class="clock-number clock-3">
+                            3
+                        </div>
 
-.dashboard {
-    width: 100%;
-    height: 100vh;
-    height: 100dvh;
+                        <div class="clock-number clock-6">
+                            6
+                        </div>
 
-    max-width: 1600px;
+                        <div class="clock-number clock-9">
+                            9
+                        </div>
 
-    margin: 0 auto;
+                        <div
+                            id="hourHand"
+                            class="clock-hand clock-hour"
+                        ></div>
 
-    padding:
-        max(10px, env(safe-area-inset-top))
-        18px
-        max(6px, env(safe-area-inset-bottom));
+                        <div
+                            id="minuteHand"
+                            class="clock-hand clock-minute"
+                        ></div>
 
-    display: grid;
+                        <div
+                            id="secondHand"
+                            class="clock-hand clock-second"
+                        ></div>
 
-    grid-template-rows:
-        minmax(0, 1fr)
-        auto;
+                        <div class="clock-center"></div>
 
-    gap: 5px;
+                    </div>
 
-    overflow: hidden;
-}
+                </div>
 
+            </div>
 
-/* =====================================================
-   CONTENT
-===================================================== */
 
-.dashboard-content {
-    min-height: 0;
+            <!-- DATE + WEATHER -->
 
-    display: grid;
+            <div class="weather-column">
 
-    grid-template-rows:
-        minmax(245px, 2.15fr)
-        minmax(90px, 0.68fr)
-        minmax(105px, 0.88fr)
-        minmax(120px, 1fr);
 
-    gap: 8px;
+                <!-- DATE -->
 
-    overflow: hidden;
-}
+                <div class="date-bubble">
 
+                    <button
+                        id="refreshButton"
+                        class="refresh-button"
+                        type="button"
+                        title="重新整理"
+                    >
+                        ↻
+                    </button>
 
-/* =====================================================
-   CARD
-===================================================== */
+                    <div
+                        id="dateMain"
+                        class="date-main"
+                    >
+                        Loading...
+                    </div>
 
-.card {
-    min-width: 0;
-    min-height: 0;
+                    <div
+                        id="lunarDate"
+                        class="date-lunar"
+                    >
+                        農曆資料載入中...
+                    </div>
 
-    overflow: hidden;
+                </div>
 
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
 
-    background: var(--card);
+                <!-- WEATHER -->
 
-    box-shadow: var(--shadow);
+                <div class="card weather-card">
 
-    backdrop-filter: blur(10px);
-}
+                    <div
+                        id="weatherTitle"
+                        class="card-title"
+                    >
+                        🌤️ TAI WO WEATHER
+                    </div>
 
 
-.card-title {
-    flex: 0 0 auto;
+                    <!-- CURRENT WEATHER + DETAILS -->
 
-    font-size: clamp(14px, 1.35vw, 20px);
-    font-weight: 800;
-}
+                    <div class="weather-summary-row">
 
 
-.updated {
-    flex: 0 0 auto;
+                        <!-- ICON + CURRENT TEMPERATURE -->
 
-    margin-top: 4px;
+                        <div class="weather-main">
 
-    font-size: 10px;
+                            <div
+                                id="weatherIcon"
+                                class="weather-icon"
+                            >
+                                ☁️
+                            </div>
 
-    color: var(--muted);
-}
 
+                            <div class="weather-temperature-block">
 
-/* =====================================================
-   TOP GRID
-===================================================== */
+                                <div
+                                    id="temperature"
+                                    class="temperature"
+                                >
+                                    --°
+                                </div>
 
-.top-grid {
-    min-width: 0;
-    min-height: 0;
+                                <div
+                                    id="weatherDescription"
+                                    class="weather-description"
+                                >
+                                    Loading...
+                                </div>
 
-    display: grid;
+                            </div>
 
-    grid-template-columns:
-        minmax(210px, 0.78fr)
-        minmax(430px, 1.72fr);
+                        </div>
 
-    gap: 8px;
-}
 
+                        <!-- TODAY / HUMIDITY / RAIN
+                             ALWAYS VERTICAL
+                             ON THE RIGHT OF TEMPERATURE -->
 
-/* =====================================================
-   CLOCK
-===================================================== */
+                        <div class="weather-details">
 
-.clock-card {
-    min-height: 0;
+                            <div class="weather-detail">
 
-    padding: 10px;
+                                <span class="weather-detail-label">
+                                    今日
+                                </span>
 
-    display: grid;
+                                <strong
+                                    id="todayRange"
+                                    class="weather-detail-value"
+                                >
+                                    --° — --°
+                                </strong>
 
-    grid-template-rows:
-        auto
-        minmax(0, 1fr);
+                            </div>
 
-    justify-items: center;
-}
 
+                            <div class="weather-detail">
 
-.digital-time {
-    font-size: clamp(26px, 3vw, 46px);
+                                <span class="weather-detail-label">
+                                    💧 濕度
+                                </span>
 
-    font-weight: 800;
+                                <strong
+                                    id="humidity"
+                                    class="weather-detail-value"
+                                >
+                                    --%
+                                </strong>
 
-    line-height: 1.05;
+                            </div>
 
-    white-space: nowrap;
-}
 
+                            <div class="weather-detail">
 
-.clock-area {
-    min-height: 0;
-    min-width: 0;
+                                <span class="weather-detail-label">
+                                    🌧️ 降雨
+                                </span>
 
-    width: 100%;
+                                <strong
+                                    id="rainProbability"
+                                    class="weather-detail-value"
+                                >
+                                    --%
+                                </strong>
 
-    display: flex;
+                            </div>
 
-    align-items: center;
-    justify-content: center;
-}
+                        </div>
 
+                    </div>
 
-.analog-clock {
-    position: relative;
 
-    width: min(100%, 190px);
-    height: auto;
+                    <!-- HKO TEXT
+                         TWO INDEPENDENT SCROLL AREAS -->
 
-    aspect-ratio: 1;
+                    <div class="weather-hko-text">
 
-    border:
-        3px solid rgba(96, 71, 76, 0.60);
 
-    border-radius: 50%;
+                        <!-- FORECAST -->
 
-    background:
-        rgba(255, 250, 251, 0.25);
-}
+                        <section
+                            id="hkoForecastPanel"
+                            class="weather-hko-section hidden"
+                        >
 
+                            <div class="weather-hko-label">
+                                天氣預測
+                            </div>
 
-.clock-number {
-    position: absolute;
+                            <div
+                                id="hkoForecast"
+                                class="weather-hko-content"
+                            ></div>
 
-    font-size: 13px;
-    font-weight: 700;
-}
+                        </section>
 
 
-.clock-12 {
-    top: 7px;
-    left: 50%;
+                        <!-- SPECIAL WEATHER TIP -->
 
-    transform: translateX(-50%);
-}
+                        <section
+                            id="hkoSpecialPanel"
+                            class="weather-hko-section hidden"
+                        >
 
+                            <div class="weather-hko-label">
+                                ⚠️ 特別天氣提示
+                            </div>
 
-.clock-3 {
-    top: 50%;
-    right: 9px;
+                            <div
+                                id="hkoSpecial"
+                                class="weather-hko-content"
+                            ></div>
 
-    transform: translateY(-50%);
-}
+                        </section>
 
+                    </div>
 
-.clock-6 {
-    bottom: 7px;
-    left: 50%;
 
-    transform: translateX(-50%);
-}
+                    <div
+                        id="weatherUpdated"
+                        class="updated"
+                    >
+                        Weather updating...
+                    </div>
 
+                </div>
 
-.clock-9 {
-    top: 50%;
-    left: 9px;
+            </div>
 
-    transform: translateY(-50%);
-}
+        </section>
 
 
-.clock-hand {
-    position: absolute;
+        <!-- =========================================
+             TODAY'S FORECAST
+        ========================================== -->
 
-    left: 50%;
-    bottom: 50%;
+        <section class="card forecast-card">
 
-    transform-origin:
-        50% 100%;
+            <div
+                id="forecastTitle"
+                class="card-title"
+            >
+                🌦️ TODAY'S FORECAST
+            </div>
 
-    border-radius: 99px;
-}
+            <div
+                id="forecast"
+                class="forecast"
+            ></div>
 
+        </section>
 
-.clock-hour {
-    width: 6px;
-    height: 27%;
 
-    background: #3d383d;
-}
+        <!-- =========================================
+             MTR + CALENDAR
+        ========================================== -->
 
+        <section class="middle-grid">
 
-.clock-minute {
-    width: 5px;
-    height: 37%;
 
-    background: #4b4449;
-}
+            <!-- MTR -->
 
+            <div class="card mtr-card">
 
-.clock-second {
-    width: 2px;
-    height: 42%;
+                <div class="card-title">
+                    🚆 MTR · TAI WO
+                </div>
 
-    background: #bd707b;
-}
 
+                <div class="mtr-grid">
 
-.clock-center {
-    position: absolute;
 
-    top: 50%;
-    left: 50%;
+                    <!-- TO ADMIRALTY -->
 
-    width: 10px;
-    height: 10px;
+                    <div class="mtr-direction">
 
-    transform:
-        translate(-50%, -50%);
+                        <div class="direction-title">
+                            往金鐘
+                        </div>
 
-    border-radius: 50%;
+                        <div
+                            id="mtrDown"
+                            class="train-list"
+                        >
+                            Loading...
+                        </div>
 
-    background: #3d383d;
-}
+                    </div>
 
 
-/* =====================================================
-   DATE + WEATHER COLUMN
-===================================================== */
+                    <!-- TO SHEUNG SHUI -->
 
-.weather-column {
-    min-width: 0;
-    min-height: 0;
+                    <div class="mtr-direction">
 
-    display: grid;
+                        <div class="direction-title">
+                            往上水
+                        </div>
 
-    grid-template-rows:
-        auto
-        minmax(0, 1fr);
+                        <div
+                            id="mtrUp"
+                            class="train-list"
+                        >
+                            Loading...
+                        </div>
 
-    gap: 8px;
-}
+                    </div>
 
+                </div>
 
-/* =====================================================
-   DATE BUBBLE
-===================================================== */
+            </div>
 
-.date-bubble {
-    position: relative;
 
-    min-width: 0;
+            <!-- CALENDAR -->
 
-    padding: 9px 58px 9px 20px;
+            <div class="card calendar-card">
 
-    border: 1px solid var(--border);
-    border-radius: 22px;
+                <div class="card-title">
+                    📅 CALENDAR
+                </div>
 
-    background:
-        rgba(255, 237, 240, 0.48);
+                <div
+                    id="calendar"
+                    class="calendar-list"
+                >
 
-    box-shadow: var(--shadow);
+                    <div class="calendar-empty">
+                        iCloud Calendar 尚未連接
+                    </div>
 
-    text-align: center;
-}
+                </div>
 
+            </div>
 
-.date-content {
-    min-width: 0;
-}
+        </section>
 
 
-.date-main {
-    font-size: clamp(24px, 2.45vw, 36px);
+        <!-- =========================================
+             NEWS
+        ========================================== -->
 
-    font-weight: 900;
+        <section class="news-grid">
 
-    line-height: 1.12;
 
-    white-space: nowrap;
-}
+            <!-- NOW -->
 
+            <div class="card news-card">
 
-.date-lunar {
-    margin-top: 2px;
+                <div class="card-title">
+                    🇭🇰 NOW NEWS
+                </div>
 
-    font-size: clamp(13px, 1.2vw, 18px);
+                <div class="news-subtitle">
+                    本地 · 兩岸
+                </div>
 
-    color: var(--secondary);
-}
+                <div
+                    id="nowNews"
+                    class="news-list"
+                >
+                    Loading...
+                </div>
 
+            </div>
 
-/* =====================================================
-   REFRESH BUTTON
-===================================================== */
 
-.refresh-button {
-    position: absolute;
+            <!-- BBC -->
 
-    top: 50%;
-    right: 13px;
+            <div class="card news-card">
 
-    transform: translateY(-50%);
+                <div class="card-title">
+                    🌍 BBC NEWS
+                </div>
 
-    z-index: 10;
+                <div class="news-subtitle">
+                    WORLD
+                </div>
 
-    width: 40px;
-    height: 40px;
+                <div
+                    id="bbcNews"
+                    class="news-list"
+                >
+                    Loading...
+                </div>
 
-    border: 1px solid var(--border);
-    border-radius: 50%;
+            </div>
 
-    background:
-        rgba(255, 244, 246, 0.85);
+        </section>
 
-    color: var(--text);
+    </main>
 
-    font-size: 24px;
 
-    cursor: pointer;
-}
+    <!-- FOOTER -->
 
+    <footer>
 
-.refresh-button.loading {
-    animation:
-        spin 0.8s linear infinite;
-}
+        <span>
+            Tai Wo Dashboard
+        </span>
 
+        <span id="lastUpdated">
+            Updated --
+        </span>
 
-@keyframes spin {
-    to {
-        transform:
-            translateY(-50%)
-            rotate(360deg);
-    }
-}
+    </footer>
 
+</div>
 
-/* =====================================================
-   WEATHER
-===================================================== */
 
-.weather-card {
-    min-width: 0;
-    min-height: 0;
+<script src="script.js"></script>
 
-    padding: 10px 13px;
-
-    display: flex;
-    flex-direction: column;
-
-    overflow: hidden;
-}
-
-
-.weather-main {
-    flex: 0 0 auto;
-
-    display: flex;
-
-    align-items: center;
-
-    gap: 14px;
-
-    margin-top: 2px;
-}
-
-
-.weather-icon {
-    flex: 0 0 auto;
-
-    font-size: clamp(42px, 5vw, 68px);
-
-    line-height: 1;
-}
-
-
-.weather-temperature-block {
-    min-width: 0;
-}
-
-
-.temperature {
-    font-size: clamp(40px, 5vw, 68px);
-
-    font-weight: 800;
-
-    line-height: 0.9;
-}
-
-
-.weather-description {
-    margin-top: 5px;
-
-    font-size: clamp(13px, 1.35vw, 19px);
-
-    color: var(--secondary);
-}
-
-
-/* =====================================================
-   WEATHER DETAILS
-   ALWAYS VERTICAL
-
-   今日
-   濕度
-   降雨
-===================================================== */
-
-.weather-details {
-    flex: 0 0 auto;
-
-    display: grid;
-
-    grid-template-columns: 1fr;
-
-    gap: 4px;
-
-    margin-top: 7px;
-
-    width: 100%;
-}
-
-
-.weather-detail {
-    min-width: 0;
-
-    padding: 5px 8px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    gap: 8px;
-
-    border-radius: 12px;
-
-    background: var(--item);
-}
-
-
-.weather-detail-label {
-    display: block;
-
-    flex: 0 0 auto;
-
-    font-size: 11px;
-
-    color: var(--secondary);
-
-    white-space: nowrap;
-}
-
-
-.weather-detail-value {
-    display: block;
-
-    min-width: 0;
-
-    margin-top: 0;
-
-    font-size: clamp(13px, 1.35vw, 20px);
-
-    white-space: nowrap;
-
-    text-align: right;
-}
-
-
-/* =====================================================
-   HKO TEXT AREA
-
-   TWO COMPLETELY INDEPENDENT SCROLL AREAS
-===================================================== */
-
-.weather-hko-text {
-    min-width: 0;
-    min-height: 0;
-
-    flex: 1 1 0;
-
-    display: grid;
-
-    grid-template-rows:
-        minmax(0, 1fr)
-        minmax(0, 1fr);
-
-    gap: 6px;
-
-    margin-top: 7px;
-
-    overflow: hidden;
-}
-
-
-/* =====================================================
-   EACH HKO PANEL
-
-   Neither panel can push the other
-===================================================== */
-
-.weather-hko-section {
-    min-width: 0;
-    min-height: 0;
-
-    height: 100%;
-
-    display: flex;
-    flex-direction: column;
-
-    margin: 0;
-
-    padding: 6px 9px;
-
-    border-radius: 12px;
-
-    background: var(--item);
-
-    overflow: hidden;
-}
-
-
-.weather-hko-section.hidden {
-    display: none;
-}
-
-
-/* =====================================================
-   HKO TITLE
-===================================================== */
-
-.weather-hko-label {
-    flex: 0 0 auto;
-
-    min-height: 0;
-
-    margin-bottom: 3px;
-
-    font-size: clamp(11px, 1.1vw, 15px);
-
-    font-weight: 800;
-
-    color: var(--text);
-}
-
-
-/* =====================================================
-   HKO CONTENT
-
-   THIS is the actual independent scroll area
-===================================================== */
-
-.weather-hko-content {
-    min-width: 0;
-    min-height: 0;
-
-    flex: 1 1 0;
-
-    height: 0;
-
-    overflow-y: auto;
-    overflow-x: hidden;
-
-    padding-right: 4px;
-
-    font-size: clamp(10px, 1vw, 14px);
-
-    line-height: 1.4;
-
-    color: var(--secondary);
-
-    white-space: normal;
-
-    overflow-wrap: anywhere;
-    word-break: break-word;
-
-    scrollbar-width: thin;
-
-    overscroll-behavior: contain;
-}
-
-
-.weather-hko-content::-webkit-scrollbar {
-    width: 5px;
-}
-
-
-.weather-hko-content::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-
-.weather-hko-content::-webkit-scrollbar-thumb {
-    border-radius: 20px;
-
-    background:
-        rgba(143, 84, 96, 0.45);
-}
-
-
-/* =====================================================
-   HOURLY FORECAST
-===================================================== */
-
-.forecast-card {
-    min-width: 0;
-    min-height: 0;
-
-    padding: 9px 12px;
-}
-
-
-.forecast {
-    height: calc(100% - 28px);
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(8, minmax(0, 1fr));
-
-    gap: 6px;
-
-    margin-top: 4px;
-}
-
-
-.forecast-hour,
-.forecast-item {
-    min-width: 0;
-
-    padding: 5px 3px;
-
-    text-align: center;
-
-    border-radius: 13px;
-
-    background: var(--item);
-}
-
-
-.forecast-time {
-    font-size: 11px;
-
-    color: var(--secondary);
-}
-
-
-.forecast-icon {
-    margin: 2px 0;
-
-    font-size: clamp(17px, 2vw, 26px);
-}
-
-
-.forecast-temp {
-    font-size: clamp(13px, 1.5vw, 19px);
-
-    font-weight: 800;
-}
-
-
-.forecast-rain {
-    font-size: 10px;
-
-    color: var(--secondary);
-}
-
-
-/* =====================================================
-   MTR + CALENDAR
-===================================================== */
-
-.middle-grid {
-    min-width: 0;
-    min-height: 0;
-
-    display: grid;
-
-    grid-template-columns:
-        minmax(250px, 0.78fr)
-        minmax(0, 2.22fr);
-
-    gap: 8px;
-}
-
-
-/* =====================================================
-   MTR
-
-   SAME LAYOUT IN BOTH LANDSCAPE + PORTRAIT
-===================================================== */
-
-.mtr-card {
-    min-width: 0;
-    min-height: 0;
-
-    padding: 9px 11px;
-
-    display: flex;
-    flex-direction: column;
-}
-
-
-.mtr-grid {
-    min-width: 0;
-    min-height: 0;
-
-    flex: 1;
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-    gap: 9px;
-
-    margin-top: 4px;
-}
-
-
-.mtr-direction {
-    min-width: 0;
-}
-
-
-.direction-title {
-    margin-bottom: 3px;
-
-    font-size: clamp(12px, 1.15vw, 16px);
-
-    font-weight: 800;
-}
-
-
-.train-list {
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 3px;
-
-    min-width: 0;
-
-    overflow: hidden;
-}
-
-
-.train {
-    min-width: 0;
-
-    padding: 3px 5px;
-
-    border-radius: 9px;
-
-    background: var(--item);
-
-    text-align: center;
-}
-
-
-.train-time {
-    font-size: clamp(13px, 1.3vw, 18px);
-
-    font-weight: 800;
-
-    white-space: nowrap;
-}
-
-
-.train-minutes {
-    display: none;
-}
-
-
-/* =====================================================
-   CALENDAR
-===================================================== */
-
-.calendar-card {
-    min-width: 0;
-    min-height: 0;
-
-    padding: 9px 13px;
-
-    display: flex;
-    flex-direction: column;
-}
-
-
-.calendar-list {
-    min-width: 0;
-    min-height: 0;
-
-    flex: 1;
-
-    margin-top: 4px;
-
-    overflow-y: auto;
-
-    padding-right: 4px;
-
-    font-size: clamp(12px, 1.2vw, 17px);
-
-    color: var(--secondary);
-
-    scrollbar-width: thin;
-}
-
-
-/* =====================================================
-   NEWS
-===================================================== */
-
-.news-grid {
-    min-width: 0;
-    min-height: 0;
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-    gap: 8px;
-}
-
-
-.news-card {
-    min-width: 0;
-    min-height: 0;
-
-    padding: 10px 13px;
-
-    display: flex;
-    flex-direction: column;
-}
-
-
-.news-subtitle {
-    flex: 0 0 auto;
-
-    margin-top: 1px;
-
-    font-size: 11px;
-
-    color: var(--secondary);
-}
-
-
-.news-list {
-    min-width: 0;
-    min-height: 0;
-
-    flex: 1;
-
-    margin-top: 5px;
-
-    overflow-y: auto;
-    overflow-x: hidden;
-
-    padding-right: 5px;
-
-    scrollbar-width: thin;
-
-    overscroll-behavior: contain;
-}
-
-
-.news-list::-webkit-scrollbar {
-    width: 5px;
-}
-
-
-.news-list::-webkit-scrollbar-thumb {
-    border-radius: 20px;
-
-    background:
-        rgba(143, 84, 96, 0.45);
-}
-
-
-.news-item {
-    display: block;
-
-    padding: 5px 2px;
-
-    color: var(--text);
-
-    text-decoration: none;
-
-    font-size: clamp(11px, 1.05vw, 15px);
-
-    line-height: 1.3;
-
-    overflow-wrap: anywhere;
-
-    border-bottom:
-        1px solid rgba(160, 99, 110, 0.17);
-}
-
-
-.news-item:hover {
-    text-decoration: underline;
-}
-
-
-/* =====================================================
-   FOOTER
-===================================================== */
-
-footer {
-    min-width: 0;
-
-    display: flex;
-
-    justify-content: space-between;
-    align-items: center;
-
-    padding: 0 2px;
-
-    font-size: 10px;
-
-    line-height: 1.1;
-
-    color:
-        rgba(70, 55, 60, 0.58);
-}
-
-
-/* =====================================================
-   IPAD / NARROW
-===================================================== */
-
-@media (max-width: 900px) {
-
-    .dashboard {
-
-        padding:
-            max(8px, env(safe-area-inset-top))
-            10px
-            max(5px, env(safe-area-inset-bottom));
-
-    }
-
-
-    .dashboard-content {
-
-        grid-template-rows:
-            minmax(235px, 2.1fr)
-            minmax(85px, 0.7fr)
-            minmax(105px, 0.9fr)
-            minmax(120px, 1fr);
-
-    }
-
-
-    .top-grid {
-
-        grid-template-columns:
-            minmax(190px, 0.72fr)
-            minmax(0, 1.28fr);
-
-    }
-
-
-    .date-main {
-
-        font-size: clamp(22px, 3.3vw, 32px);
-
-    }
-
-
-    .analog-clock {
-
-        width: min(100%, 165px);
-
-    }
-
-
-    .weather-card {
-
-        padding: 9px 10px;
-
-    }
-
-
-    .weather-icon {
-
-        font-size: 48px;
-
-    }
-
-
-    .weather-detail {
-
-        padding: 5px 6px;
-
-    }
-
-
-    .weather-detail-value {
-
-        font-size: 15px;
-
-    }
-
-
-    .weather-hko-content {
-
-        font-size: 11px;
-
-    }
-
-
-    .middle-grid {
-
-        grid-template-columns:
-            minmax(210px, 0.75fr)
-            minmax(0, 1.85fr);
-
-    }
-
-
-    .mtr-grid {
-
-        gap: 6px;
-
-    }
-
-}
-
-
-/* =====================================================
-   PORTRAIT
-
-   IMPORTANT:
-   DO NOT CHANGE MTR/CALENDAR LAYOUT
-   DO NOT CHANGE WEATHER DETAILS LAYOUT
-===================================================== */
-
-@media (orientation: portrait) and (min-width: 601px) {
-
-    .top-grid {
-
-        grid-template-columns:
-            minmax(180px, 0.68fr)
-            minmax(0, 1.32fr);
-
-    }
-
-
-    .middle-grid {
-
-        grid-template-columns:
-            minmax(190px, 0.72fr)
-            minmax(0, 1.95fr);
-
-    }
-
-}
-
-
-/* =====================================================
-   PHONE
-===================================================== */
-
-@media (max-width: 600px) {
-
-    html,
-    body {
-
-        overflow: auto;
-
-    }
-
-
-    .dashboard {
-
-        height: auto;
-        min-height: 100vh;
-
-        overflow: visible;
-
-        grid-template-rows:
-            auto
-            auto;
-
-    }
-
-
-    .dashboard-content {
-
-        display: flex;
-        flex-direction: column;
-
-        overflow: visible;
-
-    }
-
-
-    .top-grid,
-    .middle-grid,
-    .news-grid {
-
-        grid-template-columns: 1fr;
-
-    }
-
-
-    .clock-card,
-    .weather-card,
-    .forecast-card,
-    .mtr-card,
-    .calendar-card,
-    .news-card {
-
-        min-height: 180px;
-
-    }
-
-
-    .date-main {
-
-        white-space: normal;
-
-    }
-
-
-    .forecast {
-
-        grid-template-columns:
-            repeat(8, minmax(70px, 1fr));
-
-        overflow-x: auto;
-
-    }
-
-}
+</body>
+</html>
