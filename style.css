@@ -85,10 +85,6 @@ body {
 }
 
 
-/* =====================================================
-   CONTENT
-===================================================== */
-
 .dashboard-content {
     min-height: 0;
 
@@ -211,7 +207,6 @@ body {
     position: relative;
 
     width: min(100%, 190px);
-    height: auto;
 
     aspect-ratio: 1;
 
@@ -339,7 +334,7 @@ body {
 
 
 /* =====================================================
-   DATE BUBBLE
+   DATE
 ===================================================== */
 
 .date-bubble {
@@ -445,39 +440,41 @@ body {
 
 
 /* =====================================================
-   CURRENT TEMPERATURE + DETAILS ROW
+   CURRENT WEATHER ROW
 
    LEFT:
-   ICON + CURRENT TEMPERATURE
+   ICON + TEMPERATURE
 
    RIGHT:
    今日
    濕度
    降雨
 
-   DETAILS ALWAYS VERTICAL
+   ALWAYS VERTICAL
+   IN BOTH PORTRAIT + LANDSCAPE
 ===================================================== */
 
 .weather-summary-row {
     min-width: 0;
-    min-height: 0;
-
-    display: flex;
-
-    align-items: stretch;
-
-    gap: 12px;
-
-    margin-top: 4px;
 
     flex: 0 0 auto;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(180px, 0.72fr);
+
+    gap: 14px;
+
+    align-items: center;
+
+    margin-top: 2px;
 }
 
 
 .weather-main {
     min-width: 0;
-
-    flex: 1 1 auto;
 
     display: flex;
 
@@ -507,6 +504,8 @@ body {
     font-weight: 800;
 
     line-height: 0.9;
+
+    white-space: nowrap;
 }
 
 
@@ -522,14 +521,10 @@ body {
 /* =====================================================
    TODAY / HUMIDITY / RAIN
 
-   ALWAYS 3 ROWS
-   ALWAYS ON RIGHT OF CURRENT TEMPERATURE
-   BOTH PORTRAIT + LANDSCAPE
+   ALWAYS THREE VERTICAL ROWS
 ===================================================== */
 
 .weather-details {
-    flex: 0 0 clamp(150px, 31%, 300px);
-
     min-width: 0;
 
     display: grid;
@@ -540,6 +535,8 @@ body {
         repeat(3, minmax(0, 1fr));
 
     gap: 4px;
+
+    width: 100%;
 }
 
 
@@ -551,7 +548,6 @@ body {
     display: flex;
 
     align-items: center;
-
     justify-content: space-between;
 
     gap: 8px;
@@ -563,7 +559,7 @@ body {
 
 
 .weather-detail-label {
-    display: block;
+    min-width: 0;
 
     flex: 0 0 auto;
 
@@ -576,11 +572,9 @@ body {
 
 
 .weather-detail-value {
-    display: block;
-
     min-width: 0;
 
-    margin-top: 0;
+    margin: 0;
 
     font-size: clamp(13px, 1.35vw, 20px);
 
@@ -591,10 +585,9 @@ body {
 
 
 /* =====================================================
-   HKO TEXT AREA
+   HKO TEXT
 
-   FORECAST AND SPECIAL WEATHER TIP
-   HAVE THEIR OWN INDEPENDENT SCROLL AREAS
+   TWO COMPLETELY INDEPENDENT SCROLL AREAS
 ===================================================== */
 
 .weather-hko-text {
@@ -627,6 +620,7 @@ body {
     flex-direction: column;
 
     margin: 0;
+
     padding: 6px 9px;
 
     border-radius: 12px;
@@ -639,15 +633,6 @@ body {
 
 .weather-hko-section.hidden {
     display: none;
-}
-
-
-/* WHEN ONLY ONE HKO PANEL EXISTS */
-
-.weather-hko-text:has(
-    .weather-hko-section:not(.hidden):only-child
-) {
-    grid-template-rows: minmax(0, 1fr);
 }
 
 
@@ -664,7 +649,7 @@ body {
 }
 
 
-/* INDEPENDENT SCROLL AREA */
+/* EACH PANEL SCROLLS INDEPENDENTLY */
 
 .weather-hko-content {
     min-width: 0;
@@ -799,9 +784,7 @@ body {
 }
 
 
-/* =====================================================
-   MTR
-===================================================== */
+/* MTR */
 
 .mtr-card {
     min-width: 0;
@@ -847,7 +830,6 @@ body {
 
 .train-list {
     display: flex;
-
     flex-direction: column;
 
     gap: 3px;
@@ -881,20 +863,19 @@ body {
 
 
 .train-destination {
-    font-size: 10px;
+    font-size: clamp(10px, 1vw, 14px);
 
     color: var(--secondary);
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
 }
 
 
-.train-minutes {
-    display: none;
-}
-
-
-/* =====================================================
-   CALENDAR
-===================================================== */
+/* CALENDAR */
 
 .calendar-card {
     min-width: 0;
@@ -1053,171 +1034,120 @@ footer {
 @media (max-width: 900px) {
 
     .dashboard {
-
         padding:
             max(8px, env(safe-area-inset-top))
             10px
             max(5px, env(safe-area-inset-bottom));
-
     }
 
 
     .dashboard-content {
-
         grid-template-rows:
             minmax(235px, 2.1fr)
             minmax(85px, 0.7fr)
             minmax(105px, 0.9fr)
             minmax(120px, 1fr);
-
     }
 
 
     .top-grid {
-
         grid-template-columns:
             minmax(190px, 0.72fr)
             minmax(0, 1.28fr);
-
     }
 
 
     .date-main {
-
         font-size: clamp(22px, 3.3vw, 32px);
-
     }
 
 
     .analog-clock {
-
         width: min(100%, 165px);
-
     }
 
 
     .weather-card {
-
         padding: 9px 10px;
-
     }
 
 
     .weather-summary-row {
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(145px, 0.78fr);
 
-        gap: 8px;
-
+        gap: 10px;
     }
 
 
     .weather-icon {
-
         font-size: 48px;
-
     }
 
 
-    .weather-details {
-
-        flex-basis:
-            clamp(140px, 32%, 240px);
-
+    .weather-main {
+        gap: 10px;
     }
 
 
     .weather-detail {
-
         padding: 5px 6px;
-
     }
 
 
     .weather-detail-value {
-
         font-size: 15px;
-
     }
 
 
     .weather-hko-content {
-
         font-size: 11px;
-
     }
 
 
     .middle-grid {
-
         grid-template-columns:
             minmax(210px, 0.75fr)
             minmax(0, 1.85fr);
-
     }
 
 
     .mtr-grid {
-
         gap: 6px;
-
     }
 
 }
 
 
 /* =====================================================
-   PORTRAIT
+   PORTRAIT IPAD
 
-   WEATHER DETAILS REMAIN:
-   ON RIGHT OF CURRENT TEMPERATURE
-   VERTICAL 3 ROWS
+   IMPORTANT:
+   WEATHER DETAILS STAY ON THE RIGHT
+   AND STAY VERTICAL
 ===================================================== */
 
 @media (orientation: portrait) and (min-width: 601px) {
 
     .top-grid {
-
         grid-template-columns:
             minmax(180px, 0.68fr)
             minmax(0, 1.32fr);
-
     }
 
 
     .middle-grid {
-
         grid-template-columns:
             minmax(190px, 0.72fr)
             minmax(0, 1.95fr);
-
     }
 
 
     .weather-summary-row {
-
-        gap: 7px;
-
-    }
-
-
-    .weather-main {
-
-        gap: 8px;
-
-    }
-
-
-    .weather-details {
-
-        flex-basis:
-            clamp(130px, 34%, 210px);
-
-    }
-
-
-    .weather-detail {
-
-        padding: 4px 6px;
-
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(150px, 0.72fr);
     }
 
 }
@@ -1231,14 +1161,11 @@ footer {
 
     html,
     body {
-
         overflow: auto;
-
     }
 
 
     .dashboard {
-
         height: auto;
         min-height: 100vh;
 
@@ -1247,26 +1174,21 @@ footer {
         grid-template-rows:
             auto
             auto;
-
     }
 
 
     .dashboard-content {
-
         display: flex;
         flex-direction: column;
 
         overflow: visible;
-
     }
 
 
     .top-grid,
     .middle-grid,
     .news-grid {
-
         grid-template-columns: 1fr;
-
     }
 
 
@@ -1276,33 +1198,29 @@ footer {
     .mtr-card,
     .calendar-card,
     .news-card {
-
         min-height: 180px;
-
     }
 
 
     .date-main {
-
         white-space: normal;
-
-    }
-
-
-    .weather-details {
-
-        flex-basis: 150px;
-
     }
 
 
     .forecast {
-
         grid-template-columns:
             repeat(8, minmax(70px, 1fr));
 
         overflow-x: auto;
+    }
 
+
+    .weather-summary-row {
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(135px, 0.75fr);
+
+        gap: 8px;
     }
 
 }
