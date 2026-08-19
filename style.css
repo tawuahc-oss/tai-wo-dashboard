@@ -101,7 +101,7 @@ body {
 
 
 /* =========================================================
-   REFRESH
+   REFRESH BUTTON
 ========================================================= */
 
 .refresh-button {
@@ -131,7 +131,12 @@ body {
     border-radius: 50%;
 
     background:
-        rgba(255, 244, 246, 0.86);
+        rgba(
+            255,
+            244,
+            246,
+            0.86
+        );
 
     color: var(--text);
 
@@ -151,7 +156,8 @@ body {
 .refresh-button.loading {
 
     animation:
-        spin 0.8s
+        spin
+        0.8s
         linear
         infinite;
 }
@@ -316,6 +322,8 @@ body {
 }
 
 
+/* Always a true circle */
+
 .analog-clock {
 
     position: relative;
@@ -328,7 +336,8 @@ body {
 
     height: auto;
 
-    aspect-ratio: 1 / 1;
+    aspect-ratio:
+        1 / 1;
 
     flex-shrink: 0;
 
@@ -424,7 +433,8 @@ body {
     width: 6px;
     height: 28%;
 
-    background: #3d383d;
+    background:
+        #3d383d;
 }
 
 
@@ -433,7 +443,8 @@ body {
     width: 5px;
     height: 37%;
 
-    background: #4b4449;
+    background:
+        #4b4449;
 }
 
 
@@ -442,7 +453,8 @@ body {
     width: 2px;
     height: 42%;
 
-    background: #bd707b;
+    background:
+        #bd707b;
 }
 
 
@@ -464,7 +476,8 @@ body {
 
     border-radius: 50%;
 
-    background: #3d383d;
+    background:
+        #3d383d;
 }
 
 
@@ -569,13 +582,18 @@ body {
 }
 
 
+/*
+   DATE FONT
+   ~1.25x larger than previous version
+*/
+
 .top-date {
 
     font-size:
         clamp(
-            24px,
-            2.6vw,
-            36px
+            30px,
+            3.25vw,
+            45px
         );
 
     font-weight: 900;
@@ -589,22 +607,27 @@ body {
 }
 
 
+/*
+   Lunar date also slightly larger
+*/
+
 .lunar {
 
-    margin-top: 4px;
+    margin-top: 5px;
 
     font-size:
         clamp(
-            14px,
-            1.4vw,
-            20px
+            17px,
+            1.75vw,
+            25px
         );
 
     font-weight: 600;
 
     line-height: 1.05;
 
-    color: var(--secondary);
+    color:
+        var(--secondary);
 
     white-space: nowrap;
 }
@@ -688,7 +711,8 @@ body {
             18px
         );
 
-    color: var(--secondary);
+    color:
+        var(--secondary);
 }
 
 
@@ -717,7 +741,8 @@ body {
 
     border-radius: 13px;
 
-    background: var(--item);
+    background:
+        var(--item);
 
     overflow: hidden;
 }
@@ -729,7 +754,8 @@ body {
 
     font-size: 10px;
 
-    color: var(--secondary);
+    color:
+        var(--secondary);
 }
 
 
@@ -812,7 +838,8 @@ body {
 
     border-radius: 12px;
 
-    background: var(--item);
+    background:
+        var(--item);
 
     overflow: hidden;
 }
@@ -827,7 +854,8 @@ body {
             13px
         );
 
-    color: var(--secondary);
+    color:
+        var(--secondary);
 
     white-space: nowrap;
 }
@@ -875,7 +903,8 @@ body {
             11px
         );
 
-    color: var(--secondary);
+    color:
+        var(--secondary);
 }
 
 
@@ -889,6 +918,10 @@ body {
     min-height: 0;
 
     display: grid;
+
+    /*
+       Small MTR / large Calendar
+    */
 
     grid-template-columns:
 
@@ -925,28 +958,29 @@ body {
 
     margin-top: 4px;
 
-    display: grid;
+    height:
+        calc(
+            100% - 26px
+        );
 
     /*
        PORTRAIT DEFAULT:
-       directions stacked vertically.
+       directions stacked
     */
+
+    display: grid;
 
     grid-template-columns:
         1fr;
 
     grid-template-rows:
+
         repeat(
             2,
             minmax(0, 1fr)
         );
 
     gap: 5px;
-
-    height:
-        calc(
-            100% - 26px
-        );
 
     overflow: hidden;
 }
@@ -1148,7 +1182,8 @@ body {
 
     font-size: 11px;
 
-    color: var(--secondary);
+    color:
+        var(--secondary);
 
     flex-shrink: 0;
 }
@@ -1174,7 +1209,6 @@ body {
 .news-list::-webkit-scrollbar {
 
     width: 5px;
-
 }
 
 
@@ -1309,19 +1343,35 @@ footer {
 
         grid-template-rows:
 
-            minmax(72px, 0.34fr)
+            minmax(78px, 0.34fr)
 
             minmax(0, 0.66fr);
     }
 
 
+    /*
+       Keep the larger date font
+       on iPad.
+    */
+
     .top-date {
 
         font-size:
             clamp(
-                22px,
-                2.8vw,
-                30px
+                30px,
+                3.4vw,
+                38px
+            );
+    }
+
+
+    .lunar {
+
+        font-size:
+            clamp(
+                17px,
+                1.8vw,
+                24px
             );
     }
 
@@ -1350,7 +1400,7 @@ footer {
 
 /* =========================================================
    LANDSCAPE
-   Directions side by side
+   Two direction columns
 ========================================================= */
 
 @media
@@ -1375,8 +1425,6 @@ footer {
 
     .mtr-direction {
 
-        min-height: 0;
-
         display: flex;
 
         flex-direction: column;
@@ -1399,7 +1447,7 @@ footer {
 
 /* =========================================================
    PORTRAIT
-   Directions stacked
+   Two directions stacked
 ========================================================= */
 
 @media
@@ -1490,15 +1538,42 @@ footer {
 
         grid-template-rows:
 
-            minmax(78px, 0.34fr)
+            minmax(82px, 0.34fr)
 
             minmax(0, 0.66fr);
+    }
+
+
+    /*
+       Keep date large in landscape too.
+    */
+
+    .top-date {
+
+        font-size:
+            clamp(
+                30px,
+                3.25vw,
+                45px
+            );
+    }
+
+
+    .lunar {
+
+        font-size:
+            clamp(
+                17px,
+                1.75vw,
+                25px
+            );
     }
 
 
     .forecast-card {
 
         padding-top: 6px;
+
         padding-bottom: 6px;
     }
 
@@ -1509,6 +1584,15 @@ footer {
             calc(
                 100% - 24px
             );
+
+        gap: 5px;
+    }
+
+
+    .forecast-hour {
+
+        padding:
+            2px;
     }
 
 
@@ -1516,48 +1600,6 @@ footer {
 
         padding-top: 7px;
         padding-bottom: 7px;
-    }
-
-
-    /*
-       Landscape MTR:
-       two direction columns.
-    */
-
-    .mtr-grid {
-
-        grid-template-columns:
-
-            repeat(
-                2,
-                minmax(0, 1fr)
-            );
-
-        grid-template-rows: 1fr;
-
-        gap: 8px;
-    }
-
-
-    .mtr-direction {
-
-        min-height: 0;
-
-        display: flex;
-
-        flex-direction: column;
-
-        gap: 3px;
-    }
-
-
-    .train-list {
-
-        display: flex;
-
-        flex-direction: column;
-
-        gap: 4px;
     }
 
 
@@ -1634,13 +1676,13 @@ footer {
 
     .header {
 
-        min-height: 86px;
+        min-height: 90px;
     }
 
 
     .date-time-bubble {
 
-        min-height: 86px;
+        min-height: 90px;
 
         padding:
             8px 15px;
@@ -1649,7 +1691,13 @@ footer {
 
     .top-date {
 
-        font-size: 25px;
+        font-size: 30px;
+    }
+
+
+    .lunar {
+
+        font-size: 18px;
     }
 
 
@@ -1680,8 +1728,7 @@ footer {
 
 
     /*
-       Phone / narrow portrait:
-       MTR directions remain stacked.
+       Portrait MTR
     */
 
     .mtr-grid {
@@ -1690,6 +1737,7 @@ footer {
             1fr;
 
         grid-template-rows:
+
             repeat(
                 2,
                 minmax(0, 1fr)
