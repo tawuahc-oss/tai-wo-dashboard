@@ -128,169 +128,194 @@
                 </div>
 
 
-                <!-- WEATHER -->
+<!-- WEATHER -->
+<div class="card weather-card">
 
-                <div class="card weather-card">
+    <div
+        id="weatherTitle"
+        class="card-title"
+    >
+        🌤️ TAI WO WEATHER
+    </div>
+
+
+    <!--
+        CURRENT WEATHER BUBBLE
+
+        LEFT:
+        CURRENT WEATHER
+
+        RIGHT:
+        HKO FORECAST
+        HKO SPECIAL WEATHER TIP
+
+        BELOW CURRENT WEATHER:
+        TODAY / HUMIDITY / RAIN
+    -->
+    <div class="weather-layout">
+
+
+        <!-- LEFT COLUMN -->
+        <div class="weather-left-column">
+
+
+            <!-- CURRENT WEATHER -->
+            <div class="weather-main">
+
+                <div
+                    id="weatherIcon"
+                    class="weather-icon"
+                >
+                    ☁️
+                </div>
+
+
+                <div
+                    class="weather-temperature-block"
+                >
 
                     <div
-                        id="weatherTitle"
-                        class="card-title"
+                        id="temperature"
+                        class="temperature"
                     >
-                        🌤️ TAI WO WEATHER
-                    </div>
-
-
-                    <!-- CURRENT WEATHER + DETAILS -->
-
-                    <div class="weather-summary-row">
-
-
-                        <!-- LEFT:
-                             ICON + CURRENT TEMPERATURE -->
-
-                        <div class="weather-main">
-
-                            <div
-                                id="weatherIcon"
-                                class="weather-icon"
-                            >
-                                ☁️
-                            </div>
-
-
-                            <div class="weather-temperature-block">
-
-                                <div
-                                    id="temperature"
-                                    class="temperature"
-                                >
-                                    --°
-                                </div>
-
-                                <div
-                                    id="weatherDescription"
-                                    class="weather-description"
-                                >
-                                    Loading...
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
-                        <!-- RIGHT:
-                             TODAY / HUMIDITY / RAIN
-                             ALWAYS VERTICAL -->
-
-                        <div class="weather-details">
-
-                            <div class="weather-detail">
-
-                                <span class="weather-detail-label">
-                                    今日
-                                </span>
-
-                                <strong
-                                    id="todayRange"
-                                    class="weather-detail-value"
-                                >
-                                    --° — --°
-                                </strong>
-
-                            </div>
-
-
-                            <div class="weather-detail">
-
-                                <span class="weather-detail-label">
-                                    💧 濕度
-                                </span>
-
-                                <strong
-                                    id="humidity"
-                                    class="weather-detail-value"
-                                >
-                                    --%
-                                </strong>
-
-                            </div>
-
-
-                            <div class="weather-detail">
-
-                                <span class="weather-detail-label">
-                                    🌧️ 降雨
-                                </span>
-
-                                <strong
-                                    id="rainProbability"
-                                    class="weather-detail-value"
-                                >
-                                    --%
-                                </strong>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- HKO TEXT:
-                         TWO INDEPENDENT SCROLL AREAS -->
-
-                    <div class="weather-hko-text">
-
-
-                        <!-- FORECAST -->
-
-                        <section
-                            id="hkoForecastPanel"
-                            class="weather-hko-section hidden"
-                        >
-
-                            <div class="weather-hko-label">
-                                天氣預測
-                            </div>
-
-                            <div
-                                id="hkoForecast"
-                                class="weather-hko-content"
-                            ></div>
-
-                        </section>
-
-
-                        <!-- SPECIAL WEATHER TIP -->
-
-                        <section
-                            id="hkoSpecialPanel"
-                            class="weather-hko-section hidden"
-                        >
-
-                            <div class="weather-hko-label">
-                                ⚠️ 特別天氣提示
-                            </div>
-
-                            <div
-                                id="hkoSpecial"
-                                class="weather-hko-content"
-                            ></div>
-
-                        </section>
-
+                        --°
                     </div>
 
 
                     <div
-                        id="weatherUpdated"
-                        class="updated"
+                        id="weatherDescription"
+                        class="weather-description"
                     >
-                        Weather updating...
+                        Loading...
                     </div>
 
                 </div>
+
+            </div>
+
+
+            <!--
+                TODAY / HUMIDITY / RAIN
+                ALWAYS VERTICAL
+            -->
+            <div class="weather-details">
+
+                <div class="weather-detail">
+
+                    <span
+                        class="weather-detail-label"
+                    >
+                        今日
+                    </span>
+
+                    <strong
+                        id="todayRange"
+                        class="weather-detail-value"
+                    >
+                        --° — --°
+                    </strong>
+
+                </div>
+
+
+                <div class="weather-detail">
+
+                    <span
+                        class="weather-detail-label"
+                    >
+                        💧 濕度
+                    </span>
+
+                    <strong
+                        id="humidity"
+                        class="weather-detail-value"
+                    >
+                        --%
+                    </strong>
+
+                </div>
+
+
+                <div class="weather-detail">
+
+                    <span
+                        class="weather-detail-label"
+                    >
+                        🌧️ 降雨
+                    </span>
+
+                    <strong
+                        id="rainProbability"
+                        class="weather-detail-value"
+                    >
+                        --%
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- RIGHT COLUMN -->
+        <div class="weather-hko-text">
+
+
+            <!-- HKO FORECAST -->
+            <section
+                id="hkoForecastPanel"
+                class="weather-hko-section hidden"
+            >
+
+                <div
+                    class="weather-hko-label"
+                >
+                    天氣預測
+                </div>
+
+
+                <div
+                    id="hkoForecast"
+                    class="weather-hko-content"
+                ></div>
+
+            </section>
+
+
+            <!-- HKO SPECIAL WEATHER TIP -->
+            <section
+                id="hkoSpecialPanel"
+                class="weather-hko-section hidden"
+            >
+
+                <div
+                    class="weather-hko-label"
+                >
+                    ⚠️ 特別天氣提示
+                </div>
+
+
+                <div
+                    id="hkoSpecial"
+                    class="weather-hko-content"
+                ></div>
+
+            </section>
+
+        </div>
+
+    </div>
+
+
+    <div
+        id="weatherUpdated"
+        class="updated"
+    >
+        Weather updating...
+    </div>
+
+</div>
 
             </div>
 
