@@ -32,24 +32,35 @@ body {
 
 
 /* =========================================
-   MAIN DASHBOARD
+   MAIN LAYOUT
 ========================================= */
 
 .dashboard {
+
     width: 100vw;
     height: 100vh;
 
-    padding: 1.2vh 2vw;
+    padding: 1vh 2vw;
 
     display: grid;
 
+    /*
+       Header
+       Clock + Weather
+       Forecast
+       MTR
+       News
+       Calendar
+       Footer
+    */
+
     grid-template-rows:
-        12vh
-        27vh
+        11vh
+        30vh
         14vh
         15vh
-        12vh
-        9vh
+        11vh
+        8vh
         2vh;
 
     gap: 1vh;
@@ -63,16 +74,22 @@ body {
 ========================================= */
 
 .header {
-    text-align: center;
 
     display: flex;
+
     flex-direction: column;
+
     justify-content: center;
 
+    align-items: center;
+
     min-height: 0;
+
+    overflow: hidden;
 }
 
 .time {
+
     font-size: clamp(42px, 5vw, 82px);
 
     font-weight: 700;
@@ -80,79 +97,93 @@ body {
     letter-spacing: 2px;
 
     line-height: 0.95;
+
 }
 
 .date {
-    margin-top: 5px;
+
+    margin-top: 4px;
 
     font-size: clamp(16px, 1.5vw, 26px);
 
     color: #777;
+
 }
 
 
 /* =========================================
-   CARDS
+   ALL CARDS
 ========================================= */
 
 .card {
-    background: rgba(255, 255, 255, 0.9);
+
+    background: rgba(255,255,255,0.92);
 
     border: 2px solid #e7b6c5;
 
     border-radius: 25px;
 
-    padding: 1.1vh 1.5vw;
+    padding: 1vh 1.5vw;
 
     box-shadow:
-        0 5px 18px rgba(0, 0, 0, 0.05);
+        0 5px 18px rgba(0,0,0,0.05);
 
     min-height: 0;
 
     overflow: hidden;
+
 }
 
 .card-title {
+
     font-size: clamp(18px, 1.5vw, 27px);
 
     font-weight: 700;
 
-    margin-bottom: 0.7vh;
-
     line-height: 1.1;
+
+    margin-bottom: 0.6vh;
+
 }
 
 .updated {
-    font-size: 12px;
+
+    font-size: 11px;
 
     color: #999;
 
-    margin-top: 6px;
+    margin-top: 5px;
+
 }
 
 
 /* =========================================
-   TOP AREA
+   CLOCK + WEATHER
 ========================================= */
 
 .top-grid {
+
     display: grid;
 
     grid-template-columns: 1fr 2fr;
 
     gap: 1.2vw;
 
-    min-height: 0;
+    width: 100%;
 
     height: 100%;
+
+    min-height: 0;
+
 }
 
 
 /* =========================================
-   CLOCK CARD
+   CLOCK
 ========================================= */
 
 .clock-card {
+
     display: flex;
 
     flex-direction: column;
@@ -164,19 +195,16 @@ body {
     min-height: 0;
 
     overflow: hidden;
+
 }
 
-
-/* =========================================
-   ANALOG CLOCK
-========================================= */
-
 .analog-clock {
+
     position: relative;
 
-    width: min(20vh, 18vw);
+    width: min(21vh, 19vw);
 
-    height: min(20vh, 18vw);
+    height: min(21vh, 19vw);
 
     flex-shrink: 0;
 
@@ -186,50 +214,62 @@ body {
 
     background: #fff;
 
-    margin-top: 0.3vh;
+    margin-top: 0.5vh;
+
 }
 
 .number {
+
     position: absolute;
 
     font-weight: 700;
 
     font-size: clamp(15px, 1.4vw, 23px);
+
 }
 
 .n12 {
+
     top: 6px;
 
     left: 50%;
 
     transform: translateX(-50%);
+
 }
 
 .n3 {
+
     right: 8px;
 
     top: 50%;
 
     transform: translateY(-50%);
+
 }
 
 .n6 {
+
     bottom: 6px;
 
     left: 50%;
 
     transform: translateX(-50%);
+
 }
 
 .n9 {
+
     left: 8px;
 
     top: 50%;
 
     transform: translateY(-50%);
+
 }
 
 .hand {
+
     position: absolute;
 
     left: 50%;
@@ -239,33 +279,41 @@ body {
     transform-origin: bottom center;
 
     border-radius: 10px;
+
 }
 
 .hour-hand {
+
     width: 7px;
 
     height: 25%;
 
     background: #333;
+
 }
 
 .minute-hand {
+
     width: 5px;
 
     height: 34%;
 
     background: #555;
+
 }
 
 .second-hand {
+
     width: 2px;
 
     height: 39%;
 
     background: #d66;
+
 }
 
 .clock-center {
+
     position: absolute;
 
     width: 12px;
@@ -281,48 +329,64 @@ body {
     top: 50%;
 
     transform: translate(-50%, -50%);
+
 }
 
 
 /* =========================================
-   WEATHER CARD
+   WEATHER
 ========================================= */
 
 .weather-card {
+
+    height: 100%;
+
     min-height: 0;
 
     overflow: hidden;
+
 }
 
 .weather-main {
+
     display: flex;
 
     align-items: center;
 
     gap: 18px;
+
+    height: 13vh;
+
 }
 
 .weather-icon {
-    font-size: clamp(45px, 5vw, 75px);
+
+    font-size: clamp(48px, 5vw, 78px);
 
     line-height: 1;
+
 }
 
 .temperature {
-    font-size: clamp(45px, 5vw, 75px);
+
+    font-size: clamp(48px, 5vw, 78px);
 
     font-weight: 700;
 
     line-height: 1;
+
 }
 
 .weather-description {
+
     font-size: clamp(16px, 1.5vw, 25px);
 
     margin-top: 4px;
+
 }
 
 .weather-details {
+
     display: grid;
 
     grid-template-columns:
@@ -330,49 +394,61 @@ body {
 
     gap: 10px;
 
-    margin-top: 1vh;
+    margin-top: 0.5vh;
+
 }
 
 .weather-details div {
+
     background: #faf6f4;
 
-    padding: 9px 12px;
+    padding: 8px 12px;
 
     border-radius: 14px;
 
     min-width: 0;
+
+    height: 6vh;
+
 }
 
 .weather-details span {
+
     display: block;
 
     color: #888;
 
     font-size: 13px;
+
 }
 
 .weather-details strong {
+
     display: block;
 
     font-size: clamp(17px, 1.4vw, 23px);
 
-    margin-top: 3px;
+    margin-top: 2px;
+
 }
 
 
 /* =========================================
-   TODAY FORECAST
+   FORECAST
 ========================================= */
 
 .forecast-card {
+
     height: 100%;
 
     min-height: 0;
 
     overflow: hidden;
+
 }
 
 .forecast {
+
     display: grid;
 
     grid-template-columns:
@@ -380,49 +456,60 @@ body {
 
     gap: 7px;
 
-    height: calc(100% - 30px);
+    height: calc(100% - 28px);
 
     min-height: 0;
+
 }
 
 .forecast-hour {
+
     text-align: center;
 
     background: #faf7f5;
 
     border-radius: 13px;
 
-    padding: 5px 3px;
+    padding: 4px 3px;
 
     min-width: 0;
 
     overflow: hidden;
+
 }
 
 .forecast-time {
+
     font-size: 13px;
 
     color: #777;
+
 }
 
 .forecast-icon {
-    font-size: 24px;
 
-    margin: 5px 0;
+    font-size: 23px;
+
+    margin: 4px 0;
+
 }
 
 .forecast-temp {
+
     font-weight: 700;
 
     font-size: 18px;
+
 }
 
 .forecast-rain {
+
     font-size: 12px;
 
     color: #5b8ca8;
 
     margin-top: 2px;
+
 }
 
 
@@ -431,14 +518,17 @@ body {
 ========================================= */
 
 .mtr-card {
+
     height: 100%;
 
     min-height: 0;
 
     overflow: hidden;
+
 }
 
 .mtr-grid {
+
     display: grid;
 
     grid-template-columns:
@@ -446,28 +536,32 @@ body {
 
     gap: 1.5vw;
 
-    height: calc(100% - 30px);
-
     min-height: 0;
+
 }
 
 .direction-title {
+
     font-size: clamp(18px, 1.5vw, 25px);
 
     font-weight: 700;
 
-    margin-bottom: 8px;
+    margin-bottom: 7px;
+
 }
 
 .train-list {
+
     display: flex;
 
     gap: 9px;
 
     flex-wrap: wrap;
+
 }
 
 .train {
+
     background: #f7eeee;
 
     border-radius: 13px;
@@ -477,18 +571,23 @@ body {
     min-width: 85px;
 
     text-align: center;
+
 }
 
 .train-time {
+
     font-size: 19px;
 
     font-weight: 700;
+
 }
 
 .train-minutes {
+
     font-size: 12px;
 
     color: #777;
+
 }
 
 
@@ -497,6 +596,7 @@ body {
 ========================================= */
 
 .news-grid {
+
     display: grid;
 
     grid-template-columns:
@@ -507,40 +607,48 @@ body {
     height: 100%;
 
     min-height: 0;
+
 }
 
 .news-card {
+
     height: 100%;
 
     min-height: 0;
 
     overflow: hidden;
+
 }
 
 .news-subtitle {
+
     color: #999;
 
     font-size: 13px;
 
-    margin-bottom: 6px;
+    margin-bottom: 5px;
+
 }
 
 .news-list {
+
     display: flex;
 
     flex-direction: column;
 
-    gap: 5px;
+    gap: 4px;
 
     overflow: hidden;
+
 }
 
 .news-item {
+
     font-size: clamp(14px, 1.2vw, 20px);
 
-    line-height: 1.25;
+    line-height: 1.2;
 
-    padding-bottom: 5px;
+    padding-bottom: 4px;
 
     border-bottom: 1px solid #eee;
 
@@ -549,6 +657,7 @@ body {
     white-space: nowrap;
 
     text-overflow: ellipsis;
+
 }
 
 
@@ -557,39 +666,47 @@ body {
 ========================================= */
 
 .calendar-card {
+
     height: 100%;
 
     min-height: 0;
 
     overflow: hidden;
+
 }
 
 .calendar-list {
+
     display: flex;
 
-    gap: 7px;
+    gap: 5px;
 
     flex-direction: column;
 
     overflow: hidden;
+
 }
 
 .calendar-item {
+
     display: flex;
 
     gap: 15px;
 
-    padding: 6px;
+    padding: 5px;
 
     background: #faf7f5;
 
     border-radius: 10px;
+
 }
 
 .calendar-time {
+
     font-weight: 700;
 
     min-width: 80px;
+
 }
 
 
@@ -598,6 +715,7 @@ body {
 ========================================= */
 
 footer {
+
     display: flex;
 
     justify-content: space-between;
@@ -609,49 +727,35 @@ footer {
     font-size: 10px;
 
     min-height: 0;
-}
-
-
-/* =========================================
-   IPAD LANDSCAPE
-========================================= */
-
-@media (orientation: landscape) {
-
-    .dashboard {
-        grid-template-rows:
-            12vh
-            27vh
-            14vh
-            15vh
-            12vh
-            9vh
-            2vh;
-    }
 
 }
 
 
 /* =========================================
-   SMALLER LANDSCAPE
+   SAFETY FOR SMALLER LANDSCAPE SCREENS
 ========================================= */
 
 @media (max-height: 800px) {
 
     .dashboard {
+
         grid-template-rows:
-            11vh
-            25vh
+            10vh
+            30vh
             14vh
-            16vh
-            13vh
-            9vh
+            15vh
+            11vh
+            8vh
             2vh;
+
     }
 
     .analog-clock {
-        width: 17vh;
-        height: 17vh;
+
+        width: 18vh;
+
+        height: 18vh;
+
     }
 
 }
