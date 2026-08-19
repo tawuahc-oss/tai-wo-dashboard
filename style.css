@@ -1,4 +1,5 @@
 :root {
+
     --bg-main: #f4c4c8;
     --bg-top: #efb4ba;
 
@@ -15,12 +16,13 @@
         0 7px 20px rgba(125, 69, 79, 0.09);
 
     --radius: 22px;
+
 }
 
 
-/* =========================
+/* =========================================
    RESET
-========================= */
+========================================= */
 
 * {
     box-sizing: border-box;
@@ -29,16 +31,20 @@
 
 html,
 body {
+
     width: 100%;
     height: 100%;
+
     margin: 0;
     padding: 0;
 
     overflow: hidden;
+
 }
 
 
 body {
+
     font-family:
         -apple-system,
         BlinkMacSystemFont,
@@ -56,18 +62,23 @@ body {
             var(--bg-main) 55%,
             #efbec4
         );
+
 }
 
 
-/* =========================
-   MAIN DASHBOARD
-========================= */
+/* =========================================
+   DASHBOARD
+========================================= */
 
 .dashboard {
+
     position: relative;
 
     width: 100%;
+
+    height: 100vh;
     height: 100dvh;
+
     min-height: 0;
 
     max-width: 1600px;
@@ -77,7 +88,7 @@ body {
     padding:
         10px
         18px
-        max(6px, env(safe-area-inset-bottom))
+        max(8px, env(safe-area-inset-bottom))
         18px;
 
     display: grid;
@@ -86,20 +97,22 @@ body {
         minmax(0, 1fr)
         auto;
 
-    gap: 5px;
+    gap: 6px;
 
     overflow: hidden;
+
 }
 
 
-/* =========================
-   REFRESH BUTTON
-========================= */
+/* =========================================
+   REFRESH
+========================================= */
 
 .refresh-button {
+
     position: absolute;
 
-    top: 13px;
+    top: 12px;
     right: 18px;
 
     z-index: 100;
@@ -108,8 +121,7 @@ body {
     height: 40px;
 
     border:
-        1px solid
-        var(--border);
+        1px solid var(--border);
 
     border-radius: 50%;
 
@@ -123,60 +135,72 @@ body {
     cursor: pointer;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
+
 }
 
 
 .refresh-button.loading {
+
     animation:
-        spin
-        0.8s
-        linear
-        infinite;
+        spin 0.8s linear infinite;
+
 }
 
 
 @keyframes spin {
+
     to {
         transform: rotate(360deg);
     }
+
 }
 
 
-/* =========================
-   CONTENT
-========================= */
+/* =========================================
+   MAIN CONTENT
+========================================= */
 
 .dashboard-content {
+
     min-height: 0;
 
     display: grid;
 
+    /*
+       4 rows must fit inside the visible viewport.
+       No fixed total height that pushes the footer
+       under the iPad toolbar.
+    */
+
     grid-template-rows:
-        minmax(0, 1.45fr)
-        minmax(105px, 0.62fr)
-        minmax(135px, 0.85fr)
-        minmax(145px, 1fr);
+        minmax(0, 1.40fr)
+        minmax(90px, 0.60fr)
+        minmax(115px, 0.82fr)
+        minmax(120px, 0.92fr);
 
     gap: 8px;
 
     overflow: hidden;
+
 }
 
 
-/* =========================
-   GENERAL CARD
-========================= */
+/* =========================================
+   CARD
+========================================= */
 
 .card {
+
+    min-width: 0;
     min-height: 0;
 
     overflow: hidden;
 
     border:
-        1px solid
-        var(--border);
+        1px solid var(--border);
 
     border-radius:
         var(--radius);
@@ -189,10 +213,12 @@ body {
 
     backdrop-filter:
         blur(10px);
+
 }
 
 
 .card-title {
+
     font-size:
         clamp(
             15px,
@@ -203,45 +229,54 @@ body {
     font-weight: 800;
 
     line-height: 1.15;
+
 }
 
 
 .updated {
-    margin-top: 4px;
+
+    margin-top: 3px;
 
     font-size: 11px;
 
     color: var(--muted);
+
 }
 
 
-/* =========================
-   TOP AREA
+/* =========================================
+   TOP GRID
    CLOCK + DATE/WEATHER
-========================= */
+========================================= */
 
 .top-grid {
+
+    min-width: 0;
     min-height: 0;
 
     display: grid;
 
     grid-template-columns:
-        minmax(250px, 0.82fr)
-        minmax(450px, 1.55fr);
+        minmax(220px, 0.82fr)
+        minmax(400px, 1.55fr);
 
     gap: 8px;
+
+    overflow: hidden;
+
 }
 
 
-/* =========================
+/* =========================================
    CLOCK
-========================= */
+========================================= */
 
 .clock-card {
+
+    min-width: 0;
     min-height: 0;
 
-    padding:
-        10px;
+    padding: 10px;
 
     display: grid;
 
@@ -252,10 +287,12 @@ body {
     justify-items: center;
 
     overflow: hidden;
+
 }
 
 
 .clock-time {
+
     font-size:
         clamp(
             26px,
@@ -267,35 +304,26 @@ body {
 
     line-height: 1;
 
-    margin-bottom: 3px;
-
     white-space: nowrap;
+
+    margin-bottom: 4px;
+
 }
 
 
-/*
-   IMPORTANT:
-   Clock is always perfectly square.
-*/
-
 .analog-clock {
+
     position: relative;
 
     width:
         min(
             100%,
-            170px
+            165px
         );
 
-    height:
-        auto;
-
-    aspect-ratio:
-        1 / 1;
+    aspect-ratio: 1 / 1;
 
     align-self: center;
-
-    flex-shrink: 0;
 
     border:
         3px solid
@@ -305,55 +333,69 @@ body {
 
     background:
         rgba(255, 250, 251, 0.25);
+
+    flex-shrink: 0;
+
 }
 
 
 .number {
+
     position: absolute;
 
     font-size: 13px;
 
     font-weight: 700;
+
 }
 
 
 .n12 {
+
     top: 7px;
     left: 50%;
 
     transform:
         translateX(-50%);
+
 }
 
 
 .n3 {
+
     right: 9px;
     top: 50%;
 
     transform:
         translateY(-50%);
+
 }
 
 
 .n6 {
+
     bottom: 7px;
     left: 50%;
 
     transform:
         translateX(-50%);
+
 }
 
 
 .n9 {
+
     left: 9px;
     top: 50%;
 
     transform:
         translateY(-50%);
+
 }
 
 
 .hand {
+
     position: absolute;
 
     left: 50%;
@@ -363,37 +405,42 @@ body {
         50% 100%;
 
     border-radius: 99px;
+
 }
 
 
 .hour-hand {
+
     width: 6px;
     height: 28%;
 
-    background:
-        #3d383d;
+    background: #3d383d;
+
 }
 
 
 .minute-hand {
+
     width: 5px;
     height: 37%;
 
-    background:
-        #4b4449;
+    background: #4b4449;
+
 }
 
 
 .second-hand {
+
     width: 2px;
     height: 42%;
 
-    background:
-        #bd707b;
+    background: #bd707b;
+
 }
 
 
 .clock-center {
+
     position: absolute;
 
     top: 50%;
@@ -403,108 +450,102 @@ body {
     height: 10px;
 
     transform:
-        translate(
-            -50%,
-            -50%
-        );
+        translate(-50%, -50%);
 
     border-radius: 50%;
 
-    background:
-        #3d383d;
+    background: #3d383d;
+
 }
 
 
-/* =========================
-   RIGHT TOP AREA
-   DATE + WEATHER
-========================= */
+/* =========================================
+   RIGHT SIDE
+   DATE + WEATHER SHARE SAME AREA
+========================================= */
 
 .weather-column {
+
+    min-width: 0;
     min-height: 0;
 
     display: grid;
 
     /*
-       DATE gets about 30%
-       WEATHER gets about 70%
+       Date is clearly visible first,
+       but date + weather together occupy
+       exactly the right-side top area.
     */
 
     grid-template-rows:
-        minmax(70px, 0.30fr)
+        minmax(72px, 0.30fr)
         minmax(0, 0.70fr);
 
     gap: 6px;
 
     overflow: hidden;
+
 }
 
 
-/* =========================
+/* =========================================
    DATE
-========================= */
+========================================= */
 
 .header {
+
+    min-width: 0;
     min-height: 0;
 
     display: flex;
 
-    justify-content: center;
     align-items: stretch;
-
-    padding: 0;
+    justify-content: center;
 
     overflow: hidden;
+
 }
 
 
 .date-time-bubble {
-    position: relative;
-
-    top: 0;
 
     width: 100%;
+    min-width: 0;
     min-height: 0;
 
     padding:
-        8px
-        50px;
+        7px
+        55px;
 
     display: flex;
 
     flex-direction: column;
 
-    justify-content: center;
-
     align-items: center;
+    justify-content: center;
 
     text-align: center;
 
     border:
-        1px solid
-        var(--border);
+        1px solid var(--border);
 
-    border-radius:
-        24px;
+    border-radius: 24px;
 
     background:
-        rgba(
-            255,
-            237,
-            240,
-            0.48
-        );
+        rgba(255, 237, 240, 0.48);
 
     overflow: hidden;
+
 }
 
 
 .top-date {
+
     font-size:
         clamp(
             22px,
-            2.25vw,
-            32px
+            2.3vw,
+            34px
         );
 
     font-weight: 900;
@@ -512,45 +553,53 @@ body {
     line-height: 1.1;
 
     white-space: nowrap;
+
 }
 
 
 .lunar {
+
     margin-top: 3px;
 
     font-size:
         clamp(
-            14px,
-            1.35vw,
+            13px,
+            1.3vw,
             19px
         );
 
     line-height: 1.1;
 
-    color:
-        var(--secondary);
+    color: var(--secondary);
+
+    white-space: nowrap;
+
 }
 
 
-/* =========================
+/* =========================================
    WEATHER
-========================= */
+========================================= */
 
 .weather-card {
+
+    min-width: 0;
     min-height: 0;
 
-    padding:
-        10px 13px;
+    padding: 9px 13px;
 
     display: flex;
 
     flex-direction: column;
 
     overflow: hidden;
+
 }
 
 
 .weather-main {
+
+    min-width: 0;
     min-height: 0;
 
     display: flex;
@@ -562,37 +611,45 @@ body {
     flex: 1;
 
     overflow: hidden;
+
 }
 
 
 .weather-icon {
+
     font-size:
         clamp(
-            38px,
-            4.2vw,
-            58px
+            36px,
+            4vw,
+            56px
         );
 
     flex-shrink: 0;
+
 }
 
 
 .temperature {
+
     font-size:
         clamp(
             34px,
-            4.3vw,
+            4.2vw,
             58px
         );
 
     font-weight: 900;
 
     line-height: 0.95;
+
+    white-space: nowrap;
+
 }
 
 
 .weather-description {
-    margin-top: 4px;
+
+    margin-top: 3px;
 
     font-size:
         clamp(
@@ -601,50 +658,56 @@ body {
             18px
         );
 
-    color:
-        var(--secondary);
+    color: var(--secondary);
+
 }
 
 
 .weather-details {
+
     display: grid;
 
     grid-template-columns:
         repeat(
             3,
-            1fr
+            minmax(0, 1fr)
         );
 
     gap: 6px;
 
     flex-shrink: 0;
+
 }
 
 
 .weather-details > div {
+
     min-width: 0;
 
-    padding:
-        5px 9px;
+    padding: 5px 9px;
 
     border-radius: 13px;
 
-    background:
-        var(--item);
+    background: var(--item);
+
+    overflow: hidden;
+
 }
 
 
 .weather-details span {
+
     display: block;
 
     font-size: 10px;
 
-    color:
-        var(--secondary);
+    color: var(--secondary);
+
 }
 
 
 .weather-details strong {
+
     display: block;
 
     margin-top: 1px;
@@ -657,32 +720,40 @@ body {
         );
 
     white-space: nowrap;
+
 }
 
 
-/* =========================
+/* =========================================
    FORECAST
-========================= */
+========================================= */
 
 .forecast-card {
+
+    min-width: 0;
     min-height: 0;
 
-    padding:
-        8px 12px;
+    padding: 8px 12px;
 
     overflow: hidden;
+
 }
 
 
 .forecast {
-    height:
-        calc(
-            100% - 27px
-        );
 
+    height:
+        calc(100% - 27px);
+
+    min-width: 0;
     min-height: 0;
 
     display: grid;
+
+    /*
+       Always show all 8 forecast boxes.
+       They shrink to fit the horizontal screen.
+    */
 
     grid-template-columns:
         repeat(
@@ -695,36 +766,37 @@ body {
     margin-top: 4px;
 
     overflow: hidden;
+
 }
 
 
 .forecast-hour {
+
     min-width: 0;
     min-height: 0;
 
-    padding:
-        5px 3px;
+    padding: 4px 2px;
 
     display: flex;
 
     flex-direction: column;
 
     align-items: center;
-
     justify-content: center;
 
     text-align: center;
 
     border-radius: 13px;
 
-    background:
-        var(--item);
+    background: var(--item);
 
     overflow: hidden;
+
 }
 
 
 .forecast-time {
+
     font-size:
         clamp(
             10px,
@@ -732,16 +804,16 @@ body {
             13px
         );
 
-    color:
-        var(--secondary);
+    color: var(--secondary);
 
-    flex-shrink: 0;
+    white-space: nowrap;
+
 }
 
 
 .forecast-icon {
-    margin:
-        2px 0;
+
+    margin: 1px 0;
 
     font-size:
         clamp(
@@ -752,11 +824,11 @@ body {
 
     line-height: 1;
 
-    flex-shrink: 0;
 }
 
 
 .forecast-temp {
+
     font-size:
         clamp(
             13px,
@@ -768,11 +840,11 @@ body {
 
     line-height: 1.1;
 
-    flex-shrink: 0;
 }
 
 
 .forecast-rain {
+
     margin-top: 2px;
 
     font-size:
@@ -782,55 +854,59 @@ body {
             11px
         );
 
-    color:
-        var(--secondary);
+    color: var(--secondary);
 
-    flex-shrink: 0;
 }
 
 
-/* =========================
+/* =========================================
    MTR + CALENDAR
-========================= */
+========================================= */
 
 .middle-grid {
+
+    min-width: 0;
     min-height: 0;
 
     display: grid;
 
     /*
-       MTR smaller
-       Calendar much larger
+       Smaller MTR
+       Larger Calendar
     */
 
     grid-template-columns:
         minmax(280px, 0.55fr)
-        minmax(500px, 2fr);
+        minmax(0, 2fr);
 
     gap: 8px;
 
     overflow: hidden;
+
 }
 
 
 .mtr-card,
 .calendar-card {
+
+    min-width: 0;
     min-height: 0;
 
-    padding:
-        10px 13px;
+    padding: 10px 13px;
 
     overflow: hidden;
+
 }
 
 
 /* MTR */
 
 .mtr-grid {
+
     height:
-        calc(
-            100% - 27px
-        );
+        calc(100% - 27px);
+
+    min-height: 0;
 
     display: grid;
 
@@ -845,17 +921,21 @@ body {
     margin-top: 4px;
 
     overflow: hidden;
+
 }
 
 
 .mtr-direction {
+
     min-width: 0;
 
     overflow: hidden;
+
 }
 
 
 .direction-title {
+
     margin-bottom: 4px;
 
     font-size:
@@ -866,11 +946,17 @@ body {
         );
 
     font-weight: 800;
+
 }
 
 
 .train-list {
+
     display: grid;
+
+    /*
+       Only 2 upcoming trains per direction
+    */
 
     grid-template-columns:
         repeat(
@@ -880,30 +966,30 @@ body {
 
     gap: 5px;
 
-    max-height: 100%;
-
     overflow: hidden;
+
 }
 
 
 .train {
+
     min-width: 0;
 
-    padding:
-        5px 5px;
+    padding: 5px 4px;
 
     text-align: center;
 
     border-radius: 10px;
 
-    background:
-        var(--item);
+    background: var(--item);
 
     overflow: hidden;
+
 }
 
 
 .train-time {
+
     font-size:
         clamp(
             13px,
@@ -914,26 +1000,33 @@ body {
     font-weight: 800;
 
     white-space: nowrap;
+
 }
 
 
 .train-minutes {
+
     margin-top: 1px;
 
     font-size: 10px;
 
-    color:
-        var(--secondary);
+    color: var(--secondary);
+
+    white-space: nowrap;
+
 }
 
 
-/* CALENDAR */
+/* =========================================
+   CALENDAR
+========================================= */
 
 .calendar-list {
+
     height:
-        calc(
-            100% - 27px
-        );
+        calc(100% - 27px);
+
+    min-height: 0;
 
     margin-top: 4px;
 
@@ -947,16 +1040,18 @@ body {
             19px
         );
 
-    color:
-        var(--secondary);
+    color: var(--secondary);
+
 }
 
 
-/* =========================
+/* =========================================
    NEWS
-========================= */
+========================================= */
 
 .news-grid {
+
+    min-width: 0;
     min-height: 0;
 
     display: grid;
@@ -970,36 +1065,41 @@ body {
     gap: 8px;
 
     overflow: hidden;
+
 }
 
 
 .news-card {
+
+    min-width: 0;
     min-height: 0;
 
-    padding:
-        10px 13px;
+    padding: 10px 13px;
 
     display: flex;
 
     flex-direction: column;
 
     overflow: hidden;
+
 }
 
 
 .news-subtitle {
+
     margin-top: 1px;
 
     font-size: 11px;
 
-    color:
-        var(--secondary);
+    color: var(--secondary);
 
     flex-shrink: 0;
+
 }
 
 
 .news-list {
+
     min-height: 0;
 
     flex: 1;
@@ -1007,21 +1107,24 @@ body {
     margin-top: 4px;
 
     overflow-y: auto;
-
     overflow-x: hidden;
 
     padding-right: 4px;
 
     scrollbar-width: thin;
+
 }
 
 
 .news-list::-webkit-scrollbar {
+
     width: 5px;
+
 }
 
 
 .news-list::-webkit-scrollbar-thumb {
+
     border-radius: 20px;
 
     background:
@@ -1031,17 +1134,17 @@ body {
             96,
             0.45
         );
+
 }
 
 
 .news-item {
+
     display: block;
 
-    padding:
-        5px 2px;
+    padding: 5px 2px;
 
-    color:
-        var(--text);
+    color: var(--text);
 
     text-decoration: none;
 
@@ -1062,29 +1165,31 @@ body {
             110,
             0.17
         );
+
 }
 
 
 .news-item:hover {
+
     text-decoration: underline;
+
 }
 
 
-/* =========================
+/* =========================================
    FOOTER
-========================= */
+========================================= */
 
 footer {
+
     min-height: 13px;
 
     display: flex;
 
     justify-content: space-between;
-
     align-items: center;
 
-    padding:
-        0 2px;
+    padding: 0 2px;
 
     font-size: 10px;
 
@@ -1097,146 +1202,216 @@ footer {
         );
 
     overflow: hidden;
+
 }
 
 
-/* =========================
+/* =========================================
    iPAD / NARROW
-========================= */
+========================================= */
 
 @media (max-width: 900px) {
 
     .dashboard {
+
         padding:
             8px
             12px
             max(
-                5px,
-                env(
-                    safe-area-inset-bottom
-                )
+                8px,
+                env(safe-area-inset-bottom)
             )
             12px;
+
     }
 
 
     .refresh-button {
+
         top: 8px;
         right: 12px;
+
+    }
+
+
+    .dashboard-content {
+
+        grid-template-rows:
+            minmax(0, 1.35fr)
+            minmax(85px, 0.58fr)
+            minmax(110px, 0.78fr)
+            minmax(115px, 0.88fr);
+
     }
 
 
     .top-grid {
+
         grid-template-columns:
-            minmax(220px, 0.85fr)
-            minmax(350px, 1.4fr);
+            minmax(200px, 0.82fr)
+            minmax(0, 1.45fr);
+
     }
 
 
     .weather-column {
+
         grid-template-rows:
-            minmax(65px, 0.30fr)
+            minmax(62px, 0.30fr)
             minmax(0, 0.70fr);
+
     }
 
 
     .date-time-bubble {
+
         padding:
-            7px 35px;
+            6px
+            35px;
+
     }
 
 
     .top-date {
+
         font-size:
             clamp(
                 20px,
                 2.5vw,
-                28px
+                29px
             );
+
     }
 
 
     .analog-clock {
+
         width:
             min(
                 100%,
                 135px
             );
+
     }
 
 
     .middle-grid {
+
         grid-template-columns:
-            minmax(220px, 0.6fr)
-            minmax(400px, 1.8fr);
+            minmax(200px, 0.58fr)
+            minmax(0, 1.8fr);
+
     }
+
 }
 
 
-/* =========================
+/* =========================================
    iPAD LANDSCAPE
-========================= */
+========================================= */
 
 @media
     (min-width: 901px)
     and (orientation: landscape) {
 
+    .dashboard {
+
+        padding-top: 8px;
+
+    }
+
+
     .dashboard-content {
+
+        /*
+           Reduce minimum heights so the entire
+           forecast and footer remain above
+           the browser/iPad toolbar.
+        */
+
         grid-template-rows:
-            minmax(0, 1.38fr)
-            minmax(105px, 0.62fr)
-            minmax(125px, 0.82fr)
-            minmax(145px, 1fr);
+            minmax(0, 1.32fr)
+            minmax(82px, 0.56fr)
+            minmax(105px, 0.74fr)
+            minmax(110px, 0.84fr);
+
     }
 
 
     .weather-column {
+
         grid-template-rows:
-            minmax(75px, 0.28fr)
-            minmax(0, 0.72fr);
+            minmax(64px, 0.29fr)
+            minmax(0, 0.71fr);
+
+    }
+
+
+    .date-time-bubble {
+
+        padding-top: 6px;
+        padding-bottom: 6px;
+
     }
 
 
     .forecast-card {
-        padding-top: 7px;
-        padding-bottom: 7px;
+
+        padding-top: 6px;
+        padding-bottom: 6px;
+
     }
 
 
     .forecast {
+
         height:
-            calc(
-                100% - 26px
-            );
+            calc(100% - 25px);
+
+        gap: 5px;
+
     }
 
 
     .forecast-hour {
-        padding:
-            3px 2px;
+
+        padding: 3px 2px;
+
     }
 
 
     .forecast-icon {
-        margin:
-            1px 0;
+
+        margin: 1px 0;
+
     }
+
+
+    .news-item {
+
+        padding: 4px 2px;
+
+    }
+
 }
 
 
-/* =========================
-   VERY NARROW
-========================= */
+/* =========================================
+   PHONE / VERY NARROW
+========================================= */
 
 @media (max-width: 600px) {
 
     html,
     body {
+
         overflow: auto;
+
     }
 
 
     .dashboard {
+
         height: auto;
 
         min-height: 100dvh;
@@ -1249,52 +1424,64 @@ footer {
 
         padding-bottom:
             max(
-                6px,
-                env(
-                    safe-area-inset-bottom
-                )
+                8px,
+                env(safe-area-inset-bottom)
             );
+
     }
 
 
     .dashboard-content {
+
         display: flex;
 
         flex-direction: column;
 
         overflow: visible;
+
     }
 
 
     .top-grid,
     .middle-grid,
     .news-grid {
+
         grid-template-columns: 1fr;
+
     }
 
 
     .weather-column {
+
         display: flex;
 
         flex-direction: column;
+
     }
 
 
     .header {
+
         min-height: 85px;
+
     }
 
 
     .date-time-bubble {
+
         min-height: 85px;
 
         padding:
-            8px 15px;
+            8px
+            15px;
+
     }
 
 
     .top-date {
+
         font-size: 24px;
+
     }
 
 
@@ -1304,11 +1491,14 @@ footer {
     .mtr-card,
     .calendar-card,
     .news-card {
+
         min-height: 180px;
+
     }
 
 
     .forecast {
+
         grid-template-columns:
             repeat(
                 8,
@@ -1316,7 +1506,8 @@ footer {
             );
 
         overflow-x: auto;
-
         overflow-y: hidden;
+
     }
+
 }
