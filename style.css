@@ -465,8 +465,8 @@ body {
     display: grid;
 
     grid-template-columns:
-        minmax(0, 0.62fr)
-        minmax(0, 0.38fr);
+        minmax(0, 1fr)
+        minmax(0, 2fr);
 
     gap: 10px;
 
@@ -770,8 +770,8 @@ body {
 
     .weather-layout {
         grid-template-columns:
-            minmax(0, 0.60fr)
-            minmax(0, 0.40fr);
+            minmax(0, 1fr)
+            minmax(0, 2fr);
 
         gap: 8px;
     }
@@ -816,8 +816,8 @@ body {
 
     .weather-layout {
         grid-template-columns:
-            minmax(0, 0.58fr)
-            minmax(0, 0.42fr);
+            minmax(0, 1fr)
+            minmax(0, 2fr);
 
         gap: 8px;
     }
