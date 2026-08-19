@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style"
+          content="black-translucent">
+
+    <title>Tai Wo Dashboard</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+<div class="dashboard">
+
+    <!-- ========================= -->
+    <!-- HEADER -->
+    <!-- ========================= -->
+
+    <header class="header">
+
+        <div id="time" class="time">
+            12:00:00 AM
+        </div>
+
+        <div id="date" class="date">
+            19/8/2026 · 星期三
+        </div>
+
+    </header>
+
+
+    <!-- ========================= -->
+    <!-- TOP GRID -->
+    <!-- ========================= -->
+
+    <section class="top-grid">
+
+        <!-- ANALOG CLOCK -->
+
+        <div class="card clock-card">
+
+            <div class="card-title">
+                CLOCK
+            </div>
+
+            <div class="analog-clock">
+
+                <div class="number n12">12</div>
+                <div class="number n3">3</div>
+                <div class="number n6">6</div>
+                <div class="number n9">9</div>
+
+                <div id="hourHand"
+                     class="hand hour-hand"></div>
+
+                <div id="minuteHand"
+                     class="hand minute-hand"></div>
+
+                <div id="secondHand"
+                     class="hand second-hand"></div>
+
+                <div class="clock-center"></div>
+
+            </div>
+
+        </div>
+
+
+        <!-- WEATHER -->
+
+        <div class="card weather-card">
+
+            <div class="card-title">
+                🌤️ TAI WO WEATHER
+            </div>
+
+            <div class="weather-main">
+
+                <div id="weatherIcon"
+                     class="weather-icon">
+                    ☁️
+                </div>
+
+                <div>
+
+                    <div id="temperature"
+                         class="temperature">
+                        --°
+                    </div>
+
+                    <div id="weatherDescription"
+                         class="weather-description">
+                        Loading...
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="weather-details">
+
+                <div>
+                    <span>今日</span>
+                    <strong id="todayRange">
+                        --° — --°
+                    </strong>
+                </div>
+
+                <div>
+                    <span>💧 濕度</span>
+                    <strong id="humidity">
+                        --%
+                    </strong>
+                </div>
+
+                <div>
+                    <span>🌧️ 降雨</span>
+                    <strong id="rainProbability">
+                        --%
+                    </strong>
+                </div>
+
+            </div>
+
+            <div id="weatherUpdated"
+                 class="updated">
+                Weather updating...
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ========================= -->
+    <!-- HOURLY FORECAST -->
+    <!-- ========================= -->
+
+    <section class="card forecast-card">
+
+        <div class="card-title">
+            🌦️ TODAY'S FORECAST · TAI WO
+        </div>
+
+        <div id="forecast"
+             class="forecast">
+        </div>
+
+    </section>
+
+
+    <!-- ========================= -->
+    <!-- MTR -->
+    <!-- ========================= -->
+
+    <section class="card mtr-card">
+
+        <div class="card-title">
+            🚆 MTR · TAI WO 太和站
+        </div>
+
+        <div class="mtr-grid">
+
+            <div class="mtr-direction">
+
+                <div class="direction-title">
+                    往金鐘 / Admiralty
+                </div>
+
+                <div id="mtrDown"
+                     class="train-list">
+                    Loading...
+                </div>
+
+            </div>
+
+
+            <div class="mtr-direction">
+
+                <div class="direction-title">
+                    往上水 / Sheung Shui
+                </div>
+
+                <div id="mtrUp"
+                     class="train-list">
+                    Loading...
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id="mtrUpdated"
+             class="updated">
+            MTR updating...
+        </div>
+
+    </section>
+
+
+    <!-- ========================= -->
+    <!-- NEWS -->
+    <!-- ========================= -->
+
+    <section class="news-grid">
+
+        <!-- NOW -->
+
+        <div class="card news-card">
+
+            <div class="card-title">
+                🇭🇰 NOW NEWS
+            </div>
+
+            <div class="news-subtitle">
+                本地 · 兩岸
+            </div>
+
+            <div id="nowNews"
+                 class="news-list">
+
+                Loading...
+
+            </div>
+
+        </div>
+
+
+        <!-- BBC -->
+
+        <div class="card news-card">
+
+            <div class="card-title">
+                🌍 BBC NEWS
+            </div>
+
+            <div class="news-subtitle">
+                WORLD
+            </div>
+
+            <div id="bbcNews"
+                 class="news-list">
+
+                Loading...
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ========================= -->
+    <!-- CALENDAR -->
+    <!-- ========================= -->
+
+    <section class="card calendar-card">
+
+        <div class="card-title">
+            📅 TODAY
+        </div>
+
+        <div id="calendar"
+             class="calendar-list">
+
+            iCloud Calendar will be added here.
+
+        </div>
+
+    </section>
+
+
+    <!-- ========================= -->
+    <!-- FOOTER -->
+    <!-- ========================= -->
+
+    <footer>
+
+        <span>
+            Tai Wo Dashboard
+        </span>
+
+        <span id="lastUpdated">
+            --
+        </span>
+
+    </footer>
+
+</div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
