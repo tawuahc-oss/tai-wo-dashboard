@@ -1282,15 +1282,12 @@ function renderTrains(
 
 
     const upcoming =
-        trains
-            .filter(
-                train =>
-                    train.valid === "Y"
-            )
-            .slice(
-                0,
-                2
-            );
+    trains
+        .filter(
+            train =>
+                train.valid === "Y"
+        )
+        .slice(0, 3);
 
 
     if (
