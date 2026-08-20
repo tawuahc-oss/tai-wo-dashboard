@@ -90,11 +90,12 @@ body {
 
     display: grid;
 
+    /* 修正：增加 Forecast 和 MTR 的最小高度與比例，避免橫向時被裁切 */
     grid-template-rows:
-        minmax(245px, 2.15fr)
-        minmax(90px, 0.68fr)
-        minmax(105px, 0.88fr)
-        minmax(120px, 1fr);
+        minmax(230px, 2fr)
+        minmax(110px, 0.9fr)
+        minmax(130px, 1fr)
+        minmax(110px, 0.9fr);
 
     gap: 8px;
 
@@ -1443,14 +1444,14 @@ footer {
 @media (orientation: landscape) {
 
     /* ---------------------------------------------
-       TODAY'S FORECAST (改為與圖 3 相同的垂直排列)
+       TODAY'S FORECAST (垂直排列，並微調內距確保不被裁切)
     --------------------------------------------- */
     .forecast-item {
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        padding: 5px 6px;
+        padding: 4px 2px;
     }
 
     .forecast-time {
@@ -1458,7 +1459,8 @@ footer {
     }
 
     .forecast-icon {
-        margin: 4px 0;
+        font-size: clamp(20px, 2.5vw, 28px);
+        margin: 2px 0;
     }
 
     .forecast-temp {
@@ -1467,7 +1469,7 @@ footer {
 
     .forecast-rain {
         text-align: center;
-        margin-top: 2px;
+        margin-top: 1px;
     }
 
     /* ---------------------------------------------
