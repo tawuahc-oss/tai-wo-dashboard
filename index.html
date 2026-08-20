@@ -1,499 +1,151 @@
 <!DOCTYPE html>
 <html lang="zh-HK">
 <head>
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>Tai Wo Dashboard</title>
 
-    <meta
-        name="viewport"
-        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
-    >
-
-    <meta
-        name="apple-mobile-web-app-capable"
-        content="yes"
-    >
-
-    <meta
-        name="apple-mobile-web-app-status-bar-style"
-        content="black-translucent"
-    >
-
-    <title>Tai Wo Dashboard</title>
-
-    <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-
 <div class="dashboard">
 
-    <main class="dashboard-content">
+<main class="dashboard-content">
 
-        <!-- =========================================
-             CLOCK + DATE + WEATHER
-        ========================================== -->
+<section class="top-grid">
+    <div class="card clock-card">
+        <div id="digitalTime" class="digital-time">--:--:-- --</div>
 
-        <section class="top-grid">
-
-            <!-- CLOCK -->
-
-            <div class="card clock-card">
-
-                <div
-                    id="digitalTime"
-                    class="digital-time"
-                >
-                    --:--:-- --
-                </div>
-
-                <div class="clock-area">
-
-                    <div
-                        id="analogClock"
-                        class="analog-clock"
-                    >
-
-                        <div class="clock-number clock-12">
-                            12
-                        </div>
-
-                        <div class="clock-number clock-3">
-                            3
-                        </div>
-
-                        <div class="clock-number clock-6">
-                            6
-                        </div>
-
-                        <div class="clock-number clock-9">
-                            9
-                        </div>
-
-                        <div
-                            id="hourHand"
-                            class="clock-hand clock-hour"
-                        ></div>
-
-                        <div
-                            id="minuteHand"
-                            class="clock-hand clock-minute"
-                        ></div>
-
-                        <div
-                            id="secondHand"
-                            class="clock-hand clock-second"
-                        ></div>
-
-                        <div class="clock-center"></div>
-
-                    </div>
-
-                </div>
-
+        <div class="clock-area">
+            <div id="analogClock" class="analog-clock">
+                <div class="clock-number clock-12">12</div>
+                <div class="clock-number clock-3">3</div>
+                <div class="clock-number clock-6">6</div>
+                <div class="clock-number clock-9">9</div>
+                <div id="hourHand" class="clock-hand clock-hour"></div>
+                <div id="minuteHand" class="clock-hand clock-minute"></div>
+                <div id="secondHand" class="clock-hand clock-second"></div>
+                <div class="clock-center"></div>
             </div>
-
-
-            <!-- DATE + WEATHER -->
-
-            <div class="weather-column">
-
-
-                <!-- DATE -->
-
-                <div class="date-bubble">
-
-                    <button
-                        id="refreshButton"
-                        class="refresh-button"
-                        type="button"
-                        title="重新整理"
-                    >
-                        ↻
-                    </button>
-
-                    <div
-                        id="dateMain"
-                        class="date-main"
-                    >
-                        Loading...
-                    </div>
-
-                    <div
-                        id="lunarDate"
-                        class="date-lunar"
-                    >
-                        農曆資料載入中...
-                    </div>
-
-                </div>
-
-
-<!-- WEATHER -->
-<div class="card weather-card">
-
-    <div
-        id="weatherTitle"
-        class="card-title"
-    >
-        🌤️ TAI WO WEATHER
+        </div>
     </div>
 
-
-    <!--
-        CURRENT WEATHER BUBBLE
-
-        LEFT:
-        CURRENT WEATHER
-
-        RIGHT:
-        HKO FORECAST
-        HKO SPECIAL WEATHER TIP
-
-        BELOW CURRENT WEATHER:
-        TODAY / HUMIDITY / RAIN
-    -->
-    <div class="weather-layout">
-
-
-        <!-- LEFT COLUMN -->
-        <div class="weather-left-column">
-
-
-            <!-- CURRENT WEATHER -->
-            <div class="weather-main">
-
-                <div
-                    id="weatherIcon"
-                    class="weather-icon"
-                >
-                    ☁️
-                </div>
-
-
-                <div
-                    class="weather-temperature-block"
-                >
-
-                    <div
-                        id="temperature"
-                        class="temperature"
-                    >
-                        --°
-                    </div>
-
-
-                    <div
-                        id="weatherDescription"
-                        class="weather-description"
-                    >
-                        Loading...
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!--
-                TODAY / HUMIDITY / RAIN
-                ALWAYS VERTICAL
-            -->
-            <div class="weather-details">
-
-                <div class="weather-detail">
-
-                    <span
-                        class="weather-detail-label"
-                    >
-                        今日
-                    </span>
-
-                    <strong
-                        id="todayRange"
-                        class="weather-detail-value"
-                    >
-                        --° — --°
-                    </strong>
-
-                </div>
-
-
-                <div class="weather-detail">
-
-                    <span
-                        class="weather-detail-label"
-                    >
-                        💧 濕度
-                    </span>
-
-                    <strong
-                        id="humidity"
-                        class="weather-detail-value"
-                    >
-                        --%
-                    </strong>
-
-                </div>
-
-
-                <div class="weather-detail">
-
-                    <span
-                        class="weather-detail-label"
-                    >
-                        🌧️ 降雨
-                    </span>
-
-                    <strong
-                        id="rainProbability"
-                        class="weather-detail-value"
-                    >
-                        --%
-                    </strong>
-
-                </div>
-
-            </div>
-
+    <div class="weather-column">
+        <div class="date-bubble">
+            <button id="refreshButton" class="refresh-button" type="button" title="重新整理">↻</button>
+            <div id="dateMain" class="date-main">Loading...</div>
+            <div id="lunarDate" class="date-lunar">農曆資料載入中...</div>
         </div>
 
+        <div class="card weather-card">
+            <div id="weatherTitle" class="card-title">🌤️ TAI WO WEATHER</div>
 
-        <!-- RIGHT COLUMN -->
-        <div class="weather-hko-text">
+            <div class="weather-layout">
 
+                <div class="weather-left-column">
 
-            <!-- HKO FORECAST -->
-            <section
-                id="hkoForecastPanel"
-                class="weather-hko-section hidden"
-            >
+                    <div class="weather-main">
+                        <div id="weatherIcon" class="weather-icon">☁️</div>
+                        <div class="weather-temperature-block">
+                            <div id="temperature" class="temperature">--°</div>
+                            <div id="weatherDescription" class="weather-description">Loading...</div>
+                        </div>
+                    </div>
 
-                <div
-                    class="weather-hko-label"
-                >
-                    天氣預測
+                    <div class="weather-details">
+                        <div class="weather-detail">
+                            <span class="weather-detail-label">今日</span>
+                            <strong id="todayRange" class="weather-detail-value">--° — --°</strong>
+                        </div>
+                        <div class="weather-detail">
+                            <span class="weather-detail-label">💧 濕度</span>
+                            <strong id="humidity" class="weather-detail-value">--%</strong>
+                        </div>
+                        <div class="weather-detail">
+                            <span class="weather-detail-label">🌧️ 降雨</span>
+                            <strong id="rainProbability" class="weather-detail-value">--%</strong>
+                        </div>
+                    </div>
+
                 </div>
 
+                <div class="weather-hko-text">
 
-                <div
-                    id="hkoForecast"
-                    class="weather-hko-content"
-                ></div>
+                    <section id="hkoForecastPanel" class="weather-hko-section hidden">
+                        <div class="weather-hko-label">天氣預測</div>
+                        <div id="hkoForecast" class="weather-hko-content"></div>
+                    </section>
 
-            </section>
+                    <section id="hkoSpecialPanel" class="weather-hko-section hidden">
+                        <div class="weather-hko-label">⚠️ 特別天氣提示</div>
+                        <div id="hkoSpecial" class="weather-hko-content"></div>
+                    </section>
 
-
-            <!-- HKO SPECIAL WEATHER TIP -->
-            <section
-                id="hkoSpecialPanel"
-                class="weather-hko-section hidden"
-            >
-
-                <div
-                    class="weather-hko-label"
-                >
-                    ⚠️ 特別天氣提示
                 </div>
 
+            </div>
 
-                <div
-                    id="hkoSpecial"
-                    class="weather-hko-content"
-                ></div>
-
-            </section>
-
+            <div id="weatherUpdated" class="updated">Weather updating...</div>
         </div>
+    </div>
+</section>
 
+<section class="card forecast-card">
+    <div id="forecastTitle" class="card-title">🌦️ TODAY'S FORECAST</div>
+    <div id="forecast" class="forecast"></div>
+</section>
+
+<section class="middle-grid">
+    <div class="card mtr-card">
+        <div class="card-title">🚆 MTR · TAI WO</div>
+
+        <div class="mtr-grid">
+            <div class="mtr-direction">
+                <div class="direction-title">往金鐘</div>
+                <div id="mtrDown" class="train-list">Loading...</div>
+            </div>
+
+            <div class="mtr-direction">
+                <div class="direction-title">往上水</div>
+                <div id="mtrUp" class="train-list">Loading...</div>
+            </div>
+        </div>
     </div>
 
+    <div class="card calendar-card">
+        <div class="card-title">📅 CALENDAR</div>
+        <div id="calendar" class="calendar-list">
+            <div class="calendar-empty">iCloud Calendar 尚未連接</div>
+        </div>
+    </div>
+</section>
 
-    <div
-        id="weatherUpdated"
-        class="updated"
-    >
-        Weather updating...
+<section class="news-grid">
+    <div class="card news-card">
+        <div class="card-title">🇭🇰 NOW NEWS</div>
+        <div class="news-subtitle">本地 · 兩岸</div>
+        <div id="nowNews" class="news-list">Loading...</div>
     </div>
 
-</div>
+    <div class="card news-card">
+        <div class="card-title">🌍 BBC NEWS</div>
+        <div class="news-subtitle">WORLD</div>
+        <div id="bbcNews" class="news-list">Loading...</div>
+    </div>
+</section>
 
-            </div>
+</main>
 
-        </section>
-
-
-        <!-- =========================================
-             TODAY'S FORECAST
-        ========================================== -->
-
-        <section class="card forecast-card">
-
-            <div
-                id="forecastTitle"
-                class="card-title"
-            >
-                🌦️ TODAY'S FORECAST
-            </div>
-
-            <div
-                id="forecast"
-                class="forecast"
-            ></div>
-
-        </section>
-
-
-        <!-- =========================================
-             MTR + CALENDAR
-        ========================================== -->
-
-        <section class="middle-grid">
-
-
-            <!-- MTR -->
-
-            <div class="card mtr-card">
-
-                <div class="card-title">
-                    🚆 MTR · TAI WO
-                </div>
-
-                <div class="mtr-grid">
-
-
-                    <div class="mtr-direction">
-
-                        <div class="direction-title">
-                            往金鐘
-                        </div>
-
-                        <div
-                            id="mtrDown"
-                            class="train-list"
-                        >
-                            Loading...
-                        </div>
-
-                    </div>
-
-
-                    <div class="mtr-direction">
-
-                        <div class="direction-title">
-                            往上水
-                        </div>
-
-                        <div
-                            id="mtrUp"
-                            class="train-list"
-                        >
-                            Loading...
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- CALENDAR -->
-
-            <div class="card calendar-card">
-
-                <div class="card-title">
-                    📅 CALENDAR
-                </div>
-
-                <div
-                    id="calendar"
-                    class="calendar-list"
-                >
-
-                    <div class="calendar-empty">
-                        iCloud Calendar 尚未連接
-                    </div>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- =========================================
-             NEWS
-        ========================================== -->
-
-        <section class="news-grid">
-
-
-            <!-- NOW -->
-
-            <div class="card news-card">
-
-                <div class="card-title">
-                    🇭🇰 NOW NEWS
-                </div>
-
-                <div class="news-subtitle">
-                    本地 · 兩岸
-                </div>
-
-                <div
-                    id="nowNews"
-                    class="news-list"
-                >
-                    Loading...
-                </div>
-
-            </div>
-
-
-            <!-- BBC -->
-
-            <div class="card news-card">
-
-                <div class="card-title">
-                    🌍 BBC NEWS
-                </div>
-
-                <div class="news-subtitle">
-                    WORLD
-                </div>
-
-                <div
-                    id="bbcNews"
-                    class="news-list"
-                >
-                    Loading...
-                </div>
-
-            </div>
-
-        </section>
-
-    </main>
-
-
-    <!-- FOOTER -->
-
-    <footer>
-
-        <span>
-            Tai Wo Dashboard
-        </span>
-
-        <span id="lastUpdated">
-            Updated --
-        </span>
-
-    </footer>
+<footer>
+    <span>Tai Wo Dashboard</span>
+    <span id="lastUpdated">Updated --</span>
+</footer>
 
 </div>
-
 
 <script src="script.js"></script>
-
 </body>
 </html>
