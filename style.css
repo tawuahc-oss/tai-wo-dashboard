@@ -90,7 +90,6 @@ body {
 
     display: grid;
 
-    /* 修正：增加 Forecast 和 MTR 的最小高度與比例，避免橫向時被裁切 */
     grid-template-rows:
         minmax(230px, 2fr)
         minmax(110px, 0.9fr)
@@ -442,19 +441,6 @@ body {
 
 /* =====================================================
    WEATHER MAIN LAYOUT
-
-   LEFT:
-   CURRENT TEMP
-   今日
-   濕度
-   降雨
-
-   RIGHT:
-   天氣預測
-   特別天氣提示
-
-   SAME STRUCTURE IN BOTH
-   LANDSCAPE + PORTRAIT
 ===================================================== */
 
 .weather-layout {
@@ -554,8 +540,6 @@ body {
 
 /* =====================================================
    TODAY / HUMIDITY / RAIN
-
-   ALWAYS VERTICAL
 ===================================================== */
 
 .weather-details {
@@ -617,14 +601,6 @@ body {
 
 /* =====================================================
    HKO TEXT AREA
-
-   RIGHT COLUMN
-
-   天氣預測
-   特別天氣提示
-
-   TWO COMPLETELY INDEPENDENT
-   SCROLL AREAS
 ===================================================== */
 
 .weather-hko-text {
@@ -674,7 +650,6 @@ body {
 
 /* =====================================================
    IF ONLY ONE HKO SECTION IS AVAILABLE
-   IT USES THE FULL RIGHT COLUMN
 ===================================================== */
 
 .weather-hko-text:has(
@@ -705,8 +680,6 @@ body {
 
 /* =====================================================
    HKO CONTENT
-
-   EACH PANEL SCROLLS INDEPENDENTLY
 ===================================================== */
 
 .weather-hko-content {
@@ -807,499 +780,6 @@ body {
 
 /* =====================================================
    PORTRAIT IPAD
-
-   SAME LAYOUT:
-   LEFT = CURRENT WEATHER + DETAILS
-   RIGHT = TWO HKO PANELS
-===================================================== */
-
-@media (orientation: portrait) and (min-width: 601px) {
-
-    .weather-layout {
-        grid-template-columns:
-            minmax(0, 1fr)
-            minmax(0, 2fr);
-
-        gap: 8px;
-    }
-
-
-    .weather-main {
-        gap: 8px;
-    }
-
-
-    .weather-icon {
-        font-size:
-            clamp(40px, 7vw, 58px);
-    }
-
-
-    .weather-detail {
-        padding: 4px 6px;
-    }
-
-}
-
-
-/* =====================================================
-   PHONE
-===================================================== */
-
-@media (max-width: 600px) {
-
-    .weather-layout {
-        grid-template-columns: 1fr;
-
-        grid-template-rows:
-            auto
-            minmax(180px, 1fr);
-
-        overflow: visible;
-    }
-
-
-    .weather-left-column {
-        grid-template-rows:
-            auto
-            auto;
-    }
-
-
-    .weather-hko-text {
-        min-height: 180px;
-    }
-
-}
-
-
-/* =====================================================
-   HOURLY FORECAST
-===================================================== */
-
-.forecast-card {
-    min-width: 0;
-    min-height: 0;
-
-    padding: 9px 12px;
-}
-
-
-.forecast {
-    height: calc(100% - 28px);
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(8, minmax(0, 1fr));
-
-    gap: 6px;
-
-    margin-top: 4px;
-}
-
-
-.forecast-item {
-    min-width: 0;
-
-    padding: 5px 3px;
-
-    text-align: center;
-
-    border-radius: 13px;
-
-    background: var(--item);
-}
-
-
-.forecast-time {
-    font-size: 11px;
-
-    color: var(--secondary);
-}
-
-
-.forecast-icon {
-    margin: 2px 0;
-
-    font-size: clamp(17px, 2vw, 26px);
-}
-
-
-.forecast-temp {
-    font-size: clamp(13px, 1.5vw, 19px);
-
-    font-weight: 800;
-}
-
-
-.forecast-rain {
-    font-size: 10px;
-
-    color: var(--secondary);
-}
-
-
-/* =====================================================
-   MTR + CALENDAR
-===================================================== */
-
-.middle-grid {
-    min-width: 0;
-    min-height: 0;
-
-    display: grid;
-
-    grid-template-columns:
-        minmax(250px, 0.78fr)
-        minmax(0, 2.22fr);
-
-    gap: 8px;
-}
-
-
-/* MTR */
-
-.mtr-card {
-    min-width: 0;
-    min-height: 0;
-
-    padding: 9px 11px;
-
-    display: flex;
-    flex-direction: column;
-}
-
-
-.mtr-grid {
-    min-width: 0;
-    min-height: 0;
-
-    flex: 1;
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-    gap: 9px;
-
-    margin-top: 4px;
-}
-
-
-.mtr-direction {
-    min-width: 0;
-}
-
-
-.direction-title {
-    margin-bottom: 3px;
-
-    font-size: clamp(12px, 1.15vw, 16px);
-
-    font-weight: 800;
-}
-
-
-.train-list {
-    display: flex;
-    flex-direction: column;
-
-    gap: 3px;
-
-    min-width: 0;
-
-    overflow: hidden;
-}
-
-
-.train {
-    min-width: 0;
-
-    padding: 3px 5px;
-
-    border-radius: 9px;
-
-    background: var(--item);
-
-    text-align: center;
-}
-
-
-.train-time {
-    font-size: clamp(13px, 1.3vw, 18px);
-
-    font-weight: 800;
-
-    white-space: nowrap;
-}
-
-
-.train-destination {
-    font-size: clamp(10px, 1vw, 14px);
-
-    color: var(--secondary);
-
-    white-space: nowrap;
-
-    overflow: hidden;
-
-    text-overflow: ellipsis;
-}
-
-
-/* CALENDAR */
-
-.calendar-card {
-    min-width: 0;
-    min-height: 0;
-
-    padding: 9px 13px;
-
-    display: flex;
-    flex-direction: column;
-}
-
-
-.calendar-list {
-    min-width: 0;
-    min-height: 0;
-
-    flex: 1;
-
-    margin-top: 4px;
-
-    overflow-y: auto;
-
-    padding-right: 4px;
-
-    font-size: clamp(12px, 1.2vw, 17px);
-
-    color: var(--secondary);
-
-    scrollbar-width: thin;
-}
-
-
-/* =====================================================
-   NEWS
-===================================================== */
-
-.news-grid {
-    min-width: 0;
-    min-height: 0;
-
-    display: grid;
-
-    grid-template-columns:
-        repeat(2, minmax(0, 1fr));
-
-    gap: 8px;
-}
-
-
-.news-card {
-    min-width: 0;
-    min-height: 0;
-
-    padding: 10px 13px;
-
-    display: flex;
-    flex-direction: column;
-}
-
-
-.news-subtitle {
-    flex: 0 0 auto;
-
-    margin-top: 1px;
-
-    font-size: 11px;
-
-    color: var(--secondary);
-}
-
-
-.news-list {
-    min-width: 0;
-    min-height: 0;
-
-    flex: 1;
-
-    margin-top: 5px;
-
-    overflow-y: auto;
-    overflow-x: hidden;
-
-    padding-right: 5px;
-
-    scrollbar-width: thin;
-
-    overscroll-behavior: contain;
-}
-
-
-.news-list::-webkit-scrollbar {
-    width: 5px;
-}
-
-
-.news-list::-webkit-scrollbar-thumb {
-    border-radius: 20px;
-
-    background:
-        rgba(143, 84, 96, 0.45);
-}
-
-
-.news-item {
-    display: block;
-
-    padding: 5px 2px;
-
-    color: var(--text);
-
-    text-decoration: none;
-
-    font-size: clamp(11px, 1.05vw, 15px);
-
-    line-height: 1.3;
-
-    overflow-wrap: anywhere;
-
-    border-bottom:
-        1px solid rgba(160, 99, 110, 0.17);
-}
-
-
-.news-item:hover {
-    text-decoration: underline;
-}
-
-
-/* =====================================================
-   FOOTER
-===================================================== */
-
-footer {
-    min-width: 0;
-
-    display: flex;
-
-    justify-content: space-between;
-    align-items: center;
-
-    padding: 0 2px;
-
-    font-size: 10px;
-
-    line-height: 1.1;
-
-    color:
-        rgba(70, 55, 60, 0.58);
-}
-
-
-/* =====================================================
-   IPAD / NARROW
-===================================================== */
-
-@media (max-width: 900px) {
-
-    .dashboard {
-        padding:
-            max(8px, env(safe-area-inset-top))
-            10px
-            max(5px, env(safe-area-inset-bottom));
-    }
-
-
-    .dashboard-content {
-        grid-template-rows:
-            minmax(235px, 2.1fr)
-            minmax(85px, 0.7fr)
-            minmax(105px, 0.9fr)
-            minmax(120px, 1fr);
-    }
-
-
-    .top-grid {
-        grid-template-columns:
-            minmax(190px, 0.72fr)
-            minmax(0, 1.28fr);
-    }
-
-
-    .date-main {
-        font-size: clamp(22px, 3.3vw, 32px);
-    }
-
-
-    .analog-clock {
-        width: min(100%, 165px);
-    }
-
-
-    .weather-card {
-        padding: 9px 10px;
-    }
-
-
-    .weather-summary-row {
-        grid-template-columns:
-            minmax(0, 1fr)
-            minmax(145px, 0.78fr);
-
-        gap: 10px;
-    }
-
-
-    .weather-icon {
-        font-size: 48px;
-    }
-
-
-    .weather-main {
-        gap: 10px;
-    }
-
-
-    .weather-detail {
-        padding: 5px 6px;
-    }
-
-
-    .weather-detail-value {
-        font-size: 15px;
-    }
-
-
-    .weather-hko-content {
-        font-size: 11px;
-    }
-
-
-    .middle-grid {
-        grid-template-columns:
-            minmax(210px, 0.75fr)
-            minmax(0, 1.85fr);
-    }
-
-
-    .mtr-grid {
-        gap: 6px;
-    }
-
-}
-
-
-/* =====================================================
-   PORTRAIT IPAD
-
-   IMPORTANT:
-   WEATHER DETAILS STAY ON THE RIGHT
-   AND STAY VERTICAL
 ===================================================== */
 
 @media (orientation: portrait) and (min-width: 601px) {
@@ -1399,19 +879,6 @@ footer {
 
 }
 
-/* =====================================================
-   RESPONSIVE LAYOUT UPDATE
-   PORTRAIT:
-   - Bigger digital time and analog clock
-   - Weather icon above temperature, both larger
-   - Forecast cards stay same size; larger content
-   - MTR supports 3 departures per direction
-
-   LANDSCAPE:
-   - Forecast: time / temp / icon + rain
-   - MTR spacing remains stable with 3 departures
-===================================================== */
-
 
 /* =====================================================
    MTR DESTINATION
@@ -1444,7 +911,19 @@ footer {
 @media (orientation: landscape) {
 
     /* ---------------------------------------------
-       TODAY'S FORECAST (垂直排列，並微調內距確保不被裁切)
+       CURRENT WEATHER (進一步縮小字體)
+    --------------------------------------------- */
+    .temperature {
+        font-size: clamp(28px, 3.2vw, 44px);
+    }
+    
+    .weather-icon {
+        font-size: clamp(32px, 3.8vw, 48px);
+    }
+
+
+    /* ---------------------------------------------
+       TODAY'S FORECAST
     --------------------------------------------- */
     .forecast-item {
         display: flex;
@@ -1474,54 +953,34 @@ footer {
 
     /* ---------------------------------------------
        MTR
-       Keep spacing stable with 3 departures
     --------------------------------------------- */
 
     .mtr-card {
-
         padding: 9px 10px;
-
     }
-
 
     .mtr-grid {
-
         gap: 7px;
-
         margin-top: 3px;
-
     }
-
 
     .train-list {
-
         gap: 2px;
-
     }
-
 
     .train {
-
         padding: 2px 4px;
-
     }
-
 
     .train-time {
-
         font-size:
             clamp(12px, 1.2vw, 17px);
-
         line-height: 1.1;
-
     }
 
-
     .train-destination {
-
         font-size:
             clamp(9px, 0.85vw, 12px);
-
     }
 
 }
@@ -1533,246 +992,129 @@ footer {
 
 @media (orientation: portrait) and (min-width: 601px) {
 
-
-    /* =================================================
-       DASHBOARD HEIGHTS
-
-       More space for MTR because each direction
-       now shows 3 departures
-    ================================================= */
-
     .dashboard-content {
-
         grid-template-rows:
             minmax(320px, 2.45fr)
             minmax(105px, 0.82fr)
             minmax(150px, 1.12fr)
             minmax(145px, 1.08fr);
-
     }
-
-
-    /* =================================================
-       BIGGER DIGITAL TIME
-    ================================================= */
 
     .digital-time {
-
         font-size:
             clamp(32px, 5.2vw, 54px);
-
     }
-
-
-    /* =================================================
-       BIGGER ANALOG CLOCK
-    ================================================= */
 
     .analog-clock {
-
         width:
             min(100%, 200px);
-
     }
-
 
     .clock-number {
-
         font-size: 16px;
-
     }
-
-
-    /* =================================================
-       CURRENT WEATHER
-
-       ICON
-       TEMPERATURE
-       DESCRIPTION
-    ================================================= */
 
     .weather-main {
-
         flex-direction: column;
-
         align-items: center;
-
         justify-content: center;
-
         gap: 5px;
-
         margin-top: 4px;
-
         text-align: center;
-
     }
-
 
     .weather-icon {
-
         font-size:
             clamp(64px, 9vw, 98px);
-
     }
-
 
     .weather-temperature-block {
-
         text-align: center;
-
     }
-
 
     .temperature {
-
         font-size:
             clamp(56px, 8.4vw, 92px);
-
         line-height: 0.92;
-
     }
-
 
     .weather-description {
-
         margin-top: 4px;
-
         font-size:
             clamp(15px, 2vw, 22px);
-
     }
-
-
-    /* =================================================
-       TODAY'S FORECAST
-
-       Bubble size remains the same.
-       Only internal text and icons become bigger.
-    ================================================= */
 
     .forecast {
-
         gap: 6px;
-
     }
-
 
     .forecast-hour,
     .forecast-item {
-
         padding: 5px 3px;
-
     }
-
 
     .forecast-time {
-
         font-size: 13px;
-
     }
-
 
     .forecast-icon {
-
         font-size:
             clamp(25px, 3.8vw, 40px);
-
         margin: 2px 0;
-
     }
-
 
     .forecast-temp {
-
         font-size:
             clamp(17px, 2.5vw, 26px);
-
     }
-
 
     .forecast-rain {
-
         font-size: 12px;
-
     }
-
-
-    /* =================================================
-       MTR
-
-       Stable layout for 3 departures per direction
-    ================================================= */
 
     .mtr-card {
-
         padding: 9px 10px;
-
     }
-
 
     .mtr-grid {
-
         gap: 7px;
-
         margin-top: 3px;
-
     }
-
 
     .direction-title {
-
         font-size:
             clamp(13px, 1.9vw, 18px);
-
     }
-
 
     .train-list {
-
         gap: 3px;
-
     }
-
 
     .train {
-
         padding: 4px 5px;
-
     }
-
 
     .train-time {
-
         font-size:
             clamp(15px, 2.05vw, 20px);
-
         line-height: 1.1;
-
     }
 
-
     .train-destination {
-
         font-size:
             clamp(11px, 1.55vw, 15px);
-
     }
 
 }
 
 /* =====================================================
    CURRENT WEATHER BUBBLE — FINAL LAYOUT OVERRIDE
-   ONLY affects the current weather bubble.
-   LEFT 1/3  = current weather + 今日/濕度/降雨
-   RIGHT 2/3 = 天氣預測 + 特別天氣提示
-   HKO panels scroll independently.
 ===================================================== */
 
 .weather-layout {
     grid-template-columns:
         minmax(0, 1fr)
         minmax(0, 2fr);
-
     gap: 10px;
 }
 
@@ -1781,11 +1123,9 @@ footer {
     min-height: 0;
 
     display: grid;
-
     grid-template-rows:
         minmax(0, 1fr)
         auto;
-
     gap: 7px;
 
     overflow: hidden;
@@ -1797,10 +1137,8 @@ footer {
 
     display: flex;
     flex-direction: row;
-
     align-items: center;
     justify-content: flex-start;
-
     gap: 12px;
 
     margin-top: 0;
@@ -1812,7 +1150,6 @@ footer {
 
     display: grid;
     grid-template-columns: 1fr;
-
     gap: 4px;
 }
 
@@ -1821,11 +1158,9 @@ footer {
     min-height: 0;
 
     display: grid;
-
     grid-template-rows:
         minmax(0, 1fr)
         minmax(0, 1fr);
-
     gap: 7px;
 
     overflow: hidden;
@@ -1834,32 +1169,25 @@ footer {
 .weather-hko-section {
     min-width: 0;
     min-height: 0;
-
     height: 100%;
-
     display: flex;
     flex-direction: column;
-
     overflow: hidden;
 }
 
 .weather-hko-content {
     min-width: 0;
     min-height: 0;
-
     flex: 1 1 0;
     height: 0;
 
     overflow-y: auto;
     overflow-x: hidden;
-
     overscroll-behavior: contain;
 }
 
 /* =====================================================
    PORTRAIT iPAD
-   Same 1/3 + 2/3 structure.
-   Icon + temperature stay side-by-side.
 ===================================================== */
 
 @media (orientation: portrait) and (min-width: 601px) {
@@ -1868,18 +1196,14 @@ footer {
         grid-template-columns:
             minmax(0, 1fr)
             minmax(0, 2fr);
-
         gap: 8px;
     }
 
     .weather-main {
         flex-direction: row;
-
         align-items: center;
         justify-content: flex-start;
-
         gap: 8px;
-
         margin-top: 0;
         text-align: left;
     }
@@ -1892,7 +1216,6 @@ footer {
     .temperature {
         font-size:
             clamp(44px, 6.2vw, 70px);
-
         line-height: 0.92;
     }
 
@@ -1913,7 +1236,6 @@ footer {
         grid-template-rows:
             minmax(0, 1fr)
             minmax(0, 1fr);
-
         gap: 7px;
     }
 
