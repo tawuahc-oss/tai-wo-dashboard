@@ -222,42 +222,46 @@ body {
 
 .clock-number {
     position: absolute;
-
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    padding-top: 7px; /* 這裡控制數字距離邊緣的空間 */
     font-size: 13px;
     font-weight: 700;
+    pointer-events: none;
 }
 
-
-.clock-12 {
-    top: 7px;
-    left: 50%;
-
-    transform: translateX(-50%);
+.clock-number span {
+    display: inline-block;
 }
 
-
-.clock-3 {
-    top: 50%;
-    right: 9px;
-
-    transform: translateY(-50%);
-}
-
-
-.clock-6 {
-    bottom: 7px;
-    left: 50%;
-
-    transform: translateX(-50%);
-}
-
-
-.clock-9 {
-    top: 50%;
-    left: 9px;
-
-    transform: translateY(-50%);
-}
+/* 透過旋轉把數字推到對應的時鐘位置，再把文字本身轉正 */
+.clock-1 { transform: rotate(30deg); }
+.clock-1 span { transform: rotate(-30deg); }
+.clock-2 { transform: rotate(60deg); }
+.clock-2 span { transform: rotate(-60deg); }
+.clock-3 { transform: rotate(90deg); }
+.clock-3 span { transform: rotate(-90deg); }
+.clock-4 { transform: rotate(120deg); }
+.clock-4 span { transform: rotate(-120deg); }
+.clock-5 { transform: rotate(150deg); }
+.clock-5 span { transform: rotate(-150deg); }
+.clock-6 { transform: rotate(180deg); }
+.clock-6 span { transform: rotate(-180deg); }
+.clock-7 { transform: rotate(210deg); }
+.clock-7 span { transform: rotate(-210deg); }
+.clock-8 { transform: rotate(240deg); }
+.clock-8 span { transform: rotate(-240deg); }
+.clock-9 { transform: rotate(270deg); }
+.clock-9 span { transform: rotate(-270deg); }
+.clock-10 { transform: rotate(300deg); }
+.clock-10 span { transform: rotate(-300deg); }
+.clock-11 { transform: rotate(330deg); }
+.clock-11 span { transform: rotate(-330deg); }
+.clock-12 { transform: rotate(0deg); }
+.clock-12 span { transform: rotate(0deg); }
 
 
 .clock-hand {
