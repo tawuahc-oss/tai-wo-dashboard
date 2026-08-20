@@ -1443,86 +1443,32 @@ footer {
 @media (orientation: landscape) {
 
     /* ---------------------------------------------
-       TODAY'S FORECAST
-
-               TIME
-                   TEMP
-          ICON         RAIN
+       TODAY'S FORECAST (改為與圖 3 相同的垂直排列)
     --------------------------------------------- */
-
     .forecast-item {
-
-        display: grid;
-
-        grid-template-columns:
-            1fr
-            1fr;
-
-        grid-template-rows:
-            auto
-            auto
-            auto;
-
+        display: flex;
+        flex-direction: column;
         align-items: center;
-
-        column-gap: 2px;
-
-        row-gap: 1px;
-
+        justify-content: center;
         padding: 5px 6px;
-
     }
-
 
     .forecast-time {
-
-        grid-column: 1 / -1;
-
-        grid-row: 1;
-
         text-align: center;
-
     }
-
-
-    .forecast-temp {
-
-        grid-column: 2;
-
-        grid-row: 2;
-
-        justify-self: center;
-
-        text-align: center;
-
-    }
-
 
     .forecast-icon {
-
-        grid-column: 1;
-
-        grid-row: 3;
-
-        margin: 0;
-
-        justify-self: center;
-
+        margin: 4px 0;
     }
 
+    .forecast-temp {
+        text-align: center;
+    }
 
     .forecast-rain {
-
-        grid-column: 2;
-
-        grid-row: 3;
-
-        justify-self: center;
-
         text-align: center;
-
+        margin-top: 2px;
     }
-
 
     /* ---------------------------------------------
        MTR
@@ -1611,7 +1557,7 @@ footer {
     .digital-time {
 
         font-size:
-            clamp(38px, 6.1vw, 68px);
+            clamp(32px, 5.2vw, 54px);
 
     }
 
@@ -1623,7 +1569,7 @@ footer {
     .analog-clock {
 
         width:
-            min(100%, 245px);
+            min(100%, 200px);
 
     }
 
