@@ -91,9 +91,9 @@ body {
     display: grid;
 
     grid-template-rows:
-        minmax(230px, 2fr)
-        minmax(110px, 0.9fr)
-        minmax(130px, 1fr)
+        minmax(230px, 2.1fr)
+        minmax(95px, 0.75fr)
+        minmax(115px, 0.95fr)
         minmax(110px, 0.9fr);
 
     gap: 8px;
@@ -227,8 +227,8 @@ body {
     width: 100%;
     height: 100%;
     text-align: center;
-    padding-top: 7px; /* 這裡控制數字距離邊緣的空間 */
-    font-size: 13px;
+    padding-top: 6px;
+    font-size: 12px;
     font-weight: 700;
     pointer-events: none;
 }
@@ -237,7 +237,6 @@ body {
     display: inline-block;
 }
 
-/* 透過旋轉把數字推到對應的時鐘位置，再把文字本身轉正 */
 .clock-1 { transform: rotate(30deg); }
 .clock-1 span { transform: rotate(-30deg); }
 .clock-2 { transform: rotate(60deg); }
@@ -783,35 +782,6 @@ body {
 
 
 /* =====================================================
-   PORTRAIT IPAD
-===================================================== */
-
-@media (orientation: portrait) and (min-width: 601px) {
-
-    .top-grid {
-        grid-template-columns:
-            minmax(180px, 0.68fr)
-            minmax(0, 1.32fr);
-    }
-
-
-    .middle-grid {
-        grid-template-columns:
-            minmax(190px, 0.72fr)
-            minmax(0, 1.95fr);
-    }
-
-
-    .weather-summary-row {
-        grid-template-columns:
-            minmax(0, 1fr)
-            minmax(150px, 0.72fr);
-    }
-
-}
-
-
-/* =====================================================
    PHONE
 ===================================================== */
 
@@ -885,38 +855,337 @@ body {
 
 
 /* =====================================================
-   MTR DESTINATION
+   HOURLY FORECAST
 ===================================================== */
 
-.train-destination {
-    margin-top: 1px;
+.forecast-card {
+    min-width: 0;
+    min-height: 0;
 
+    padding: 9px 12px;
+}
+
+
+.forecast {
+    height: calc(100% - 28px);
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(8, minmax(0, 1fr));
+
+    gap: 6px;
+
+    margin-top: 4px;
+}
+
+
+.forecast-item {
     min-width: 0;
 
-    font-size:
-        clamp(10px, 0.95vw, 14px);
+    padding: 5px 3px;
 
-    line-height: 1.1;
+    text-align: center;
+
+    border-radius: 13px;
+
+    background: var(--item);
+}
+
+
+.forecast-time {
+    font-size: 11px;
 
     color: var(--secondary);
+}
 
-    white-space: nowrap;
 
-    overflow: hidden;
+.forecast-icon {
+    margin: 2px 0;
 
-    text-overflow: ellipsis;
+    font-size: clamp(17px, 2vw, 26px);
+}
+
+
+.forecast-temp {
+    font-size: clamp(13px, 1.5vw, 19px);
+
+    font-weight: 800;
+}
+
+
+.forecast-rain {
+    font-size: 10px;
+
+    color: var(--secondary);
 }
 
 
 /* =====================================================
-   LANDSCAPE
+   MTR + CALENDAR
+===================================================== */
+
+.middle-grid {
+    min-width: 0;
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(250px, 0.78fr)
+        minmax(0, 2.22fr);
+
+    gap: 8px;
+}
+
+
+/* MTR */
+
+.mtr-card {
+    min-width: 0;
+    min-height: 0;
+
+    padding: 9px 11px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+.mtr-grid {
+    min-width: 0;
+    min-height: 0;
+
+    flex: 1;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 9px;
+
+    margin-top: 4px;
+}
+
+
+.mtr-direction {
+    min-width: 0;
+}
+
+
+.direction-title {
+    margin-bottom: 3px;
+
+    font-size: clamp(12px, 1.15vw, 16px);
+
+    font-weight: 800;
+}
+
+
+.train-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+
+    min-width: 0;
+
+    overflow: hidden;
+}
+
+
+.train {
+    min-width: 0;
+
+    padding: 3px 5px;
+
+    border-radius: 9px;
+
+    background: var(--item);
+
+    text-align: center;
+}
+
+
+.train-time {
+    font-size: clamp(13px, 1.3vw, 18px);
+
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+
+.train-destination {
+    margin-top: 1px;
+    min-width: 0;
+    font-size: clamp(10px, 0.95vw, 14px);
+    line-height: 1.1;
+    color: var(--secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* CALENDAR */
+
+.calendar-card {
+    min-width: 0;
+    min-height: 0;
+
+    padding: 9px 13px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+.calendar-list {
+    min-width: 0;
+    min-height: 0;
+
+    flex: 1;
+
+    margin-top: 4px;
+
+    overflow-y: auto;
+
+    padding-right: 4px;
+
+    font-size: clamp(12px, 1.2vw, 17px);
+
+    color: var(--secondary);
+
+    scrollbar-width: thin;
+}
+
+
+/* =====================================================
+   NEWS
+===================================================== */
+
+.news-grid {
+    min-width: 0;
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 8px;
+}
+
+
+.news-card {
+    min-width: 0;
+    min-height: 0;
+
+    padding: 10px 13px;
+
+    display: flex;
+    flex-direction: column;
+}
+
+
+.news-subtitle {
+    flex: 0 0 auto;
+
+    margin-top: 1px;
+
+    font-size: 11px;
+
+    color: var(--secondary);
+}
+
+
+.news-list {
+    min-width: 0;
+    min-height: 0;
+
+    flex: 1;
+
+    margin-top: 5px;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding-right: 5px;
+
+    scrollbar-width: thin;
+
+    overscroll-behavior: contain;
+}
+
+
+.news-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+
+.news-list::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+
+    background:
+        rgba(143, 84, 96, 0.45);
+}
+
+
+.news-item {
+    display: block;
+
+    padding: 5px 2px;
+
+    color: var(--text);
+
+    text-decoration: none;
+
+    font-size: clamp(11px, 1.05vw, 15px);
+
+    line-height: 1.3;
+
+    overflow-wrap: anywhere;
+
+    border-bottom:
+        1px solid rgba(160, 99, 110, 0.17);
+}
+
+
+.news-item:hover {
+    text-decoration: underline;
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+footer {
+    min-width: 0;
+
+    display: flex;
+
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 0 2px;
+
+    font-size: 10px;
+
+    line-height: 1.1;
+
+    color:
+        rgba(70, 55, 60, 0.58);
+}
+
+
+/* =====================================================
+   LANDSCAPE (橫向模式)
 ===================================================== */
 
 @media (orientation: landscape) {
-
-    /* ---------------------------------------------
-       CURRENT WEATHER (進一步縮小字體)
-    --------------------------------------------- */
     .temperature {
         font-size: clamp(28px, 3.2vw, 40px);
     }
@@ -924,74 +1193,11 @@ body {
     .weather-icon {
         font-size: clamp(32px, 3.8vw, 48px);
     }
-
-
-    /* ---------------------------------------------
-       TODAY'S FORECAST
-    --------------------------------------------- */
-    .forecast-item {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 4px 2px;
-    }
-
-    .forecast-time {
-        text-align: center;
-    }
-
-    .forecast-icon {
-        font-size: clamp(20px, 2.5vw, 28px);
-        margin: 2px 0;
-    }
-
-    .forecast-temp {
-        text-align: center;
-    }
-
-    .forecast-rain {
-        text-align: center;
-        margin-top: 1px;
-    }
-
-    /* ---------------------------------------------
-       MTR
-    --------------------------------------------- */
-
-    .mtr-card {
-        padding: 9px 10px;
-    }
-
-    .mtr-grid {
-        gap: 7px;
-        margin-top: 3px;
-    }
-
-    .train-list {
-        gap: 2px;
-    }
-
-    .train {
-        padding: 2px 4px;
-    }
-
-    .train-time {
-        font-size:
-            clamp(12px, 1.2vw, 17px);
-        line-height: 1.1;
-    }
-
-    .train-destination {
-        font-size:
-            clamp(9px, 0.85vw, 12px);
-    }
-
 }
 
 
 /* =====================================================
-   PORTRAIT IPAD
+   PORTRAIT IPAD (直向 iPad 模式)
 ===================================================== */
 
 @media (orientation: portrait) and (min-width: 601px) {
@@ -1015,7 +1221,8 @@ body {
     }
 
     .clock-number {
-        font-size: 16px;
+        font-size: 14px;
+        padding-top: 5px;
     }
 
     .weather-main {
@@ -1047,72 +1254,11 @@ body {
         font-size:
             clamp(15px, 2vw, 22px);
     }
-
-    .forecast {
-        gap: 6px;
-    }
-
-    .forecast-hour,
-    .forecast-item {
-        padding: 5px 3px;
-    }
-
-    .forecast-time {
-        font-size: 13px;
-    }
-
-    .forecast-icon {
-        font-size:
-            clamp(25px, 3.8vw, 40px);
-        margin: 2px 0;
-    }
-
-    .forecast-temp {
-        font-size:
-            clamp(17px, 2.5vw, 26px);
-    }
-
-    .forecast-rain {
-        font-size: 12px;
-    }
-
-    .mtr-card {
-        padding: 9px 10px;
-    }
-
-    .mtr-grid {
-        gap: 7px;
-        margin-top: 3px;
-    }
-
-    .direction-title {
-        font-size:
-            clamp(13px, 1.9vw, 18px);
-    }
-
-    .train-list {
-        gap: 3px;
-    }
-
-    .train {
-        padding: 4px 5px;
-    }
-
-    .train-time {
-        font-size:
-            clamp(15px, 2.05vw, 20px);
-        line-height: 1.1;
-    }
-
-    .train-destination {
-        font-size:
-            clamp(11px, 1.55vw, 15px);
-    }
-
 }
 
+
 /* =====================================================
-   CURRENT WEATHER BUBBLE — FINAL LAYOUT OVERRIDE
+   CURRENT WEATHER BUBBLE OVERRIDE
 ===================================================== */
 
 .weather-layout {
@@ -1188,68 +1334,4 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
     overscroll-behavior: contain;
-}
-
-/* =====================================================
-   PORTRAIT iPAD
-===================================================== */
-
-@media (orientation: portrait) and (min-width: 601px) {
-
-    .weather-layout {
-        grid-template-columns:
-            minmax(0, 1fr)
-            minmax(0, 2fr);
-        gap: 8px;
-    }
-
-    .weather-main {
-        flex-direction: row;
-        align-items: center;
-        justify-content: flex-start;
-        gap: 8px;
-        margin-top: 0;
-        text-align: left;
-    }
-
-    .weather-icon {
-        font-size:
-            clamp(48px, 7vw, 72px);
-    }
-
-    .temperature {
-        font-size:
-            clamp(44px, 6.2vw, 70px);
-        line-height: 0.92;
-    }
-
-    .weather-temperature-block {
-        text-align: left;
-    }
-
-    .weather-description {
-        font-size:
-            clamp(13px, 1.8vw, 20px);
-    }
-
-    .weather-details {
-        grid-template-columns: 1fr;
-    }
-
-    .weather-hko-text {
-        grid-template-rows:
-            minmax(0, 1fr)
-            minmax(0, 1fr);
-        gap: 7px;
-    }
-
-    .weather-hko-section {
-        min-height: 0;
-    }
-
-    .weather-hko-content {
-        min-height: 0;
-        overflow-y: auto;
-        overflow-x: hidden;
-    }
 }
