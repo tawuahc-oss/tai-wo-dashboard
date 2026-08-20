@@ -1,616 +1,1362 @@
 :root {
-    --pink-background: #efb0b7;
-    --pink-background-2: #f3c1c6;
-    --card-background: rgba(255, 244, 246, 0.82);
-    --small-card: rgba(230, 173, 181, 0.30);
+    --bg-main: #f4c4c8;
+    --bg-top: #efb4ba;
+
+    --card: rgba(255, 244, 246, 0.78);
+    --item: rgba(232, 180, 187, 0.34);
+
+    --border: rgba(193, 120, 132, 0.36);
+
     --text: #39353a;
-    --secondary: #766a70;
-    --muted: #998a90;
-    --border: rgba(180, 103, 117, 0.28);
-    --shadow: 0 5px 18px rgba(120, 60, 72, 0.08);
+    --secondary: #70656c;
+    --muted: #94848c;
+
+    --shadow:
+        0 7px 20px rgba(125, 69, 79, 0.09);
+
+    --radius: 22px;
 }
 
-* { box-sizing: border-box; }
 
-html, body {
+* {
+    box-sizing: border-box;
+}
+
+
+html,
+body {
     width: 100%;
     height: 100%;
+
     margin: 0;
-    padding: 0;
+
     overflow: hidden;
 }
 
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-        "PingFang TC", "Noto Sans TC", sans-serif;
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        "Noto Sans TC",
+        "PingFang TC",
+        sans-serif;
+
     color: var(--text);
-    background: linear-gradient(135deg, var(--pink-background), var(--pink-background-2));
+
+    background:
+        linear-gradient(
+            135deg,
+            var(--bg-top),
+            var(--bg-main) 55%,
+            #efbec4
+        );
 }
+
+
+/* =====================================================
+   MAIN DASHBOARD
+===================================================== */
 
 .dashboard {
     width: 100%;
+    height: 100vh;
     height: 100dvh;
-    min-height: 100dvh;
+
+    max-width: 1600px;
+
+    margin: 0 auto;
+
     padding:
-        max(8px, env(safe-area-inset-top))
-        max(14px, env(safe-area-inset-right))
-        2px
-        max(14px, env(safe-area-inset-left));
+        max(10px, env(safe-area-inset-top))
+        18px
+        max(6px, env(safe-area-inset-bottom));
+
     display: grid;
-    grid-template-rows: minmax(0, 1fr) auto;
+
+    grid-template-rows:
+        minmax(0, 1fr)
+        auto;
+
     gap: 5px;
+
     overflow: hidden;
 }
 
+
 .dashboard-content {
-    min-width: 0;
     min-height: 0;
+
     display: grid;
+
     grid-template-rows:
-        minmax(0, 1.58fr)
-        minmax(0, 0.60fr)
-        minmax(0, 0.76fr)
-        minmax(0, 0.96fr);
-    gap: 7px;
+        minmax(245px, 2.15fr)
+        minmax(90px, 0.68fr)
+        minmax(105px, 0.88fr)
+        minmax(120px, 1fr);
+
+    gap: 8px;
+
     overflow: hidden;
 }
+
+
+/* =====================================================
+   CARD
+===================================================== */
 
 .card {
     min-width: 0;
     min-height: 0;
-    background: var(--card-background);
-    border: 1px solid rgba(255,255,255,0.25);
-    border-radius: 25px;
-    box-shadow: var(--shadow);
+
     overflow: hidden;
+
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+
+    background: var(--card);
+
+    box-shadow: var(--shadow);
+
+    backdrop-filter: blur(10px);
 }
+
 
 .card-title {
-    font-size: clamp(15px, 1.5vw, 21px);
+    flex: 0 0 auto;
+
+    font-size: clamp(14px, 1.35vw, 20px);
     font-weight: 800;
-    line-height: 1.15;
-    letter-spacing: 0.02em;
 }
 
-/* CLOCK + DATE + WEATHER */
+
+.updated {
+    flex: 0 0 auto;
+
+    margin-top: 4px;
+
+    font-size: 10px;
+
+    color: var(--muted);
+}
+
+
+/* =====================================================
+   TOP GRID
+===================================================== */
+
 .top-grid {
     min-width: 0;
     min-height: 0;
+
     display: grid;
-    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.6fr);
-    gap: 7px;
+
+    grid-template-columns:
+        minmax(210px, 0.78fr)
+        minmax(430px, 1.72fr);
+
+    gap: 8px;
 }
 
+
+/* =====================================================
+   CLOCK
+===================================================== */
+
 .clock-card {
-    min-width: 0;
     min-height: 0;
-    padding: 8px 12px;
+
+    padding: 10px;
+
     display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
+
+    grid-template-rows:
+        auto
+        minmax(0, 1fr);
+
     justify-items: center;
 }
 
+
 .digital-time {
-    font-size: clamp(25px, 3vw, 43px);
+    font-size: clamp(26px, 3vw, 46px);
+
     font-weight: 800;
-    line-height: 1;
-    margin-top: 1px;
+
+    line-height: 1.05;
+
     white-space: nowrap;
 }
 
+
 .clock-area {
-    min-width: 0;
     min-height: 0;
+    min-width: 0;
+
     width: 100%;
+
     display: flex;
+
     align-items: center;
     justify-content: center;
-    overflow: hidden;
 }
+
 
 .analog-clock {
     position: relative;
-    width: 190px;
-    height: 190px;
-    max-width: 100%;
-    max-height: 100%;
-    aspect-ratio: 1 / 1;
-    flex: 0 0 auto;
-    border: 3px solid rgba(92,71,77,0.55);
+
+    width: min(100%, 190px);
+
+    aspect-ratio: 1;
+
+    border:
+        3px solid rgba(96, 71, 76, 0.60);
+
     border-radius: 50%;
-    background: rgba(255,250,251,0.20);
+
+    background:
+        rgba(255, 250, 251, 0.25);
 }
+
 
 .clock-number {
     position: absolute;
-    font-size: clamp(12px, 1.3vw, 17px);
-    font-weight: 800;
+
+    font-size: 13px;
+    font-weight: 700;
 }
-.clock-12 { top: 7px; left: 50%; transform: translateX(-50%); }
-.clock-3 { right: 9px; top: 50%; transform: translateY(-50%); }
-.clock-6 { bottom: 7px; left: 50%; transform: translateX(-50%); }
-.clock-9 { left: 9px; top: 50%; transform: translateY(-50%); }
+
+
+.clock-12 {
+    top: 7px;
+    left: 50%;
+
+    transform: translateX(-50%);
+}
+
+
+.clock-3 {
+    top: 50%;
+    right: 9px;
+
+    transform: translateY(-50%);
+}
+
+
+.clock-6 {
+    bottom: 7px;
+    left: 50%;
+
+    transform: translateX(-50%);
+}
+
+
+.clock-9 {
+    top: 50%;
+    left: 9px;
+
+    transform: translateY(-50%);
+}
+
 
 .clock-hand {
     position: absolute;
+
     left: 50%;
     bottom: 50%;
-    transform-origin: 50% 100%;
+
+    transform-origin:
+        50% 100%;
+
     border-radius: 99px;
 }
-.clock-hour { width: 6px; height: 29%; background: #3e393d; }
-.clock-minute { width: 5px; height: 38%; background: #4b4449; }
-.clock-second { width: 2px; height: 43%; background: #c46f7a; }
+
+
+.clock-hour {
+    width: 6px;
+    height: 27%;
+
+    background: #3d383d;
+}
+
+
+.clock-minute {
+    width: 5px;
+    height: 37%;
+
+    background: #4b4449;
+}
+
+
+.clock-second {
+    width: 2px;
+    height: 42%;
+
+    background: #bd707b;
+}
+
 
 .clock-center {
     position: absolute;
-    width: 11px;
-    height: 11px;
+
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
+
+    width: 10px;
+    height: 10px;
+
+    transform:
+        translate(-50%, -50%);
+
     border-radius: 50%;
-    background: #39353a;
+
+    background: #3d383d;
 }
+
+
+/* =====================================================
+   DATE + WEATHER COLUMN
+===================================================== */
 
 .weather-column {
     min-width: 0;
     min-height: 0;
+
     display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
-    gap: 7px;
-    overflow: hidden;
-}
 
-.date-bubble {
-    position: relative;
-    width: 100%;
-    min-width: 0;
-    padding: 8px 62px 8px 20px;
-    text-align: center;
-    background: rgba(255,226,230,0.55);
-    border: 1px solid var(--border);
-    border-radius: 24px;
-    box-shadow: 0 2px 8px rgba(130,70,80,0.04);
-}
+    grid-template-rows:
+        auto
+        minmax(0, 1fr);
 
-.date-main {
-    font-size: clamp(26px, 3.1vw, 44px);
-    font-weight: 800;
-    line-height: 1.12;
-    white-space: nowrap;
-}
-
-.date-lunar {
-    margin-top: 2px;
-    font-size: clamp(12px, 1.2vw, 17px);
-    color: var(--secondary);
-}
-
-.refresh-button {
-    position: absolute;
-    top: 8px;
-    right: 10px;
-    z-index: 5;
-    width: 40px;
-    height: 40px;
-    border: 1px solid var(--border);
-    border-radius: 50%;
-    background: rgba(255,244,246,0.90);
-    color: var(--text);
-    font-size: 24px;
-    line-height: 1;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 2px 8px rgba(125,69,79,0.08);
-}
-.refresh-button:active { transform: scale(0.92); }
-.refresh-button.loading { animation: refresh-spin 0.7s linear infinite; }
-.refresh-button:disabled { opacity: 0.65; }
-@keyframes refresh-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-/* WEATHER */
-.weather-card {
-    min-width: 0;
-    min-height: 0;
-    padding: 10px 14px;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-.weather-main {
-    flex: 1;
-    min-height: 0;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.weather-icon {
-    flex: 0 0 auto;
-    font-size: clamp(45px, 5vw, 70px);
-}
-
-.temperature {
-    font-size: clamp(43px, 5.2vw, 70px);
-    font-weight: 800;
-    line-height: 0.95;
-}
-
-.weather-description {
-    margin-top: 5px;
-    font-size: clamp(14px, 1.4vw, 20px);
-    color: var(--secondary);
-}
-
-.weather-details {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 8px;
 }
 
+
+/* =====================================================
+   DATE
+===================================================== */
+
+.date-bubble {
+    position: relative;
+
+    min-width: 0;
+
+    padding: 9px 58px 9px 20px;
+
+    border: 1px solid var(--border);
+    border-radius: 22px;
+
+    background:
+        rgba(255, 237, 240, 0.48);
+
+    box-shadow: var(--shadow);
+
+    text-align: center;
+}
+
+
+.date-main {
+    font-size: clamp(24px, 2.45vw, 36px);
+
+    font-weight: 900;
+
+    line-height: 1.12;
+
+    white-space: nowrap;
+}
+
+
+.date-lunar {
+    margin-top: 2px;
+
+    font-size: clamp(13px, 1.2vw, 18px);
+
+    color: var(--secondary);
+}
+
+
+/* =====================================================
+   REFRESH BUTTON
+===================================================== */
+
+.refresh-button {
+    position: absolute;
+
+    top: 50%;
+    right: 13px;
+
+    transform: translateY(-50%);
+
+    z-index: 10;
+
+    width: 40px;
+    height: 40px;
+
+    border: 1px solid var(--border);
+    border-radius: 50%;
+
+    background:
+        rgba(255, 244, 246, 0.85);
+
+    color: var(--text);
+
+    font-size: 24px;
+
+    cursor: pointer;
+}
+
+
+.refresh-button.loading {
+    animation:
+        spin 0.8s linear infinite;
+}
+
+
+@keyframes spin {
+    to {
+        transform:
+            translateY(-50%)
+            rotate(360deg);
+    }
+}
+
+
+/* =====================================================
+   WEATHER
+===================================================== */
+
+.weather-card {
+    min-width: 0;
+    min-height: 0;
+
+    padding: 10px 13px;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+
+/* =====================================================
+   WEATHER MAIN LAYOUT
+
+   LEFT:
+   CURRENT TEMP
+   今日
+   濕度
+   降雨
+
+   RIGHT:
+   天氣預測
+   特別天氣提示
+
+   SAME STRUCTURE IN BOTH
+   LANDSCAPE + PORTRAIT
+===================================================== */
+
+.weather-layout {
+    min-width: 0;
+    min-height: 0;
+
+    flex: 1 1 0;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 2fr);
+
+    gap: 10px;
+
+    margin-top: 5px;
+
+    overflow: hidden;
+}
+
+
+/* =====================================================
+   LEFT COLUMN
+===================================================== */
+
+.weather-left-column {
+    min-width: 0;
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-rows:
+        minmax(0, 1fr)
+        auto;
+
+    gap: 7px;
+
+    overflow: hidden;
+}
+
+
+/* =====================================================
+   CURRENT WEATHER
+===================================================== */
+
+.weather-main {
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+}
+
+
+.weather-icon {
+    flex: 0 0 auto;
+
+    font-size:
+        clamp(42px, 5vw, 68px);
+
+    line-height: 1;
+}
+
+
+.weather-temperature-block {
+    min-width: 0;
+}
+
+
+.temperature {
+    font-size:
+        clamp(40px, 5vw, 68px);
+
+    font-weight: 800;
+
+    line-height: 0.9;
+
+    white-space: nowrap;
+}
+
+
+.weather-description {
+    margin-top: 5px;
+
+    font-size:
+        clamp(13px, 1.35vw, 19px);
+
+    color: var(--secondary);
+
+    white-space: normal;
+}
+
+
+/* =====================================================
+   TODAY / HUMIDITY / RAIN
+
+   ALWAYS VERTICAL
+===================================================== */
+
+.weather-details {
+    min-width: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        1fr;
+
+    gap: 4px;
+}
+
+
 .weather-detail {
     min-width: 0;
-    padding: 6px 10px;
-    border-radius: 14px;
-    background: var(--small-card);
+
+    padding: 5px 8px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 8px;
+
+    border-radius: 12px;
+
+    background: var(--item);
 }
+
 
 .weather-detail-label {
     display: block;
+
+    flex: 0 0 auto;
+
     font-size: 11px;
+
     color: var(--secondary);
+
+    white-space: nowrap;
 }
+
 
 .weather-detail-value {
     display: block;
-    margin-top: 1px;
-    font-size: clamp(14px, 1.45vw, 20px);
-    font-weight: 800;
-    white-space: nowrap;
-}
 
-.hko-forecast,
-.hko-special {
-    display: none;
     min-width: 0;
+
+    font-size:
+        clamp(13px, 1.35vw, 20px);
+
+    white-space: nowrap;
+
+    text-align: right;
+}
+
+
+/* =====================================================
+   HKO TEXT AREA
+
+   RIGHT COLUMN
+
+   天氣預測
+   特別天氣提示
+
+   TWO COMPLETELY INDEPENDENT
+   SCROLL AREAS
+===================================================== */
+
+.weather-hko-text {
+    min-width: 0;
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-rows:
+        minmax(0, 1fr)
+        minmax(0, 1fr);
+
+    gap: 7px;
+
     overflow: hidden;
-    text-overflow: ellipsis;
 }
 
-.hko-forecast {
-    margin-top: 5px;
-    font-size: clamp(9px, 0.82vw, 12px);
-    line-height: 1.25;
-    color: var(--secondary);
-}
 
-.hko-special {
-    margin-top: 4px;
-    padding: 4px 8px;
+/* =====================================================
+   INDIVIDUAL HKO PANEL
+===================================================== */
+
+.weather-hko-section {
+    min-width: 0;
+    min-height: 0;
+
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    margin: 0;
+    padding: 6px 9px;
+
     border-radius: 12px;
-    background: rgba(230,173,181,0.36);
-    font-size: clamp(9px, 0.82vw, 12px);
-    font-weight: 700;
-    line-height: 1.2;
+
+    background: var(--item);
+
+    overflow: hidden;
+}
+
+
+.weather-hko-section.hidden {
+    display: none;
+}
+
+
+/* =====================================================
+   IF ONLY ONE HKO SECTION IS AVAILABLE
+   IT USES THE FULL RIGHT COLUMN
+===================================================== */
+
+.weather-hko-text:has(
+    .weather-hko-section:not(.hidden):only-child
+) {
+    grid-template-rows:
+        minmax(0, 1fr);
+}
+
+
+/* =====================================================
+   HKO LABEL
+===================================================== */
+
+.weather-hko-label {
+    flex: 0 0 auto;
+
+    margin-bottom: 3px;
+
+    font-size:
+        clamp(11px, 1.1vw, 15px);
+
+    font-weight: 800;
+
     color: var(--text);
 }
 
-.updated {
-    margin-top: 4px;
-    font-size: 10px;
-    color: var(--muted);
+
+/* =====================================================
+   HKO CONTENT
+
+   EACH PANEL SCROLLS INDEPENDENTLY
+===================================================== */
+
+.weather-hko-content {
+    min-width: 0;
+    min-height: 0;
+
+    flex: 1 1 0;
+
+    height: 0;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    padding-right: 4px;
+
+    font-size:
+        clamp(10px, 1vw, 14px);
+
+    line-height: 1.4;
+
+    color: var(--secondary);
+
+    white-space: normal;
+
+    overflow-wrap: anywhere;
+    word-break: break-word;
+
+    scrollbar-width: thin;
+
+    overscroll-behavior: contain;
 }
 
-/* FORECAST */
+
+.weather-hko-content::-webkit-scrollbar {
+    width: 5px;
+}
+
+
+.weather-hko-content::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+
+.weather-hko-content::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+
+    background:
+        rgba(143, 84, 96, 0.45);
+}
+
+
+/* =====================================================
+   IPAD / NARROW
+===================================================== */
+
+@media (max-width: 900px) {
+
+    .weather-card {
+        padding: 9px 10px;
+    }
+
+
+    .weather-layout {
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(0, 2fr);
+
+        gap: 8px;
+    }
+
+
+    .weather-main {
+        gap: 9px;
+    }
+
+
+    .weather-icon {
+        font-size: 48px;
+    }
+
+
+    .weather-detail {
+        padding: 4px 6px;
+    }
+
+
+    .weather-detail-value {
+        font-size: 15px;
+    }
+
+
+    .weather-hko-content {
+        font-size: 11px;
+    }
+
+}
+
+
+/* =====================================================
+   PORTRAIT IPAD
+
+   SAME LAYOUT:
+   LEFT = CURRENT WEATHER + DETAILS
+   RIGHT = TWO HKO PANELS
+===================================================== */
+
+@media (orientation: portrait) and (min-width: 601px) {
+
+    .weather-layout {
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(0, 2fr);
+
+        gap: 8px;
+    }
+
+
+    .weather-main {
+        gap: 8px;
+    }
+
+
+    .weather-icon {
+        font-size:
+            clamp(40px, 7vw, 58px);
+    }
+
+
+    .weather-detail {
+        padding: 4px 6px;
+    }
+
+}
+
+
+/* =====================================================
+   PHONE
+===================================================== */
+
+@media (max-width: 600px) {
+
+    .weather-layout {
+        grid-template-columns: 1fr;
+
+        grid-template-rows:
+            auto
+            minmax(180px, 1fr);
+
+        overflow: visible;
+    }
+
+
+    .weather-left-column {
+        grid-template-rows:
+            auto
+            auto;
+    }
+
+
+    .weather-hko-text {
+        min-height: 180px;
+    }
+
+}
+
+
+/* =====================================================
+   HOURLY FORECAST
+===================================================== */
+
 .forecast-card {
     min-width: 0;
     min-height: 0;
+
     padding: 9px 12px;
-    display: flex;
-    flex-direction: column;
 }
 
+
 .forecast {
-    flex: 1;
-    min-height: 0;
-    margin-top: 4px;
+    height: calc(100% - 28px);
+
     display: grid;
-    grid-template-columns: repeat(8, minmax(0, 1fr));
+
+    grid-template-columns:
+        repeat(8, minmax(0, 1fr));
+
     gap: 6px;
-    overflow: hidden;
+
+    margin-top: 4px;
 }
+
 
 .forecast-item {
     min-width: 0;
-    min-height: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 3px;
+
+    padding: 5px 3px;
+
+    text-align: center;
+
     border-radius: 13px;
-    background: var(--small-card);
+
+    background: var(--item);
 }
 
-.forecast-time { font-size: clamp(10px, 1vw, 14px); color: var(--secondary); }
-.forecast-icon { margin: 2px 0; font-size: clamp(18px, 2vw, 28px); }
-.forecast-temp { font-size: clamp(13px, 1.4vw, 19px); font-weight: 800; }
-.forecast-rain { font-size: clamp(9px, 0.9vw, 12px); color: var(--secondary); }
 
-/* MTR + CALENDAR */
+.forecast-time {
+    font-size: 11px;
+
+    color: var(--secondary);
+}
+
+
+.forecast-icon {
+    margin: 2px 0;
+
+    font-size: clamp(17px, 2vw, 26px);
+}
+
+
+.forecast-temp {
+    font-size: clamp(13px, 1.5vw, 19px);
+
+    font-weight: 800;
+}
+
+
+.forecast-rain {
+    font-size: 10px;
+
+    color: var(--secondary);
+}
+
+
+/* =====================================================
+   MTR + CALENDAR
+===================================================== */
+
 .middle-grid {
     min-width: 0;
     min-height: 0;
+
     display: grid;
-    grid-template-columns: minmax(175px, 0.34fr) minmax(0, 2.35fr);
-    gap: 7px;
+
+    grid-template-columns:
+        minmax(250px, 0.78fr)
+        minmax(0, 2.22fr);
+
+    gap: 8px;
 }
 
-.mtr-card,
-.calendar-card {
+
+/* MTR */
+
+.mtr-card {
     min-width: 0;
     min-height: 0;
-    padding: 9px 12px;
+
+    padding: 9px 11px;
+
     display: flex;
     flex-direction: column;
 }
 
+
 .mtr-grid {
-    flex: 1;
+    min-width: 0;
     min-height: 0;
-    margin-top: 4px;
+
+    flex: 1;
+
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 7px;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 9px;
+
+    margin-top: 4px;
 }
+
 
 .mtr-direction {
     min-width: 0;
+}
+
+
+.direction-title {
+    margin-bottom: 3px;
+
+    font-size: clamp(12px, 1.15vw, 16px);
+
+    font-weight: 800;
+}
+
+
+.train-list {
+    display: flex;
+    flex-direction: column;
+
+    gap: 3px;
+
+    min-width: 0;
+
+    overflow: hidden;
+}
+
+
+.train {
+    min-width: 0;
+
+    padding: 3px 5px;
+
+    border-radius: 9px;
+
+    background: var(--item);
+
+    text-align: center;
+}
+
+
+.train-time {
+    font-size: clamp(13px, 1.3vw, 18px);
+
+    font-weight: 800;
+
+    white-space: nowrap;
+}
+
+
+.train-destination {
+    font-size: clamp(10px, 1vw, 14px);
+
+    color: var(--secondary);
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+/* CALENDAR */
+
+.calendar-card {
+    min-width: 0;
     min-height: 0;
+
+    padding: 9px 13px;
+
     display: flex;
     flex-direction: column;
 }
 
-.direction-title {
-    margin-bottom: 3px;
-    font-size: clamp(11px, 1.1vw, 16px);
-    font-weight: 800;
-}
-
-.train-list {
-    min-width: 0;
-    min-height: 0;
-    display: grid;
-    grid-template-columns: 1fr;
-    align-content: start;
-    gap: 4px;
-    overflow-y: auto;
-}
-
-.train {
-    min-width: 0;
-    padding: 4px 3px;
-    border-radius: 10px;
-    text-align: center;
-    background: var(--small-card);
-}
-
-.train-time {
-    font-size: clamp(12px, 1.15vw, 17px);
-    font-weight: 800;
-    white-space: nowrap;
-}
-
-.train-destination {
-    margin-top: 1px;
-    font-size: 9px;
-    color: var(--secondary);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
 
 .calendar-list {
-    flex: 1;
+    min-width: 0;
     min-height: 0;
-    margin-top: 5px;
+
+    flex: 1;
+
+    margin-top: 4px;
+
     overflow-y: auto;
-}
 
-.calendar-empty {
-    font-size: clamp(12px, 1.15vw, 16px);
+    padding-right: 4px;
+
+    font-size: clamp(12px, 1.2vw, 17px);
+
     color: var(--secondary);
+
+    scrollbar-width: thin;
 }
 
-/* NEWS */
+
+/* =====================================================
+   NEWS
+===================================================== */
+
 .news-grid {
     min-width: 0;
     min-height: 0;
+
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 7px;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 8px;
 }
+
 
 .news-card {
     min-width: 0;
     min-height: 0;
-    padding: 9px 13px;
+
+    padding: 10px 13px;
+
     display: flex;
     flex-direction: column;
 }
 
+
 .news-subtitle {
-    margin-top: 2px;
+    flex: 0 0 auto;
+
+    margin-top: 1px;
+
     font-size: 11px;
+
     color: var(--secondary);
 }
 
+
 .news-list {
-    flex: 1;
+    min-width: 0;
     min-height: 0;
-    margin-top: 4px;
+
+    flex: 1;
+
+    margin-top: 5px;
+
     overflow-y: auto;
     overflow-x: hidden;
+
     padding-right: 5px;
+
     scrollbar-width: thin;
+
+    overscroll-behavior: contain;
 }
 
-.news-list::-webkit-scrollbar { width: 5px; }
-.news-list::-webkit-scrollbar-thumb {
-    background: rgba(130,76,87,0.40);
-    border-radius: 20px;
+
+.news-list::-webkit-scrollbar {
+    width: 5px;
 }
+
+
+.news-list::-webkit-scrollbar-thumb {
+    border-radius: 20px;
+
+    background:
+        rgba(143, 84, 96, 0.45);
+}
+
 
 .news-item {
     display: block;
-    padding: 4px 2px;
-    border-bottom: 1px solid rgba(140,85,95,0.16);
-    color: var(--text);
-    text-decoration: none;
-    font-size: clamp(11px, 1.05vw, 15px);
-    line-height: 1.25;
-}
-.news-item:hover { text-decoration: underline; }
 
-/* FOOTER */
+    padding: 5px 2px;
+
+    color: var(--text);
+
+    text-decoration: none;
+
+    font-size: clamp(11px, 1.05vw, 15px);
+
+    line-height: 1.3;
+
+    overflow-wrap: anywhere;
+
+    border-bottom:
+        1px solid rgba(160, 99, 110, 0.17);
+}
+
+
+.news-item:hover {
+    text-decoration: underline;
+}
+
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
 footer {
     min-width: 0;
+
     display: flex;
+
     justify-content: space-between;
-    gap: 10px;
+    align-items: center;
+
+    padding: 0 2px;
+
     font-size: 10px;
-    line-height: 1;
-    color: rgba(70,55,60,0.55);
+
+    line-height: 1.1;
+
+    color:
+        rgba(70, 55, 60, 0.58);
 }
 
-/* TABLET PORTRAIT */
-@media (orientation: portrait) and (min-width: 600px) {
+
+/* =====================================================
+   IPAD / NARROW
+===================================================== */
+
+@media (max-width: 900px) {
+
+    .dashboard {
+        padding:
+            max(8px, env(safe-area-inset-top))
+            10px
+            max(5px, env(safe-area-inset-bottom));
+    }
+
+
     .dashboard-content {
         grid-template-rows:
-            minmax(0, 1.35fr)
-            minmax(0, 0.62fr)
-            minmax(0, 0.90fr)
-            minmax(0, 1fr);
+            minmax(235px, 2.1fr)
+            minmax(85px, 0.7fr)
+            minmax(105px, 0.9fr)
+            minmax(120px, 1fr);
     }
+
 
     .top-grid {
-        grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.55fr);
+        grid-template-columns:
+            minmax(190px, 0.72fr)
+            minmax(0, 1.28fr);
     }
+
+
+    .date-main {
+        font-size: clamp(22px, 3.3vw, 32px);
+    }
+
 
     .analog-clock {
-        width: 185px;
-        height: 185px;
+        width: min(100%, 165px);
     }
 
-    .middle-grid {
-        grid-template-columns: minmax(175px, 0.55fr) minmax(0, 1.65fr);
-    }
-
-    .train-list {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
-
-/* LANDSCAPE: keep 30° clear and details vertically aligned */
-@media (orientation: landscape) and (min-width: 700px) {
-    .dashboard-content {
-        grid-template-rows:
-            minmax(0, 1.42fr)
-            minmax(0, 0.62fr)
-            minmax(0, 0.72fr)
-            minmax(0, 0.96fr);
-    }
 
     .weather-card {
-        display: grid;
-        grid-template-columns: minmax(210px, 0.78fr) minmax(0, 1.72fr);
-        grid-template-rows: auto minmax(62px, auto) auto auto auto;
-        column-gap: 12px;
-        row-gap: 3px;
-        align-items: center;
+        padding: 9px 10px;
     }
 
-    .weather-card > .card-title {
-        grid-column: 1 / -1;
-        grid-row: 1;
+
+    .weather-summary-row {
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(145px, 0.78fr);
+
+        gap: 10px;
     }
+
+
+    .weather-icon {
+        font-size: 48px;
+    }
+
 
     .weather-main {
-        grid-column: 1;
-        grid-row: 2 / 4;
-        min-height: 0;
-        flex: none;
-        align-self: stretch;
-        display: flex;
-        align-items: center;
         gap: 10px;
-        overflow: hidden;
     }
 
-    .weather-details {
-        grid-column: 2;
-        grid-row: 2;
-        width: 100%;
-        align-self: center;
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-        gap: 6px;
+
+    .weather-detail {
+        padding: 5px 6px;
     }
 
-    .hko-forecast {
-        grid-column: 1 / -1;
-        grid-row: 3;
-        margin-top: 0;
+
+    .weather-detail-value {
+        font-size: 15px;
     }
 
-    .hko-special {
-        grid-column: 1 / -1;
-        grid-row: 4;
-        margin-top: 0;
+
+    .weather-hko-content {
+        font-size: 11px;
     }
 
-    .updated {
-        grid-column: 1 / -1;
-        grid-row: 5;
-        margin-top: 0;
-    }
 
     .middle-grid {
-        grid-template-columns: minmax(175px, 0.30fr) minmax(0, 2.55fr);
+        grid-template-columns:
+            minmax(210px, 0.75fr)
+            minmax(0, 1.85fr);
     }
 
-    .mtr-card,
-    .calendar-card {
-        padding: 8px 10px;
-    }
 
     .mtr-grid {
         gap: 6px;
     }
 
-    .date-main {
-        font-size: clamp(30px, 3.3vw, 48px);
-    }
 }
 
-/* SMALL SCREENS */
-@media (max-width: 599px) {
-    html, body { overflow: auto; }
+
+/* =====================================================
+   PORTRAIT IPAD
+
+   IMPORTANT:
+   WEATHER DETAILS STAY ON THE RIGHT
+   AND STAY VERTICAL
+===================================================== */
+
+@media (orientation: portrait) and (min-width: 601px) {
+
+    .top-grid {
+        grid-template-columns:
+            minmax(180px, 0.68fr)
+            minmax(0, 1.32fr);
+    }
+
+
+    .middle-grid {
+        grid-template-columns:
+            minmax(190px, 0.72fr)
+            minmax(0, 1.95fr);
+    }
+
+
+    .weather-summary-row {
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(150px, 0.72fr);
+    }
+
+}
+
+
+/* =====================================================
+   PHONE
+===================================================== */
+
+@media (max-width: 600px) {
+
+    html,
+    body {
+        overflow: auto;
+    }
+
 
     .dashboard {
         height: auto;
         min-height: 100vh;
+
         overflow: visible;
+
+        grid-template-rows:
+            auto
+            auto;
     }
+
 
     .dashboard-content {
         display: flex;
         flex-direction: column;
+
         overflow: visible;
     }
+
 
     .top-grid,
     .middle-grid,
@@ -618,17 +1364,618 @@ footer {
         grid-template-columns: 1fr;
     }
 
-    .card {
+
+    .clock-card,
+    .weather-card,
+    .forecast-card,
+    .mtr-card,
+    .calendar-card,
+    .news-card {
         min-height: 180px;
     }
 
-    .forecast {
-        overflow-x: auto;
-        grid-template-columns: repeat(8, 75px);
-    }
 
     .date-main {
         white-space: normal;
-        font-size: 26px;
+    }
+
+
+    .forecast {
+        grid-template-columns:
+            repeat(8, minmax(70px, 1fr));
+
+        overflow-x: auto;
+    }
+
+
+    .weather-summary-row {
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(135px, 0.75fr);
+
+        gap: 8px;
+    }
+
+}
+
+/* =====================================================
+   RESPONSIVE LAYOUT UPDATE
+   PORTRAIT:
+   - Bigger digital time and analog clock
+   - Weather icon above temperature, both larger
+   - Forecast cards stay same size; larger content
+   - MTR supports 3 departures per direction
+
+   LANDSCAPE:
+   - Forecast: time / temp / icon + rain
+   - MTR spacing remains stable with 3 departures
+===================================================== */
+
+
+/* =====================================================
+   MTR DESTINATION
+===================================================== */
+
+.train-destination {
+    margin-top: 1px;
+
+    min-width: 0;
+
+    font-size:
+        clamp(10px, 0.95vw, 14px);
+
+    line-height: 1.1;
+
+    color: var(--secondary);
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+/* =====================================================
+   LANDSCAPE
+===================================================== */
+
+@media (orientation: landscape) {
+
+    /* ---------------------------------------------
+       TODAY'S FORECAST
+
+               TIME
+                   TEMP
+          ICON         RAIN
+    --------------------------------------------- */
+
+    .forecast-item {
+
+        display: grid;
+
+        grid-template-columns:
+            1fr
+            1fr;
+
+        grid-template-rows:
+            auto
+            auto
+            auto;
+
+        align-items: center;
+
+        column-gap: 2px;
+
+        row-gap: 1px;
+
+        padding: 5px 6px;
+
+    }
+
+
+    .forecast-time {
+
+        grid-column: 1 / -1;
+
+        grid-row: 1;
+
+        text-align: center;
+
+    }
+
+
+    .forecast-temp {
+
+        grid-column: 2;
+
+        grid-row: 2;
+
+        justify-self: center;
+
+        text-align: center;
+
+    }
+
+
+    .forecast-icon {
+
+        grid-column: 1;
+
+        grid-row: 3;
+
+        margin: 0;
+
+        justify-self: center;
+
+    }
+
+
+    .forecast-rain {
+
+        grid-column: 2;
+
+        grid-row: 3;
+
+        justify-self: center;
+
+        text-align: center;
+
+    }
+
+
+    /* ---------------------------------------------
+       MTR
+       Keep spacing stable with 3 departures
+    --------------------------------------------- */
+
+    .mtr-card {
+
+        padding: 9px 10px;
+
+    }
+
+
+    .mtr-grid {
+
+        gap: 7px;
+
+        margin-top: 3px;
+
+    }
+
+
+    .train-list {
+
+        gap: 2px;
+
+    }
+
+
+    .train {
+
+        padding: 2px 4px;
+
+    }
+
+
+    .train-time {
+
+        font-size:
+            clamp(12px, 1.2vw, 17px);
+
+        line-height: 1.1;
+
+    }
+
+
+    .train-destination {
+
+        font-size:
+            clamp(9px, 0.85vw, 12px);
+
+    }
+
+}
+
+
+/* =====================================================
+   PORTRAIT IPAD
+===================================================== */
+
+@media (orientation: portrait) and (min-width: 601px) {
+
+
+    /* =================================================
+       DASHBOARD HEIGHTS
+
+       More space for MTR because each direction
+       now shows 3 departures
+    ================================================= */
+
+    .dashboard-content {
+
+        grid-template-rows:
+            minmax(320px, 2.45fr)
+            minmax(105px, 0.82fr)
+            minmax(150px, 1.12fr)
+            minmax(145px, 1.08fr);
+
+    }
+
+
+    /* =================================================
+       BIGGER DIGITAL TIME
+    ================================================= */
+
+    .digital-time {
+
+        font-size:
+            clamp(38px, 6.1vw, 68px);
+
+    }
+
+
+    /* =================================================
+       BIGGER ANALOG CLOCK
+    ================================================= */
+
+    .analog-clock {
+
+        width:
+            min(100%, 245px);
+
+    }
+
+
+    .clock-number {
+
+        font-size: 16px;
+
+    }
+
+
+    /* =================================================
+       CURRENT WEATHER
+
+       ICON
+       TEMPERATURE
+       DESCRIPTION
+    ================================================= */
+
+    .weather-main {
+
+        flex-direction: column;
+
+        align-items: center;
+
+        justify-content: center;
+
+        gap: 5px;
+
+        margin-top: 4px;
+
+        text-align: center;
+
+    }
+
+
+    .weather-icon {
+
+        font-size:
+            clamp(64px, 9vw, 98px);
+
+    }
+
+
+    .weather-temperature-block {
+
+        text-align: center;
+
+    }
+
+
+    .temperature {
+
+        font-size:
+            clamp(56px, 8.4vw, 92px);
+
+        line-height: 0.92;
+
+    }
+
+
+    .weather-description {
+
+        margin-top: 4px;
+
+        font-size:
+            clamp(15px, 2vw, 22px);
+
+    }
+
+
+    /* =================================================
+       TODAY'S FORECAST
+
+       Bubble size remains the same.
+       Only internal text and icons become bigger.
+    ================================================= */
+
+    .forecast {
+
+        gap: 6px;
+
+    }
+
+
+    .forecast-hour,
+    .forecast-item {
+
+        padding: 5px 3px;
+
+    }
+
+
+    .forecast-time {
+
+        font-size: 13px;
+
+    }
+
+
+    .forecast-icon {
+
+        font-size:
+            clamp(25px, 3.8vw, 40px);
+
+        margin: 2px 0;
+
+    }
+
+
+    .forecast-temp {
+
+        font-size:
+            clamp(17px, 2.5vw, 26px);
+
+    }
+
+
+    .forecast-rain {
+
+        font-size: 12px;
+
+    }
+
+
+    /* =================================================
+       MTR
+
+       Stable layout for 3 departures per direction
+    ================================================= */
+
+    .mtr-card {
+
+        padding: 9px 10px;
+
+    }
+
+
+    .mtr-grid {
+
+        gap: 7px;
+
+        margin-top: 3px;
+
+    }
+
+
+    .direction-title {
+
+        font-size:
+            clamp(13px, 1.9vw, 18px);
+
+    }
+
+
+    .train-list {
+
+        gap: 3px;
+
+    }
+
+
+    .train {
+
+        padding: 4px 5px;
+
+    }
+
+
+    .train-time {
+
+        font-size:
+            clamp(15px, 2.05vw, 20px);
+
+        line-height: 1.1;
+
+    }
+
+
+    .train-destination {
+
+        font-size:
+            clamp(11px, 1.55vw, 15px);
+
+    }
+
+}
+
+/* =====================================================
+   CURRENT WEATHER BUBBLE — FINAL LAYOUT OVERRIDE
+   ONLY affects the current weather bubble.
+   LEFT 1/3  = current weather + 今日/濕度/降雨
+   RIGHT 2/3 = 天氣預測 + 特別天氣提示
+   HKO panels scroll independently.
+===================================================== */
+
+.weather-layout {
+    grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, 2fr);
+
+    gap: 10px;
+}
+
+.weather-left-column {
+    min-width: 0;
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-rows:
+        minmax(0, 1fr)
+        auto;
+
+    gap: 7px;
+
+    overflow: hidden;
+}
+
+.weather-main {
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: row;
+
+    align-items: center;
+    justify-content: flex-start;
+
+    gap: 12px;
+
+    margin-top: 0;
+    text-align: left;
+}
+
+.weather-details {
+    min-width: 0;
+
+    display: grid;
+    grid-template-columns: 1fr;
+
+    gap: 4px;
+}
+
+.weather-hko-text {
+    min-width: 0;
+    min-height: 0;
+
+    display: grid;
+
+    grid-template-rows:
+        minmax(0, 1fr)
+        minmax(0, 1fr);
+
+    gap: 7px;
+
+    overflow: hidden;
+}
+
+.weather-hko-section {
+    min-width: 0;
+    min-height: 0;
+
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow: hidden;
+}
+
+.weather-hko-content {
+    min-width: 0;
+    min-height: 0;
+
+    flex: 1 1 0;
+    height: 0;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    overscroll-behavior: contain;
+}
+
+/* =====================================================
+   PORTRAIT iPAD
+   Same 1/3 + 2/3 structure.
+   Icon + temperature stay side-by-side.
+===================================================== */
+
+@media (orientation: portrait) and (min-width: 601px) {
+
+    .weather-layout {
+        grid-template-columns:
+            minmax(0, 1fr)
+            minmax(0, 2fr);
+
+        gap: 8px;
+    }
+
+    .weather-main {
+        flex-direction: row;
+
+        align-items: center;
+        justify-content: flex-start;
+
+        gap: 8px;
+
+        margin-top: 0;
+        text-align: left;
+    }
+
+    .weather-icon {
+        font-size:
+            clamp(48px, 7vw, 72px);
+    }
+
+    .temperature {
+        font-size:
+            clamp(44px, 6.2vw, 70px);
+
+        line-height: 0.92;
+    }
+
+    .weather-temperature-block {
+        text-align: left;
+    }
+
+    .weather-description {
+        font-size:
+            clamp(13px, 1.8vw, 20px);
+    }
+
+    .weather-details {
+        grid-template-columns: 1fr;
+    }
+
+    .weather-hko-text {
+        grid-template-rows:
+            minmax(0, 1fr)
+            minmax(0, 1fr);
+
+        gap: 7px;
+    }
+
+    .weather-hko-section {
+        min-height: 0;
+    }
+
+    .weather-hko-content {
+        min-height: 0;
+        overflow-y: auto;
+        overflow-x: hidden;
     }
 }
