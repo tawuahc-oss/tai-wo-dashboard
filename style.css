@@ -1197,7 +1197,7 @@ footer {
 
 
 /* =====================================================
-   PORTRAIT IPAD (直向 iPad 模式)
+   PORTRAIT IPAD (直向 iPad 模式 — 微調時鐘與氣温大小)
 ===================================================== */
 
 @media (orientation: portrait) and (min-width: 601px) {
@@ -1210,18 +1210,19 @@ footer {
             minmax(145px, 1.08fr);
     }
 
+    /* 稍微調小直向的電子時鐘字體 */
     .digital-time {
         font-size:
-            clamp(32px, 5.2vw, 54px);
+            clamp(26px, 4.2vw, 44px);
     }
 
     .analog-clock {
         width:
-            min(100%, 200px);
+            min(100%, 180px);
     }
 
     .clock-number {
-        font-size: 14px;
+        font-size: 13px;
         padding-top: 5px;
     }
 
@@ -1236,23 +1237,24 @@ footer {
 
     .weather-icon {
         font-size:
-            clamp(64px, 9vw, 98px);
+            clamp(52px, 7.5vw, 82px);
     }
 
     .weather-temperature-block {
         text-align: center;
     }
 
+    /* 稍微調小直向的當前氣溫字體 */
     .temperature {
         font-size:
-            clamp(56px, 8.4vw, 92px);
+            clamp(44px, 6.8vw, 76px);
         line-height: 0.92;
     }
 
     .weather-description {
         margin-top: 4px;
         font-size:
-            clamp(15px, 2vw, 22px);
+            clamp(14px, 1.8vw, 20px);
     }
 }
 
