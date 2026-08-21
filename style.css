@@ -23,21 +23,10 @@
 }
 
 
-html {
-    width: 100%;
-    height: 100%;
-    height: 100dvh;
-    height: -webkit-fill-available;
-
-    margin: 0;
-
-    background-color: #efbec4;
-}
-
-
 html,
 body {
     width: 100%;
+    height: 100%;
 
     margin: 0;
 
@@ -46,10 +35,6 @@ body {
 
 
 body {
-    min-height: 100%;
-    min-height: 100dvh;
-    min-height: -webkit-fill-available;
-
     font-family:
         -apple-system,
         BlinkMacSystemFont,
@@ -60,19 +45,13 @@ body {
 
     color: var(--text);
 
-    background-color: #efbec4;
-
-    background-image:
+    background:
         linear-gradient(
             135deg,
             var(--bg-top),
             var(--bg-main) 55%,
             #efbec4
         );
-
-    background-attachment: fixed;
-    background-repeat: no-repeat;
-    background-size: cover;
 }
 
 
@@ -81,24 +60,18 @@ body {
 ===================================================== */
 
 .dashboard {
-    position: fixed;
-
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-
     width: 100%;
+    height: 100vh;
+    height: 100dvh;
 
     max-width: 1600px;
 
     margin: 0 auto;
 
     padding:
-        max(10px, env(safe-area-inset-top, 0px))
-        max(18px, env(safe-area-inset-right, 0px))
-        max(10px, env(safe-area-inset-bottom, 0px))
-        max(18px, env(safe-area-inset-left, 0px));
+        max(10px, env(safe-area-inset-top))
+        18px
+        max(6px, env(safe-area-inset-bottom));
 
     display: grid;
 
@@ -234,7 +207,6 @@ body {
     position: relative;
 
     width: min(100%, 190px);
-    height: min(100%, 190px);
 
     aspect-ratio: 1;
 
@@ -523,17 +495,7 @@ body {
     min-height: 0;
 
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
 
-    gap: 6px;
-}
-
-
-.weather-icon-temp {
-    display: flex;
-    flex-direction: row;
     align-items: center;
 
     gap: 14px;
@@ -568,7 +530,7 @@ body {
 
 
 .weather-description {
-    margin-top: 2px;
+    margin-top: 5px;
 
     font-size:
         clamp(13px, 1.35vw, 19px);
@@ -734,8 +696,6 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
 
-    -webkit-overflow-scrolling: touch;
-
     padding-right: 4px;
 
     font-size:
@@ -753,17 +713,6 @@ body {
     scrollbar-width: thin;
 
     overscroll-behavior: contain;
-
-    mask-image: linear-gradient(
-        to bottom,
-        #000 calc(100% - 14px),
-        transparent 100%
-    );
-    -webkit-mask-image: linear-gradient(
-        to bottom,
-        #000 calc(100% - 14px),
-        transparent 100%
-    );
 }
 
 
@@ -806,11 +755,6 @@ body {
 
 
     .weather-main {
-        gap: 4px;
-    }
-
-
-    .weather-icon-temp {
         gap: 9px;
     }
 
@@ -919,15 +863,11 @@ body {
     min-height: 0;
 
     padding: 9px 12px;
-
-    display: flex;
-    flex-direction: column;
 }
 
 
 .forecast {
-    flex: 1 1 0;
-    min-height: 0;
+    height: calc(100% - 28px);
 
     display: grid;
 
@@ -942,22 +882,14 @@ body {
 
 .forecast-item {
     min-width: 0;
-    min-height: 0;
 
-    padding: 4px 3px;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    padding: 5px 3px;
 
     text-align: center;
 
     border-radius: 13px;
 
     background: var(--item);
-
-    overflow: hidden;
 }
 
 
@@ -1039,10 +971,6 @@ body {
 
 .mtr-direction {
     min-width: 0;
-    min-height: 0;
-
-    display: flex;
-    flex-direction: column;
 }
 
 
@@ -1059,11 +987,9 @@ body {
     display: flex;
     flex-direction: column;
 
-    flex: 1 1 0;
-    min-height: 0;
-    min-width: 0;
-
     gap: 3px;
+
+    min-width: 0;
 
     overflow: hidden;
 }
@@ -1071,23 +997,14 @@ body {
 
 .train {
     min-width: 0;
-    min-height: 0;
-
-    flex: 1 1 0;
 
     padding: 3px 5px;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
 
     border-radius: 9px;
 
     background: var(--item);
 
     text-align: center;
-
-    overflow: hidden;
 }
 
 
@@ -1269,88 +1186,18 @@ footer {
 ===================================================== */
 
 @media (orientation: landscape) {
-    .dashboard-content {
-        grid-template-rows:
-            minmax(220px, 1.7fr)
-            minmax(110px, 0.85fr)
-            minmax(140px, 1fr)
-            minmax(80px, 0.75fr);
-    }
-
     .temperature {
         font-size: clamp(28px, 3.2vw, 40px);
     }
-
+    
     .weather-icon {
         font-size: clamp(32px, 3.8vw, 48px);
-    }
-
-    .weather-main {
-        flex-direction: column;
-        align-items: flex-start;
-        justify-content: center;
-        text-align: left;
-        gap: 4px;
-    }
-
-    .weather-icon-temp {
-        flex-direction: row;
-        align-items: center;
-        gap: 12px;
-    }
-
-    .forecast-card {
-        padding: 6px 10px;
-    }
-
-    .forecast {
-        gap: 5px;
-        margin-top: 2px;
-    }
-
-    .forecast-item {
-        padding: 3px 2px;
-    }
-
-    .forecast-time {
-        font-size: 10px;
-    }
-
-    .forecast-icon {
-        margin: 1px 0;
-        font-size: clamp(15px, 1.7vw, 22px);
-    }
-
-    .forecast-temp {
-        font-size: clamp(12px, 1.3vw, 16px);
-    }
-
-    .forecast-rain {
-        font-size: 9px;
-        line-height: 1.1;
-    }
-
-    .mtr-card {
-        padding: 7px 9px;
-    }
-
-    .train {
-        padding: 2px 4px;
-    }
-
-    .train-time {
-        font-size: clamp(12px, 1.15vw, 16px);
-        line-height: 1.05;
-    }
-
-    .train-destination {
-        font-size: clamp(9px, 0.85vw, 12px);
     }
 }
 
 
 /* =====================================================
-   PORTRAIT IPAD (直向 iPad 模式 — 微調時鐘與氣温大小)
+   PORTRAIT IPAD (直向 iPad 模式)
 ===================================================== */
 
 @media (orientation: portrait) and (min-width: 601px) {
@@ -1363,21 +1210,18 @@ footer {
             minmax(145px, 1.08fr);
     }
 
-    /* 稍微調小直向的電子時鐘字體 */
     .digital-time {
         font-size:
-            clamp(26px, 4.2vw, 44px);
+            clamp(32px, 5.2vw, 54px);
     }
 
     .analog-clock {
         width:
-            min(100%, 180px);
-        height:
-            min(100%, 180px);
+            min(100%, 200px);
     }
 
     .clock-number {
-        font-size: 13px;
+        font-size: 14px;
         padding-top: 5px;
     }
 
@@ -1385,38 +1229,30 @@ footer {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 4px;
+        gap: 5px;
         margin-top: 4px;
         text-align: center;
     }
 
-    .weather-icon-temp {
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 2px;
-    }
-
     .weather-icon {
         font-size:
-            clamp(52px, 7.5vw, 82px);
+            clamp(64px, 9vw, 98px);
     }
 
     .weather-temperature-block {
         text-align: center;
     }
 
-    /* 稍微調小直向的當前氣溫字體 */
     .temperature {
         font-size:
-            clamp(44px, 6.8vw, 76px);
+            clamp(56px, 8.4vw, 92px);
         line-height: 0.92;
     }
 
     .weather-description {
         margin-top: 4px;
         font-size:
-            clamp(14px, 1.8vw, 20px);
+            clamp(15px, 2vw, 22px);
     }
 }
 
@@ -1450,46 +1286,13 @@ footer {
     min-height: 0;
 
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 6px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
 
     margin-top: 0;
     text-align: left;
-}
-
-.weather-icon-temp {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 12px;
-}
-
-
-@media (orientation: portrait) and (min-width: 601px) {
-    .weather-main {
-        align-items: center;
-        text-align: center;
-    }
-
-    .weather-icon-temp {
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 2px;
-    }
-
-    .weather-icon {
-        font-size:
-            clamp(52px, 7.5vw, 82px);
-    }
-
-    .temperature {
-        font-size:
-            clamp(44px, 6.8vw, 76px);
-        line-height: 0.92;
-    }
 }
 
 .weather-details {
