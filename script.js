@@ -2101,7 +2101,7 @@ async function loadCalendar() {
     }
 
 
-    // 2. 直接內建你剛才提供的 Google 生日資料
+    // 2. 內建 Google 生日資料[cite: 4]
     const googleBirthdaysICS = `
 BEGIN:VCALENDAR
 VERSION:2.0
@@ -2240,7 +2240,7 @@ END:VEVENT
             results.push(term);
         }
 
-        // 2. 加入當天符合的行程與生日 (自動轉換每年重複)
+        // 2. 加入當天符合的行程與生日
         const targetMonth = date.getMonth();
         const targetDay = date.getDate();
 
@@ -2264,7 +2264,8 @@ END:VEVENT
 
     if (todayEvents.length === 0) {
 
-        todayContainer.innerHTML = "";
+        todayContainer.innerHTML =
+            `<div class="calendar-empty" style="color: var(--muted); font-style: italic;">今日無行程</div>`;
 
     }
 
@@ -2309,15 +2310,14 @@ END:VEVENT
 
     if (tomorrowEvents.length === 0) {
 
-        tomorrowContainer.innerHTML = "";
+        tomorrowContainer.innerHTML =
+            `<div class="calendar-empty" style="color: var(--muted); font-style: italic;">明日無行程</div>`;
 
     }
 
     else {
 
         tomorrowContainer.innerHTML = "";
-
-    }
 
         tomorrowEvents.forEach(
             e => {
@@ -2348,6 +2348,8 @@ END:VEVENT
 
             }
         );
+
+    }
 
 }
 
