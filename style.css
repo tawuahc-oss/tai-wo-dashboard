@@ -642,7 +642,7 @@ body {
 
 
 /* =====================================================
-   HKO TEXT AREA
+   HKO TEXT AREA (預設直排)
 ===================================================== */
 
 .weather-hko-text {
@@ -654,6 +654,7 @@ body {
     grid-template-rows:
         minmax(0, 1fr)
         minmax(0, 1fr);
+    grid-template-columns: 1fr;
 
     gap: 7px;
 
@@ -783,131 +784,6 @@ body {
 
     background:
         rgba(143, 84, 96, 0.45);
-}
-
-
-/* =====================================================
-   IPAD / NARROW
-===================================================== */
-
-@media (max-width: 900px) {
-
-    .weather-card {
-        padding: 9px 10px;
-    }
-
-
-    .weather-layout {
-        grid-template-columns:
-            minmax(0, 1fr)
-            minmax(0, 2fr);
-
-        gap: 8px;
-    }
-
-
-    .weather-main {
-        gap: 4px;
-    }
-
-
-    .weather-icon-temp {
-        gap: 9px;
-    }
-
-
-    .weather-icon {
-        font-size: 48px;
-    }
-
-
-    .weather-detail {
-        padding: 4px 6px;
-    }
-
-
-    .weather-detail-value {
-        font-size: 15px;
-    }
-
-
-    .weather-hko-content {
-        font-size: 11px;
-    }
-
-}
-
-
-/* =====================================================
-   PHONE
-===================================================== */
-
-@media (max-width: 600px) {
-
-    html,
-    body {
-        overflow: auto;
-    }
-
-
-    .dashboard {
-        height: auto;
-        min-height: 100vh;
-
-        overflow: visible;
-
-        grid-template-rows:
-            auto
-            auto;
-    }
-
-
-    .dashboard-content {
-        display: flex;
-        flex-direction: column;
-
-        overflow: visible;
-    }
-
-
-    .top-grid,
-    .middle-grid,
-    .news-grid {
-        grid-template-columns: 1fr;
-    }
-
-
-    .clock-card,
-    .weather-card,
-    .forecast-card,
-    .mtr-card,
-    .calendar-card,
-    .news-card {
-        min-height: 180px;
-    }
-
-
-    .date-main {
-        white-space: normal;
-    }
-
-
-    .forecast {
-        grid-template-columns:
-            repeat(8, minmax(70px, 1fr));
-
-        overflow-x: auto;
-    }
-
-
-    .weather-summary-row {
-        grid-template-columns:
-            minmax(0, 1fr)
-            minmax(135px, 0.75fr);
-
-        gap: 8px;
-    }
-
 }
 
 
@@ -1266,6 +1142,47 @@ footer {
 
 
 /* =====================================================
+   IPAD / NARROW (響應式微調)
+===================================================== */
+
+@media (max-width: 900px) {
+    .weather-card { padding: 9px 10px; }
+    .weather-layout { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr); gap: 8px; }
+    .weather-main { gap: 4px; }
+    .weather-icon-temp { gap: 9px; }
+    .weather-icon { font-size: 48px; }
+    .weather-detail { padding: 4px 6px; }
+    .weather-detail-value { font-size: 15px; }
+    .weather-hko-content { font-size: 11px; }
+}
+
+
+/* =====================================================
+   PHONE (手機模式)
+===================================================== */
+
+@media (max-width: 600px) {
+    html, body { overflow: auto; }
+    .dashboard {
+        height: auto;
+        min-height: 100vh;
+        overflow: visible;
+        grid-template-rows: auto auto;
+    }
+    .dashboard-content {
+        display: flex;
+        flex-direction: column;
+        overflow: visible;
+    }
+    .top-grid, .middle-grid, .news-grid { grid-template-columns: 1fr; }
+    .clock-card, .weather-card, .forecast-card, .mtr-card, .calendar-card, .news-card { min-height: 180px; }
+    .date-main { white-space: normal; }
+    .forecast { grid-template-columns: repeat(8, minmax(70px, 1fr)); overflow-x: auto; }
+    .weather-summary-row { grid-template-columns: minmax(0, 1fr) minmax(135px, 0.75fr); gap: 8px; }
+}
+
+
+/* =====================================================
    LANDSCAPE (橫向模式)
 ===================================================== */
 
@@ -1278,13 +1195,8 @@ footer {
             minmax(120px, 1.2fr);
     }
 
-    .temperature {
-        font-size: clamp(28px, 3.2vw, 40px);
-    }
-
-    .weather-icon {
-        font-size: clamp(32px, 3.8vw, 48px);
-    }
+    .temperature { font-size: clamp(28px, 3.2vw, 40px); }
+    .weather-icon { font-size: clamp(32px, 3.8vw, 48px); }
 
     .weather-main {
         flex-direction: row;
@@ -1300,68 +1212,31 @@ footer {
         gap: 12px;
     }
     
-    .weather-description {
-        margin-top: 0;
-    }
+    .weather-description { margin-top: 0; }
 
-    /* 將 HKO 文字區塊從上下改為左右並排 */
+    /* ★ 橫向時，強迫 HKO 區塊填滿高度，並改為左右兩欄並排 ★ */
     .weather-hko-text {
-        grid-template-rows: minmax(0, 1fr);
+        height: 100%;
+        grid-template-rows: minmax(0, 1fr) !important;
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     }
 
-    /* 如果只有一個提示顯示時，讓它填滿整個寬度 */
     .weather-hko-text:has(.weather-hko-section:not(.hidden):only-child) {
         grid-template-columns: minmax(0, 1fr);
     }
 
-    .forecast-card {
-        padding: 6px 10px;
-    }
+    .forecast-card { padding: 6px 10px; }
+    .forecast { gap: 5px; margin-top: 2px; }
+    .forecast-item { padding: 3px 2px; }
+    .forecast-time { font-size: 10px; }
+    .forecast-icon { margin: 1px 0; font-size: clamp(15px, 1.7vw, 22px); }
+    .forecast-temp { font-size: clamp(12px, 1.3vw, 16px); }
+    .forecast-rain { font-size: 9px; line-height: 1.1; }
 
-    .forecast {
-        gap: 5px;
-        margin-top: 2px;
-    }
-
-    .forecast-item {
-        padding: 3px 2px;
-    }
-
-    .forecast-time {
-        font-size: 10px;
-    }
-
-    .forecast-icon {
-        margin: 1px 0;
-        font-size: clamp(15px, 1.7vw, 22px);
-    }
-
-    .forecast-temp {
-        font-size: clamp(12px, 1.3vw, 16px);
-    }
-
-    .forecast-rain {
-        font-size: 9px;
-        line-height: 1.1;
-    }
-
-    .mtr-card {
-        padding: 7px 9px;
-    }
-
-    .train {
-        padding: 2px 4px;
-    }
-
-    .train-time {
-        font-size: clamp(12px, 1.15vw, 16px);
-        line-height: 1.05;
-    }
-
-    .train-destination {
-        font-size: clamp(9px, 0.85vw, 12px);
-    }
+    .mtr-card { padding: 7px 9px; }
+    .train { padding: 2px 4px; }
+    .train-time { font-size: clamp(12px, 1.15vw, 16px); line-height: 1.05; }
+    .train-destination { font-size: clamp(9px, 0.85vw, 12px); }
 }
 
 
@@ -1380,15 +1255,12 @@ footer {
     }
 
     .digital-time {
-        font-size:
-            clamp(26px, 4.2vw, 44px);
+        font-size: clamp(26px, 4.2vw, 44px);
     }
 
     .analog-clock {
-        width:
-            min(100%, 180px);
-        height:
-            min(100%, 180px);
+        width: min(100%, 180px);
+        height: min(100%, 180px);
     }
 
     .clock-number {
@@ -1413,8 +1285,7 @@ footer {
     }
 
     .weather-icon {
-        font-size:
-            clamp(52px, 7.5vw, 82px);
+        font-size: clamp(52px, 7.5vw, 82px);
     }
 
     .weather-temperature-block {
@@ -1422,127 +1293,18 @@ footer {
     }
 
     .temperature {
-        font-size:
-            clamp(44px, 6.8vw, 76px);
+        font-size: clamp(44px, 6.8vw, 76px);
         line-height: 0.92;
     }
 
     .weather-description {
         margin-top: 4px;
-        font-size:
-            clamp(14px, 1.8vw, 20px);
-    }
-}
-
-
-/* =====================================================
-   CURRENT WEATHER BUBBLE OVERRIDE
-===================================================== */
-
-.weather-layout {
-    grid-template-columns:
-        minmax(0, 1fr)
-        minmax(0, 2fr);
-    gap: 10px;
-}
-
-.weather-left-column {
-    min-width: 0;
-    min-height: 0;
-
-    display: grid;
-    grid-template-rows:
-        minmax(0, 1fr)
-        auto;
-    gap: 7px;
-
-    overflow: hidden;
-}
-
-.weather-main {
-    min-width: 0;
-    min-height: 0;
-
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 6px;
-
-    margin-top: 0;
-    text-align: left;
-}
-
-.weather-icon-temp {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 12px;
-}
-
-
-@media (orientation: portrait) and (min-width: 601px) {
-    .weather-main {
-        align-items: center;
-        text-align: center;
+        font-size: clamp(14px, 1.8vw, 20px);
     }
 
-    .weather-icon-temp {
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 2px;
+    /* ★ 直向時，確保 HKO 區塊為上下兩列垂直排列 ★ */
+    .weather-hko-text {
+        grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
+        grid-template-columns: 1fr;
     }
-
-    .weather-icon {
-        font-size:
-            clamp(52px, 7.5vw, 82px);
-    }
-
-    .temperature {
-        font-size:
-            clamp(44px, 6.8vw, 76px);
-        line-height: 0.92;
-    }
-}
-
-.weather-details {
-    min-width: 0;
-
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 4px;
-}
-
-.weather-hko-text {
-    min-width: 0;
-    min-height: 0;
-
-    display: grid;
-    grid-template-rows:
-        minmax(0, 1fr)
-        minmax(0, 1fr);
-    gap: 7px;
-
-    overflow: hidden;
-}
-
-.weather-hko-section {
-    min-width: 0;
-    min-height: 0;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-.weather-hko-content {
-    min-width: 0;
-    min-height: 0;
-    flex: 1 1 0;
-    height: 0;
-
-    overflow-y: auto;
-    overflow-x: hidden;
-    overscroll-behavior: contain;
 }
