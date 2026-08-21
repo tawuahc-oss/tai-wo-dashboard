@@ -51,9 +51,11 @@
 
     <div class="weather-column">
         <div class="date-bubble">
-            <!-- 語音朗讀開關按鈕與重新整理按鈕並排在右上方 -->
-            <button id="ttsToggleButton" class="action-button" type="button" title="切換語音朗讀">🔇</button>
-            <button id="refreshButton" class="refresh-button" type="button" title="重新整理">↻</button>
+            <!-- 右上角按鈕群組：語音按鈕與重新整理按鈕使用完全相同的樣式 -->
+            <div class="top-actions">
+                <button id="ttsToggleButton" class="top-action-btn" type="button" title="切換語音朗讀">🔇</button>
+                <button id="refreshButton" class="top-action-btn" type="button" title="重新整理">↻</button>
+            </div>
 
             <div id="dateMain" class="date-main">Loading...</div>
             <div id="lunarDate" class="date-lunar">農曆資料載入中...</div>
@@ -66,7 +68,7 @@
 
                 <div class="weather-left-column">
 
-                    <div class="weather-main">
+                    <div class="weather-main" id="weatherMainBox">
                         <div class="weather-icon-temp">
                             <div id="weatherIcon" class="weather-icon">☁️</div>
                             <div id="temperature" class="temperature">--°</div>
@@ -75,7 +77,7 @@
                     </div>
 
                     <div class="weather-details">
-                        <div class="weather-detail">
+                        <div class="weather-detail" id="todayRangeBox">
                             <span class="weather-detail-label">📅 今日</span>
                             <strong id="todayRange" class="weather-detail-value">--° — --°</strong>
                         </div>
