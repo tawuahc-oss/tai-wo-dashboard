@@ -34,8 +34,9 @@ const NOW_LOCAL_RSS =
 const NOW_INTERNATIONAL_RSS =
     "https://news.google.com/rss/search?q=site%3Anews.now.com%2Fhome%2Finternational&hl=zh-HK&gl=HK&ceid=HK%3Azh-Hant";
 
-const APPLE_HOLIDAYS_ICS =
-    "https://p20-calendars.icloud.com/holidays/hk_zh.ics";
+/* 改用香港政府 1823 官方的穩定公眾假期 iCal 連結 */
+const GOV_HOLIDAYS_ICS =
+    "https://www.1823.gov.hk/ical/tc/common.ics";
 
 
 /* =====================================================
@@ -1341,7 +1342,7 @@ function renderTrains(
 
 
 /* =====================================================
-   RSS HELPERS (支援多重代理以加速載入)
+   RSS HELPERS
 ===================================================== */
 
 async function getRSS2JSON(
@@ -2023,7 +2024,7 @@ async function loadBBCNews() {
 
 
 /* =====================================================
-   CALENDAR (APPLE HONG KONG HOLIDAYS - 支援多重代理防失敗)
+   CALENDAR (1823 HONG KONG PUBLIC HOLIDAYS)
 ===================================================== */
 
 async function loadCalendar() {
@@ -2054,8 +2055,8 @@ async function loadCalendar() {
 
 
     const proxyUrls = [
-        "https://corsproxy.io/?" + encodeURIComponent(APPLE_HOLIDAYS_ICS),
-        "https://api.allorigins.win/raw?url=" + encodeURIComponent(APPLE_HOLIDAYS_ICS)
+        "https://corsproxy.io/?" + encodeURIComponent(GOV_HOLIDAYS_ICS),
+        "https://api.allorigins.win/raw?url=" + encodeURIComponent(GOV_HOLIDAYS_ICS)
     ];
 
 
@@ -2093,7 +2094,7 @@ async function loadCalendar() {
 
         catch (e) {
 
-            console.warn("Calendar proxy failed, trying next...");
+            console.warn("Holiday proxy failed, trying next...");
 
         }
 
