@@ -2048,30 +2048,34 @@ async function loadBBCNews() {
 
 
 /* =====================================================
-   CALENDAR (APPLE HONG KONG HOLIDAYS)
+   CALENDAR (APPLE HONG KONG HOLIDAYS - TODAY & TOMORROW)
 ===================================================== */
 
 async function loadCalendar() {
 
-    const calendar =
+    const todayContainer =
         document.getElementById(
-            "calendar"
+            "calendarToday"
+        );
+
+    const tomorrowContainer =
+        document.getElementById(
+            "calendarTomorrow"
         );
 
 
-    if (!calendar) {
+    if (!todayContainer || !tomorrowContainer) {
 
         return;
 
     }
 
 
-    calendar.innerHTML =
-        `
-            <div class="calendar-empty">
-                載入香港公眾假期中...
-            </div>
-        `;
+    todayContainer.innerHTML =
+        `<div class="calendar-empty">載入中...</div>`;
+
+    tomorrowContainer.innerHTML =
+        `<div class="calendar-empty">載入中...</div>`;
 
 
     try {
@@ -2111,70 +2115,133 @@ async function loadCalendar() {
             );
 
 
-        if (
-            events.length === 0
-        ) {
+        const now =
+            new Date();
 
-            calendar.innerHTML =
-                `
-                    <div class="calendar-empty">
-                        暫無近期公眾假期
-                    </div>
-                `;
+        now.setHours(
+            0,
+            0,
+            0,
+            0
+        );
 
-            return;
+
+        const tomorrow =
+            new Date(now);
+
+        tomorrow.setDate(
+            tomorrow.getDate() + 1
+        );
+
+
+        const todayEvents =
+            events.filter(
+                e =>
+                    e.date.getTime() ===
+                    now.getTime()
+            );
+
+
+        const tomorrowEvents =
+            events.filter(
+                e =>
+                    e.date.getTime() ===
+                    tomorrow.getTime()
+            );
+
+
+        /* 渲染今日 */
+
+        if (todayEvents.length === 0) {
+
+            todayContainer.innerHTML =
+                `<div class="calendar-empty">今日無假期</div>`;
+
+        }
+
+        else {
+
+            todayContainer.innerHTML =
+                "";
+
+            todayEvents.forEach(
+                event => {
+
+                    const item =
+                        document.createElement(
+                            "div"
+                        );
+
+                    item.className =
+                        "calendar-item";
+
+                    item.style.padding =
+                        "3px 0";
+
+                    item.style.fontSize =
+                        "clamp(11px, 1.1vw, 15px)";
+
+                    item.style.fontWeight =
+                        "600";
+
+                    item.textContent =
+                        event.summary;
+
+                    todayContainer.appendChild(
+                        item
+                    );
+
+                }
+            );
 
         }
 
 
-        calendar.innerHTML =
-            "";
+        /* 渲染明日 */
 
+        if (tomorrowEvents.length === 0) {
 
-        events.forEach(
-            event => {
+            tomorrowContainer.innerHTML =
+                `<div class="calendar-empty">明日無假期</div>`;
 
-                const item =
-                    document.createElement(
-                        "div"
+        }
+
+        else {
+
+            tomorrowContainer.innerHTML =
+                "";
+
+            tomorrowEvents.forEach(
+                event => {
+
+                    const item =
+                        document.createElement(
+                            "div"
+                        );
+
+                    item.className =
+                        "calendar-item";
+
+                    item.style.padding =
+                        "3px 0";
+
+                    item.style.fontSize =
+                        "clamp(11px, 1.1vw, 15px)";
+
+                    item.style.fontWeight =
+                        "600";
+
+                    item.textContent =
+                        event.summary;
+
+                    tomorrowContainer.appendChild(
+                        item
                     );
 
+                }
+            );
 
-                item.className =
-                    "calendar-item";
-
-
-                item.style.padding =
-                    "4px 0";
-
-                item.style.borderBottom =
-                    "1px solid rgba(160, 99, 110, 0.17)";
-
-                item.style.display =
-                    "flex";
-
-                item.style.justifyContent =
-                    "space-between";
-
-
-                item.innerHTML =
-                    `
-                        <span style="font-weight: 600;">
-                            ${event.summary}
-                        </span>
-
-                        <span style="color: var(--secondary); font-size: 0.9em;">
-                            ${event.dateStr}
-                        </span>
-                    `;
-
-
-                calendar.appendChild(
-                    item
-                );
-
-            }
-        );
+        }
 
     }
 
@@ -2187,17 +2254,15 @@ async function loadCalendar() {
         );
 
 
-        calendar.innerHTML =
-            `
-                <div class="calendar-empty">
-                    無法載入香港公眾假期
-                </div>
-            `;
+        todayContainer.innerHTML =
+            `<div class="calendar-empty">載入失敗</div>`;
+
+        tomorrowContainer.innerHTML =
+            `<div class="calendar-empty">載入失敗</div>`;
 
     }
 
 }
-
 
 function parseICS(icsText) {
 
