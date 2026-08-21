@@ -1031,6 +1031,23 @@ async function loadWeather() {
         }
 
 
+        // 綁定點擊朗讀：目前天氣主區塊
+        const weatherMainBox = document.getElementById("weatherMainBox");
+        if (weatherMainBox) {
+            weatherMainBox.onclick = () => {
+                speakText(`當前天氣 ${info[1]}，氣溫 ${Math.round(data.current.temperature_2m)}度，相對濕度 ${data.current.relative_humidity_2m}%`);
+            };
+        }
+
+        // 綁定點擊朗讀：今日氣溫範圍
+        const todayRangeBox = document.getElementById("todayRangeBox");
+        if (todayRangeBox) {
+            todayRangeBox.onclick = () => {
+                speakText(`今日氣溫介乎 ${Math.round(data.daily.temperature_2m_min[0])}度至 ${Math.round(data.daily.temperature_2m_max[0])}度`);
+            };
+        }
+
+
         renderForecast(
             data,
             hkHour
