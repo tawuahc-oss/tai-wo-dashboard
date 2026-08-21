@@ -1366,3 +1366,33 @@ footer {
     color: white;
     border-color: #45a049;
 }
+
+/* 語音朗讀按鈕樣式（與右側重新整理按鈕風格一致） */
+.action-button {
+    position: absolute;
+    top: 15px;
+    right: 60px; /* 放在重新整理按鈕的左側 */
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: var(--text);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    z-index: 10;
+}
+
+.action-button:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.action-button.active {
+    background: #4caf50;
+    color: white;
+}
+
