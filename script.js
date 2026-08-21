@@ -2020,7 +2020,7 @@ async function loadBBCNews() {
 
 
 /* =====================================================
-   CALENDAR (穩定的本地香港假期邏輯 - 100% 成功秒開)
+   CALENDAR (香港公眾假期與二十四節氣)
 ===================================================== */
 
 async function loadCalendar() {
@@ -2050,7 +2050,7 @@ async function loadCalendar() {
     tomorrow.setDate(tomorrow.getDate() + 1);
 
 
-    // 香港主要公眾假期快速對照表 (可依需求自行擴充)
+    // 香港公眾假期
     const holidays = {
         "1-1": "元旦",
         "5-1": "勞動節",
@@ -2060,37 +2060,54 @@ async function loadCalendar() {
         "12-26": "聖誕節後第一個周日"
     };
 
+    // 二十四節氣對照表 (格式: "月-日": "節氣名稱")
+    const solarTerms = {
+        "2-4": "立春", "2-19": "雨水",
+        "3-5": "驚蟄", "3-20": "春分",
+        "4-4": "清明", "4-20": "穀雨",
+        "5-5": "立夏", "5-21": "小滿",
+        "6-5": "芒種", "6-21": "夏至",
+        "7-7": "小暑", "7-22": "大暑",
+        "8-7": "立秋", "8-23": "處暑",
+        "9-7": "白露", "9-22": "秋分",
+        "10-8": "寒露", "10-23": "霜降",
+        "11-7": "立冬", "11-22": "小雪",
+        "12-7": "大雪", "12-21": "冬至",
+        "1-5": "小寒", "1-20": "大寒"
+    };
 
-    function getHolidaysForDate(date) {
+
+    function getEventsForDate(date) {
         const key = `${date.getMonth() + 1}-${date.getDate()}`;
         const results = [];
         if (holidays[key]) {
             results.push(holidays[key]);
         }
+        if (solarTerms[key]) {
+            results.push(solarTerms[key]);
+        }
         return results;
     }
 
 
-    const todayHolidays = getHolidaysForDate(now);
-    const tomorrowHolidays = getHolidaysForDate(tomorrow);
+    const todayEvents = getEventsForDate(now);
+    const tomorrowEvents = getEventsForDate(tomorrow);
 
 
     /* 渲染今日 */
 
-    if (todayHolidays.length === 0) {
+    if (todayEvents.length === 0) {
 
-        todayContainer.innerHTML =
-            `<div class="calendar-empty">今日無公眾假期</div>`;
+        todayContainer.innerHTML = "";
 
     }
 
     else {
 
-        todayContainer.innerHTML =
-            "";
+        todayContainer.innerHTML = "";
 
-        todayHolidays.forEach(
-            h => {
+        todayEvents.forEach(
+            e => {
 
                 const item =
                     document.createElement(
@@ -2110,7 +2127,7 @@ async function loadCalendar() {
                     "600";
 
                 item.textContent =
-                    h;
+                    e;
 
                 todayContainer.appendChild(
                     item
@@ -2124,20 +2141,18 @@ async function loadCalendar() {
 
     /* 渲染明日 */
 
-    if (tomorrowHolidays.length === 0) {
+    if (tomorrowEvents.length === 0) {
 
-        tomorrowContainer.innerHTML =
-            `<div class="calendar-empty">明日無公眾假期</div>`;
+        tomorrowContainer.innerHTML = "";
 
     }
 
     else {
 
-        tomorrowContainer.innerHTML =
-            "";
+        tomorrowContainer.innerHTML = "";
 
-        tomorrowHolidays.forEach(
-            h => {
+        tomorrowEvents.forEach(
+            e => {
 
                 const item =
                     document.createElement(
@@ -2157,7 +2172,7 @@ async function loadCalendar() {
                     "600";
 
                 item.textContent =
-                    h;
+                    e;
 
                 tomorrowContainer.appendChild(
                     item
