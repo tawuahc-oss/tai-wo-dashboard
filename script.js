@@ -1341,7 +1341,7 @@ function renderTrains(
 
 
 /* =====================================================
-   RSS HELPERS
+   RSS HELPERS (支援多重代理以加速載入)
 ===================================================== */
 
 async function getRSS2JSON(
@@ -1395,12 +1395,12 @@ async function getRSS2JSON(
 }
 
 
-async function getRSSAllOrigins(
+async function getRSSCorsProxy(
     rssURL
 ) {
 
     const url =
-        "https://api.allorigins.win/raw?url=" +
+        "https://corsproxy.io/?" +
         encodeURIComponent(
             rssURL
         );
@@ -1418,7 +1418,7 @@ async function getRSSAllOrigins(
     if (!response.ok) {
 
         throw new Error(
-            "AllOrigins request failed"
+            "CorsProxy request failed"
         );
 
     }
@@ -1447,12 +1447,12 @@ async function getRSSAllOrigins(
 }
 
 
-async function getRSSCorsProxy(
+async function getRSSAllOrigins(
     rssURL
 ) {
 
     const url =
-        "https://corsproxy.io/?" +
+        "https://api.allorigins.win/raw?url=" +
         encodeURIComponent(
             rssURL
         );
@@ -1470,7 +1470,7 @@ async function getRSSCorsProxy(
     if (!response.ok) {
 
         throw new Error(
-            "CorsProxy request failed"
+            "AllOrigins request failed"
         );
 
     }
@@ -1594,17 +1594,17 @@ async function getRSS(
     const methods = [
 
         () =>
+            getRSSCorsProxy(
+                rssURL
+            ),
+
+        () =>
             getRSS2JSON(
                 rssURL
             ),
 
         () =>
             getRSSAllOrigins(
-                rssURL
-            ),
-
-        () =>
-            getRSSCorsProxy(
                 rssURL
             )
 
@@ -1641,12 +1641,6 @@ async function getRSS(
 
             lastError =
                 error;
-
-
-            console.warn(
-                "RSS method failed:",
-                error
-            );
 
         }
 
@@ -1963,25 +1957,6 @@ async function loadNowNews() {
             internationalLink
         );
 
-
-        const status =
-            document.createElement(
-                "div"
-            );
-
-
-        status.className =
-            "news-item";
-
-
-        status.textContent =
-            "NOW News 暫時無法取得即時標題";
-
-
-        container.appendChild(
-            status
-        );
-
     }
 
 }
@@ -2048,7 +2023,7 @@ async function loadBBCNews() {
 
 
 /* =====================================================
-   CALENDAR (APPLE HONG KONG HOLIDAYS - TODAY & TOMORROW)
+   CALENDAR (APPLE HONG KONG HOLIDAYS - 支援多重代理防失敗)
 ===================================================== */
 
 async function loadCalendar() {
@@ -2078,36 +2053,67 @@ async function loadCalendar() {
         `<div class="calendar-empty">載入中...</div>`;
 
 
-    try {
-
-        const url =
-            "https://api.allorigins.win/raw?url=" +
-            encodeURIComponent(
-                APPLE_HOLIDAYS_ICS
-            );
+    const proxyUrls = [
+        "https://corsproxy.io/?" + encodeURIComponent(APPLE_HOLIDAYS_ICS),
+        "https://api.allorigins.win/raw?url=" + encodeURIComponent(APPLE_HOLIDAYS_ICS)
+    ];
 
 
-        const response =
-            await fetch(
-                url,
-                {
-                    cache: "no-store"
+    let icsText = null;
+
+
+    for (const url of proxyUrls) {
+
+        try {
+
+            const response =
+                await fetch(
+                    url,
+                    {
+                        cache: "no-store"
+                    }
+                );
+
+
+            if (response.ok) {
+
+                icsText =
+                    await response.text();
+
+
+                if (icsText && icsText.includes("BEGIN:VEVENT")) {
+
+                    break;
+
                 }
-            );
 
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Failed to fetch holidays"
-            );
+            }
 
         }
 
+        catch (e) {
 
-        const icsText =
-            await response.text();
+            console.warn("Calendar proxy failed, trying next...");
 
+        }
+
+    }
+
+
+    if (!icsText) {
+
+        todayContainer.innerHTML =
+            `<div class="calendar-empty">無法載入假期</div>`;
+
+        tomorrowContainer.innerHTML =
+            `<div class="calendar-empty">無法載入假期</div>`;
+
+        return;
+
+    }
+
+
+    try {
 
         const events =
             parseICS(
@@ -2249,20 +2255,21 @@ async function loadCalendar() {
     catch (error) {
 
         console.error(
-            "Calendar error:",
+            "Calendar parse error:",
             error
         );
 
 
         todayContainer.innerHTML =
-            `<div class="calendar-empty">載入失敗</div>`;
+            `<div class="calendar-empty">解析失敗</div>`;
 
         tomorrowContainer.innerHTML =
-            `<div class="calendar-empty">載入失敗</div>`;
+            `<div class="calendar-empty">解析失敗</div>`;
 
     }
 
 }
+
 
 function parseICS(icsText) {
 
