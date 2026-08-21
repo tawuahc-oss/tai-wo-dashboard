@@ -495,7 +495,17 @@ body {
     min-height: 0;
 
     display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
 
+    gap: 6px;
+}
+
+
+.weather-icon-temp {
+    display: flex;
+    flex-direction: row;
     align-items: center;
 
     gap: 14px;
@@ -530,7 +540,7 @@ body {
 
 
 .weather-description {
-    margin-top: 5px;
+    margin-top: 2px;
 
     font-size:
         clamp(13px, 1.35vw, 19px);
@@ -755,6 +765,11 @@ body {
 
 
     .weather-main {
+        gap: 4px;
+    }
+
+
+    .weather-icon-temp {
         gap: 9px;
     }
 
@@ -863,11 +878,15 @@ body {
     min-height: 0;
 
     padding: 9px 12px;
+
+    display: flex;
+    flex-direction: column;
 }
 
 
 .forecast {
-    height: calc(100% - 28px);
+    flex: 1 1 0;
+    min-height: 0;
 
     display: grid;
 
@@ -882,14 +901,22 @@ body {
 
 .forecast-item {
     min-width: 0;
+    min-height: 0;
 
-    padding: 5px 3px;
+    padding: 4px 3px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 
     text-align: center;
 
     border-radius: 13px;
 
     background: var(--item);
+
+    overflow: hidden;
 }
 
 
@@ -971,6 +998,10 @@ body {
 
 .mtr-direction {
     min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
 }
 
 
@@ -987,9 +1018,11 @@ body {
     display: flex;
     flex-direction: column;
 
-    gap: 3px;
-
+    flex: 1 1 0;
+    min-height: 0;
     min-width: 0;
+
+    gap: 3px;
 
     overflow: hidden;
 }
@@ -997,14 +1030,23 @@ body {
 
 .train {
     min-width: 0;
+    min-height: 0;
+
+    flex: 1 1 0;
 
     padding: 3px 5px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 
     border-radius: 9px;
 
     background: var(--item);
 
     text-align: center;
+
+    overflow: hidden;
 }
 
 
@@ -1186,12 +1228,82 @@ footer {
 ===================================================== */
 
 @media (orientation: landscape) {
+    .dashboard-content {
+        grid-template-rows:
+            minmax(160px, 1.35fr)
+            minmax(128px, 1fr)
+            minmax(172px, 1.25fr)
+            minmax(80px, 0.75fr);
+    }
+
     .temperature {
         font-size: clamp(28px, 3.2vw, 40px);
     }
-    
+
     .weather-icon {
         font-size: clamp(32px, 3.8vw, 48px);
+    }
+
+    .weather-main {
+        flex-direction: column;
+        align-items: flex-start;
+        justify-content: center;
+        text-align: left;
+        gap: 4px;
+    }
+
+    .weather-icon-temp {
+        flex-direction: row;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .forecast-card {
+        padding: 6px 10px;
+    }
+
+    .forecast {
+        gap: 5px;
+        margin-top: 2px;
+    }
+
+    .forecast-item {
+        padding: 3px 2px;
+    }
+
+    .forecast-time {
+        font-size: 10px;
+    }
+
+    .forecast-icon {
+        margin: 1px 0;
+        font-size: clamp(15px, 1.7vw, 22px);
+    }
+
+    .forecast-temp {
+        font-size: clamp(12px, 1.3vw, 16px);
+    }
+
+    .forecast-rain {
+        font-size: 9px;
+        line-height: 1.1;
+    }
+
+    .mtr-card {
+        padding: 7px 9px;
+    }
+
+    .train {
+        padding: 2px 4px;
+    }
+
+    .train-time {
+        font-size: clamp(12px, 1.15vw, 16px);
+        line-height: 1.05;
+    }
+
+    .train-destination {
+        font-size: clamp(9px, 0.85vw, 12px);
     }
 }
 
@@ -1230,9 +1342,16 @@ footer {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        gap: 5px;
+        gap: 4px;
         margin-top: 4px;
         text-align: center;
+    }
+
+    .weather-icon-temp {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
     }
 
     .weather-icon {
@@ -1288,13 +1407,46 @@ footer {
     min-height: 0;
 
     display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 12px;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 6px;
 
     margin-top: 0;
     text-align: left;
+}
+
+.weather-icon-temp {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 12px;
+}
+
+
+@media (orientation: portrait) and (min-width: 601px) {
+    .weather-main {
+        align-items: center;
+        text-align: center;
+    }
+
+    .weather-icon-temp {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 2px;
+    }
+
+    .weather-icon {
+        font-size:
+            clamp(52px, 7.5vw, 82px);
+    }
+
+    .temperature {
+        font-size:
+            clamp(44px, 6.8vw, 76px);
+        line-height: 0.92;
+    }
 }
 
 .weather-details {
