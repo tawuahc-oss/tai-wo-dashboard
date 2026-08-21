@@ -1396,3 +1396,51 @@ footer {
     color: white;
 }
 
+/* 右上角按鈕群組容器 */
+.top-actions {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+
+/* 統一語音按鈕與重新整理按鈕的尺寸、外觀、字型與樣式 */
+.top-action-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: var(--text);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 16px;
+    font-family: inherit;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+    box-sizing: border-box;
+    line-height: 1;
+}
+
+.top-action-btn:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.top-action-btn.active {
+    background: #4caf50;
+    color: white;
+}
+
+/* 旋轉動畫（重新整理按鈕專用） */
+.top-action-btn.loading {
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
