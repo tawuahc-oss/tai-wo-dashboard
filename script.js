@@ -47,6 +47,39 @@ const ICLOUD_CALENDARS = [
 
 
 /* =====================================================
+   SPEECH SYNTHESIS (語音朗讀控制)
+===================================================== */
+
+let ttsEnabled = false;
+
+function speakText(text) {
+    if (!ttsEnabled || !window.speechSynthesis) return;
+    window.speechSynthesis.cancel(); // 停止上一次未講完的語音
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = "zh-HK"; // 使用廣東話
+    utterance.rate = 1.0;
+    window.speechSynthesis.speak(utterance);
+}
+
+function setupTTSToggle() {
+    const btn = document.getElementById("ttsToggleButton");
+    if (!btn) return;
+    btn.addEventListener("click", () => {
+        ttsEnabled = !ttsEnabled;
+        if (ttsEnabled) {
+            btn.textContent = "🔊 語音：開";
+            btn.classList.add("active");
+            speakText("語音朗讀已開啟");
+        } else {
+            btn.textContent = "🔇 語音：關";
+            btn.classList.remove("active");
+            window.speechSynthesis.cancel();
+        }
+    });
+}
+
+
+/* =====================================================
    WEATHER CODE
 ===================================================== */
 
@@ -1164,6 +1197,11 @@ function renderForecast(
             `;
 
 
+        item.addEventListener("click", () => {
+            speakText(`時間 ${time}，天氣 ${info[1]}，氣溫 ${Math.round(data.hourly.temperature_2m[hour])}度，降雨機率 ${data.hourly.precipitation_probability[hour] ?? 0}%`);
+        });
+
+
         forecast.appendChild(
             item
         );
@@ -1218,13 +1256,15 @@ async function loadMTR() {
 
         renderTrains(
             station.DOWN || [],
-            "mtrDown"
+            "mtrDown",
+            "往金鐘"
         );
 
 
         renderTrains(
             station.UP || [],
-            "mtrUp"
+            "mtrUp",
+            "往上水"
         );
 
     }
@@ -1272,7 +1312,8 @@ async function loadMTR() {
 
 function renderTrains(
     trains,
-    elementId
+    elementId,
+    directionName
 ) {
 
     const container =
@@ -1336,6 +1377,11 @@ function renderTrains(
                         ${train.dest || ""}
                     </div>
                 `;
+
+
+            item.addEventListener("click", () => {
+                speakText(`港鐵太和站，${directionName}，往 ${train.dest || "未知"}，大約 ${train.ttnt} 分鐘後到達`);
+            });
 
 
             container.appendChild(
@@ -1740,6 +1786,14 @@ function renderNews(
                     "noopener noreferrer";
 
 
+                link.addEventListener("click", (e) => {
+                    if (ttsEnabled) {
+                        e.preventDefault(); // 開啟語音時點擊先朗讀，不立刻跳轉
+                        speakText(item.title);
+                    }
+                });
+
+
                 container.appendChild(
                     link
                 );
@@ -2101,7 +2155,7 @@ async function loadCalendar() {
     }
 
 
-    // 2. 內建 Google 生日資料[cite: 4]
+    // 2. 內建 Google 生日資料
     const googleBirthdaysICS = `
 BEGIN:VCALENDAR
 VERSION:2.0
@@ -2296,6 +2350,10 @@ END:VEVENT
                 item.textContent =
                     e;
 
+                item.addEventListener("click", () => {
+                    speakText(`今日行程：${e}`);
+                });
+
                 todayContainer.appendChild(
                     item
                 );
@@ -2341,6 +2399,10 @@ END:VEVENT
 
                 item.textContent =
                     e;
+
+                item.addEventListener("click", () => {
+                    speakText(`明日行程：${e}`);
+                });
 
                 tomorrowContainer.appendChild(
                     item
@@ -2532,6 +2594,7 @@ document.addEventListener(
     "DOMContentLoaded",
     () => {
 
+        setupTTSToggle();
 
         updateClock();
 
@@ -2607,28 +2670,3 @@ document.addEventListener(
 
     }
 );
-
-/* 語音朗讀開關按鈕樣式 */
-.tts-toggle-button {
-    position: absolute;
-    top: 15px;
-    left: 15px;
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    color: var(--text);
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    backdrop-filter: blur(5px);
-    transition: all 0.2s ease;
-    z-index: 10;
-}
-
-.tts-toggle-button.active {
-    background: #4caf50;
-    color: white;
-    border-color: #45a049;
-}
-
