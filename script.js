@@ -35,6 +35,17 @@ const NOW_INTERNATIONAL_RSS =
     "https://news.google.com/rss/search?q=site%3Anews.now.com%2Fhome%2Finternational&hl=zh-HK&gl=HK&ceid=HK%3Azh-Hant";
 
 
+/* iCloud 訂閱日曆連結 (已將 webcal:// 轉為 https://) */
+const ICLOUD_CALENDARS = [
+    "https://p170-caldav.icloud.com/published/2/ODA1MjEyOTQ3NzgwNTIxMssqreFkn5MljNTC_3qVRJ3s9OwRJhK0r3O4-sax3JrI_KMLy9TpQmuJ2t8jrY2lM73_p-QWN2TKEBvK98Q30Qs",
+    "https://p170-caldav.icloud.com/published/2/ODA1MjEyOTQ3NzgwNTIxMssqreFkn5MljNTC_3qVRJ1k5zbbkMsz4vVe9lJM1E6e",
+    "https://p170-caldav.icloud.com/published/2/ODA1MjEyOTQ3NzgwNTIxMssqreFkn5MljNTC_3qVRJ1pgnMLghN0zGqrwi_ENPqf",
+    "https://p170-caldav.icloud.com/published/2/ODA1MjEyOTQ3NzgwNTIxMssqreFkn5MljNTC_3qVRJ2mbiVciD6GSfks91rAceJIbNHZyrQKq77gKKvB7UanyoWpRyHIJcQyrmmaZSVjo2s",
+    "https://p170-caldav.icloud.com/published/2/ODA1MjEyOTQ3NzgwNTIxMssqreFkn5MljNTC_3qVRJ37ec25P4O8drDnPPCz3eldFn9hLR4SrDeKePNc2U0DYbdY_HWVqUoM6RB8mZP-d8U",
+    "https://p170-caldav.icloud.com/published/2/ODA1MjEyOTQ3NzgwNTIxMssqreFkn5MljNTC_3qVRJ3l57idu39MOFFJ9rdPSeQ5aivqI9-jDLZ1Dy9WemMZAQwVTw6TWIiVlrRZEhEZQYQ"
+];
+
+
 /* =====================================================
    WEATHER CODE
 ===================================================== */
@@ -2020,7 +2031,7 @@ async function loadBBCNews() {
 
 
 /* =====================================================
-   CALENDAR (香港公眾假期與二十四節氣)
+   CALENDAR (iCloud 訂閱日曆 + 二十四節氣)
 ===================================================== */
 
 async function loadCalendar() {
@@ -2050,17 +2061,7 @@ async function loadCalendar() {
     tomorrow.setDate(tomorrow.getDate() + 1);
 
 
-    // 香港公眾假期
-    const holidays = {
-        "1-1": "元旦",
-        "5-1": "勞動節",
-        "7-1": "香港特別行政區成立紀念日",
-        "10-1": "國慶日",
-        "12-25": "聖誕節",
-        "12-26": "聖誕節後第一個周日"
-    };
-
-    // 二十四節氣對照表 (格式: "月-日": "節氣名稱")
+    // 二十四節氣對照表
     const solarTerms = {
         "2-4": "立春", "2-19": "雨水",
         "3-5": "驚蟄", "3-20": "春分",
@@ -2076,16 +2077,48 @@ async function loadCalendar() {
         "1-5": "小寒", "1-20": "大寒"
     };
 
+    function getSolarTerm(date) {
+        const key = `${date.getMonth() + 1}-${date.getDate()}`;
+        return solarTerms[key] || null;
+    }
+
+
+    // 抓取並解析所有 iCloud 日曆
+    let allICloudEvents = [];
+
+    for (const calUrl of ICLOUD_CALENDARS) {
+        try {
+            const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(calUrl);
+            const response = await fetch(proxyUrl, { cache: "no-store" });
+            if (response.ok) {
+                const icsText = await response.text();
+                const events = parseICS(icsText);
+                allICloudEvents.push(...events);
+            }
+        } catch (e) {
+            console.warn("Failed to load an iCloud calendar:", e);
+        }
+    }
+
 
     function getEventsForDate(date) {
-        const key = `${date.getMonth() + 1}-${date.getDate()}`;
         const results = [];
-        if (holidays[key]) {
-            results.push(holidays[key]);
+        
+        // 1. 加入二十四節氣
+        const term = getSolarTerm(date);
+        if (term) {
+            results.push(term);
         }
-        if (solarTerms[key]) {
-            results.push(solarTerms[key]);
-        }
+
+        // 2. 加入當天符合的 iCloud 行程
+        allICloudEvents.forEach(e => {
+            if (e.date.getTime() === date.getTime()) {
+                if (!results.includes(e.summary)) {
+                    results.push(e.summary);
+                }
+            }
+        });
+
         return results;
     }
 
@@ -2183,6 +2216,46 @@ async function loadCalendar() {
 
     }
 
+}
+
+
+function parseICS(icsText) {
+    const events = [];
+    const lines = icsText.split(/\r\n|\n|\r/);
+    let currentEvent = null;
+
+    for (const line of lines) {
+        if (line === "BEGIN:VEVENT") {
+            currentEvent = {};
+        } else if (line === "END:VEVENT") {
+            if (currentEvent && currentEvent.summary && currentEvent.date) {
+                events.push(currentEvent);
+            }
+            currentEvent = null;
+        } else if (currentEvent) {
+            if (line.startsWith("SUMMARY")) {
+                currentEvent.summary = line.split(":")[1] || "";
+            } else if (line.startsWith("DTSTART")) {
+                const val = line.split(":")[1] || "";
+                currentEvent.date = parseICSDate(val);
+            }
+        }
+    }
+
+    return events;
+}
+
+
+function parseICSDate(str) {
+    if (!str || str.length < 8) {
+        return new Date();
+    }
+    const year = parseInt(str.substring(0, 4), 10);
+    const month = parseInt(str.substring(4, 6), 10) - 1;
+    const day = parseInt(str.substring(6, 8), 10);
+    const date = new Date(year, month, day);
+    date.setHours(0, 0, 0, 0);
+    return date;
 }
 
 
