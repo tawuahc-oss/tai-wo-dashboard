@@ -35,7 +35,7 @@ const NOW_INTERNATIONAL_RSS =
     "https://news.google.com/rss/search?q=site%3Anews.now.com%2Fhome%2Finternational&hl=zh-HK&gl=HK&ceid=HK%3Azh-Hant";
 
 
-/* iCloud 訂閱日曆連結 (已將 webcal:// 轉為 https://) */
+/* iCloud 訂閱日曆連結 */
 const ICLOUD_CALENDARS = [
     "https://p170-caldav.icloud.com/published/2/ODA1MjEyOTQ3NzgwNTIxMssqreFkn5MljNTC_3qVRJ3s9OwRJhK0r3O4-sax3JrI_KMLy9TpQmuJ2t8jrY2lM73_p-QWN2TKEBvK98Q30Qs",
     "https://p170-caldav.icloud.com/published/2/ODA1MjEyOTQ3NzgwNTIxMssqreFkn5MljNTC_3qVRJ1k5zbbkMsz4vVe9lJM1E6e",
@@ -2031,7 +2031,7 @@ async function loadBBCNews() {
 
 
 /* =====================================================
-   CALENDAR (iCloud 訂閱日曆 + 二十四節氣)
+   CALENDAR (iCloud + Google Birthdays + 二十四節氣)
 ===================================================== */
 
 async function loadCalendar() {
@@ -2083,8 +2083,8 @@ async function loadCalendar() {
     }
 
 
-    // 抓取並解析所有 iCloud 日曆
-    let allICloudEvents = [];
+    // 1. 抓取所有 iCloud 日曆
+    let allEvents = [];
 
     for (const calUrl of ICLOUD_CALENDARS) {
         try {
@@ -2093,12 +2093,142 @@ async function loadCalendar() {
             if (response.ok) {
                 const icsText = await response.text();
                 const events = parseICS(icsText);
-                allICloudEvents.push(...events);
+                allEvents.push(...events);
             }
         } catch (e) {
             console.warn("Failed to load an iCloud calendar:", e);
         }
     }
+
+
+    // 2. 直接內建你剛才提供的 Google 生日資料
+    const googleBirthdaysICS = `
+BEGIN:VCALENDAR
+VERSION:2.0
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20250725
+RRULE:FREQ=YEARLY
+SUMMARY:何靖琳的生日
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20240302
+RRULE:FREQ=YEARLY
+SUMMARY:柳文文的生日
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:19921218
+RRULE:FREQ=YEARLY
+SUMMARY:吳萬超的生日
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:19940622
+RRULE:FREQ=YEARLY
+SUMMARY:勞曉彤的生日
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:19610825
+RRULE:FREQ=YEARLY
+SUMMARY:Mom的生日
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:19920311
+RRULE:FREQ=YEARLY
+SUMMARY:Brother的生日
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:19931218
+RRULE:FREQ=YEARLY
+SUMMARY:李少康的生日
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:19870302
+RRULE:FREQ=YEARLY
+SUMMARY:林廣俊的生日
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20240228
+RRULE:FREQ=YEARLY
+SUMMARY:梁洪恩的生日
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20001014
+RRULE:FREQ=YEARLY
+SUMMARY:黎思瑩的生日
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20230102
+RRULE:FREQ=YEARLY
+SUMMARY:吳詠遙的生日
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20230326
+RRULE:FREQ=YEARLY
+SUMMARY:李詠欣的生日
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20240205
+RRULE:FREQ=YEARLY
+SUMMARY:林鉅文的生日
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20231022
+RRULE:FREQ=YEARLY
+SUMMARY:楊卓鋒的生日
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20240915
+RRULE:FREQ=YEARLY
+SUMMARY:貞貞的生日
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20240527
+RRULE:FREQ=YEARLY
+SUMMARY:彭潔琳的生日
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:19940321
+RRULE:FREQ=YEARLY
+SUMMARY:戴家樂的生日
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:19941119
+RRULE:FREQ=YEARLY
+SUMMARY:蘇朗慈的生日
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:19940209
+RRULE:FREQ=YEARLY
+SUMMARY:朱麗君的生日
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:19560419
+RRULE:FREQ=YEARLY
+SUMMARY:Dad的生日
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20160722
+RRULE:FREQ=YEARLY
+SUMMARY:信主：朱麗君
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20250727
+RRULE:FREQ=YEARLY
+SUMMARY:吳晨羽的生日
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:20241005
+RRULE:FREQ=YEARLY
+SUMMARY:梁洪麗的生日
+END:VEVENT
+BEGIN:VEVENT
+DTSTART;VALUE=DATE:19940616
+RRULE:FREQ=YEARLY
+SUMMARY:鄺如雪的生日
+END:VEVENT
+    `;
+
+    const birthdayEvents = parseICS(googleBirthdaysICS);
+    allEvents.push(...birthdayEvents);
 
 
     function getEventsForDate(date) {
@@ -2110,9 +2240,12 @@ async function loadCalendar() {
             results.push(term);
         }
 
-        // 2. 加入當天符合的 iCloud 行程
-        allICloudEvents.forEach(e => {
-            if (e.date.getTime() === date.getTime()) {
+        // 2. 加入當天符合的行程與生日 (自動轉換每年重複)
+        const targetMonth = date.getMonth();
+        const targetDay = date.getDate();
+
+        allEvents.forEach(e => {
+            if (e.date.getMonth() === targetMonth && e.date.getDate() === targetDay) {
                 if (!results.includes(e.summary)) {
                     results.push(e.summary);
                 }
@@ -2184,6 +2317,8 @@ async function loadCalendar() {
 
         tomorrowContainer.innerHTML = "";
 
+    }
+
         tomorrowEvents.forEach(
             e => {
 
@@ -2213,8 +2348,6 @@ async function loadCalendar() {
 
             }
         );
-
-    }
 
 }
 
