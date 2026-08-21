@@ -25,9 +25,6 @@
 
 <section class="top-grid">
     <div class="card clock-card">
-        <!-- 語音朗讀開關按鈕 -->
-        <button id="ttsToggleButton" class="tts-toggle-button" type="button" title="切換語音朗讀">🔇 語音：關</button>
-
         <div id="digitalTime" class="digital-time">--:--:-- --</div>
 
         <div class="clock-area">
@@ -54,7 +51,10 @@
 
     <div class="weather-column">
         <div class="date-bubble">
+            <!-- 語音朗讀開關按鈕與重新整理按鈕並排在右上方 -->
+            <button id="ttsToggleButton" class="action-button" type="button" title="切換語音朗讀">🔇</button>
             <button id="refreshButton" class="refresh-button" type="button" title="重新整理">↻</button>
+
             <div id="dateMain" class="date-main">Loading...</div>
             <div id="lunarDate" class="date-lunar">農曆資料載入中...</div>
         </div>
