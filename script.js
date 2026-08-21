@@ -34,6 +34,9 @@ const NOW_LOCAL_RSS =
 const NOW_INTERNATIONAL_RSS =
     "https://news.google.com/rss/search?q=site%3Anews.now.com%2Fhome%2Finternational&hl=zh-HK&gl=HK&ceid=HK%3Azh-Hant";
 
+const APPLE_HOLIDAYS_ICS =
+    "https://p20-calendars.icloud.com/holidays/hk_zh.ics";
+
 
 /* =====================================================
    WEATHER CODE
@@ -618,7 +621,7 @@ async function loadHKOWeatherText() {
 
                 "hkoSpecial",
 
-                tips.join("　")
+                tips.join(" ")
 
             );
 
@@ -2045,10 +2048,10 @@ async function loadBBCNews() {
 
 
 /* =====================================================
-   CALENDAR
+   CALENDAR (APPLE HONG KONG HOLIDAYS)
 ===================================================== */
 
-function loadCalendar() {
+async function loadCalendar() {
 
     const calendar =
         document.getElementById(
@@ -2066,9 +2069,331 @@ function loadCalendar() {
     calendar.innerHTML =
         `
             <div class="calendar-empty">
-                iCloud Calendar 尚未連接
+                載入香港公眾假期中...
             </div>
         `;
+
+
+    try {
+
+        const url =
+            "https://api.allorigins.win/raw?url=" +
+            encodeURIComponent(
+                APPLE_HOLIDAYS_ICS
+            );
+
+
+        const response =
+            await fetch(
+                url,
+                {
+                    cache: "no-store"
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                "Failed to fetch holidays"
+            );
+
+        }
+
+
+        const icsText =
+            await response.text();
+
+
+        const events =
+            parseICS(
+                icsText
+            );
+
+
+        if (
+            events.length === 0
+        ) {
+
+            calendar.innerHTML =
+                `
+                    <div class="calendar-empty">
+                        暫無近期公眾假期
+                    </div>
+                `;
+
+            return;
+
+        }
+
+
+        calendar.innerHTML =
+            "";
+
+
+        events.forEach(
+            event => {
+
+                const item =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                item.className =
+                    "calendar-item";
+
+
+                item.style.padding =
+                    "4px 0";
+
+                item.style.borderBottom =
+                    "1px solid rgba(160, 99, 110, 0.17)";
+
+                item.style.display =
+                    "flex";
+
+                item.style.justifyContent =
+                    "space-between";
+
+
+                item.innerHTML =
+                    `
+                        <span style="font-weight: 600;">
+                            ${event.summary}
+                        </span>
+
+                        <span style="color: var(--secondary); font-size: 0.9em;">
+                            ${event.dateStr}
+                        </span>
+                    `;
+
+
+                calendar.appendChild(
+                    item
+                );
+
+            }
+        );
+
+    }
+
+
+    catch (error) {
+
+        console.error(
+            "Calendar error:",
+            error
+        );
+
+
+        calendar.innerHTML =
+            `
+                <div class="calendar-empty">
+                    無法載入香港公眾假期
+                </div>
+            `;
+
+    }
+
+}
+
+
+function parseICS(icsText) {
+
+    const events =
+        [];
+
+
+    const lines =
+        icsText.split(/\r\n|\n|\r/);
+
+
+    let currentEvent =
+        null;
+
+
+    for (
+        const line of lines
+    ) {
+
+        if (
+            line === "BEGIN:VEVENT"
+        ) {
+
+            currentEvent =
+                {};
+
+        }
+
+        else if (
+            line === "END:VEVENT"
+        ) {
+
+            if (
+                currentEvent &&
+                currentEvent.summary &&
+                currentEvent.date
+            ) {
+
+                events.push(
+                    currentEvent
+                );
+
+            }
+
+            currentEvent =
+                null;
+
+        }
+
+        else if (
+            currentEvent
+        ) {
+
+            if (
+                line.startsWith(
+                    "SUMMARY"
+                )
+            ) {
+
+                currentEvent.summary =
+                    line.split(
+                        ":"
+                    )[1] || "";
+
+            }
+
+            else if (
+                line.startsWith(
+                    "DTSTART"
+                )
+            ) {
+
+                const val =
+                    line.split(
+                        ":"
+                    )[1] || "";
+
+                currentEvent.date =
+                    parseICSDate(
+                        val
+                    );
+
+                currentEvent.dateStr =
+                    formatDateReadable(
+                        currentEvent.date
+                    );
+
+            }
+
+        }
+
+    }
+
+
+    const now =
+        new Date();
+
+    now.setHours(
+        0,
+        0,
+        0,
+        0
+    );
+
+
+    return events
+        .filter(
+            e =>
+                e.date >= now
+        )
+        .sort(
+            (a, b) =>
+                a.date - b.date
+        )
+        .slice(
+            0,
+            10
+        );
+
+}
+
+
+function parseICSDate(
+    str
+) {
+
+    if (
+        !str ||
+        str.length < 8
+    ) {
+
+        return new Date();
+
+    }
+
+
+    const year =
+        parseInt(
+            str.substring(0, 4),
+            10
+        );
+
+
+    const month =
+        parseInt(
+            str.substring(4, 6),
+            10
+        ) - 1;
+
+
+    const day =
+        parseInt(
+            str.substring(6, 8),
+            10
+        );
+
+
+    return new Date(
+        year,
+        month,
+        day
+    );
+
+}
+
+
+function formatDateReadable(
+    date
+) {
+
+    const m =
+        date.getMonth() + 1;
+
+
+    const d =
+        date.getDate();
+
+
+    const weekdays = [
+        "日",
+        "一",
+        "二",
+        "三",
+        "四",
+        "五",
+        "六"
+    ];
+
+
+    const w =
+        weekdays[
+            date.getDay()
+        ];
+
+
+    return `${m}月${d}日 (${w})`;
 
 }
 
@@ -2169,7 +2494,9 @@ async function refreshDashboard() {
 
             loadNowNews(),
 
-            loadBBCNews()
+            loadBBCNews(),
+
+            loadCalendar()
 
         ]);
 
