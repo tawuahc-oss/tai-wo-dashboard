@@ -54,9 +54,9 @@ let ttsEnabled = false;
 
 function speakText(text) {
     if (!ttsEnabled || !window.speechSynthesis) return;
-    window.speechSynthesis.cancel(); // 停止上一次未講完的語音
+    window.speechSynthesis.cancel();
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = "zh-HK"; // 使用廣東話
+    utterance.lang = "zh-HK";
     utterance.rate = 1.0;
     window.speechSynthesis.speak(utterance);
 }
@@ -67,11 +67,11 @@ function setupTTSToggle() {
     btn.addEventListener("click", () => {
         ttsEnabled = !ttsEnabled;
         if (ttsEnabled) {
-            btn.textContent = "🔊 語音：開";
+            btn.textContent = "🔊";
             btn.classList.add("active");
             speakText("語音朗讀已開啟");
         } else {
-            btn.textContent = "🔇 語音：關";
+            btn.textContent = "🔇";
             btn.classList.remove("active");
             window.speechSynthesis.cancel();
         }
@@ -1788,7 +1788,7 @@ function renderNews(
 
                 link.addEventListener("click", (e) => {
                     if (ttsEnabled) {
-                        e.preventDefault(); // 開啟語音時點擊先朗讀，不立刻跳轉
+                        e.preventDefault();
                         speakText(item.title);
                     }
                 });
