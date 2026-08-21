@@ -515,7 +515,7 @@ body {
 
 
 /* =====================================================
-   CURRENT WEATHER
+   CURRENT WEATHER (BASE / MOBILE)
 ===================================================== */
 
 .weather-main {
@@ -528,6 +528,7 @@ body {
     justify-content: center;
 
     gap: 6px;
+    text-align: left;
 }
 
 
@@ -1270,11 +1271,12 @@ footer {
 
 @media (orientation: landscape) {
     .dashboard-content {
+        /* 調小 Forecast 高度 (minmax(85px)) 並放大新聞高度 (minmax(120px)) */
         grid-template-rows:
-            minmax(220px, 1.7fr)
-            minmax(110px, 0.85fr)
-            minmax(140px, 1fr)
-            minmax(80px, 0.75fr);
+            minmax(210px, 1.8fr)
+            minmax(85px, 0.65fr)
+            minmax(130px, 1fr)
+            minmax(120px, 1.2fr);
     }
 
     .temperature {
@@ -1285,18 +1287,23 @@ footer {
         font-size: clamp(32px, 3.8vw, 48px);
     }
 
+    /* 將當前天氣的所有元素排在同一列 (Row) */
     .weather-main {
-        flex-direction: column;
-        align-items: flex-start;
-        justify-content: center;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
         text-align: left;
-        gap: 4px;
+        gap: 15px; /* 圖示與溫度的組合 vs 描述文字的間距 */
     }
 
     .weather-icon-temp {
         flex-direction: row;
         align-items: center;
         gap: 12px;
+    }
+    
+    .weather-description {
+        margin-top: 0; /* 移除與上方的間距，實現置中對齊 */
     }
 
     .forecast-card {
@@ -1381,6 +1388,7 @@ footer {
         padding-top: 5px;
     }
 
+    /* 直向保持上下垂直排列 */
     .weather-main {
         flex-direction: column;
         align-items: center;
@@ -1418,117 +1426,4 @@ footer {
         font-size:
             clamp(14px, 1.8vw, 20px);
     }
-}
-
-
-/* =====================================================
-   CURRENT WEATHER BUBBLE OVERRIDE
-===================================================== */
-
-.weather-layout {
-    grid-template-columns:
-        minmax(0, 1fr)
-        minmax(0, 2fr);
-    gap: 10px;
-}
-
-.weather-left-column {
-    min-width: 0;
-    min-height: 0;
-
-    display: grid;
-    grid-template-rows:
-        minmax(0, 1fr)
-        auto;
-    gap: 7px;
-
-    overflow: hidden;
-}
-
-.weather-main {
-    min-width: 0;
-    min-height: 0;
-
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    gap: 6px;
-
-    margin-top: 0;
-    text-align: left;
-}
-
-.weather-icon-temp {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 12px;
-}
-
-
-@media (orientation: portrait) and (min-width: 601px) {
-    .weather-main {
-        align-items: center;
-        text-align: center;
-    }
-
-    .weather-icon-temp {
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 2px;
-    }
-
-    .weather-icon {
-        font-size:
-            clamp(52px, 7.5vw, 82px);
-    }
-
-    .temperature {
-        font-size:
-            clamp(44px, 6.8vw, 76px);
-        line-height: 0.92;
-    }
-}
-
-.weather-details {
-    min-width: 0;
-
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 4px;
-}
-
-.weather-hko-text {
-    min-width: 0;
-    min-height: 0;
-
-    display: grid;
-    grid-template-rows:
-        minmax(0, 1fr)
-        minmax(0, 1fr);
-    gap: 7px;
-
-    overflow: hidden;
-}
-
-.weather-hko-section {
-    min-width: 0;
-    min-height: 0;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
-.weather-hko-content {
-    min-width: 0;
-    min-height: 0;
-    flex: 1 1 0;
-    height: 0;
-
-    overflow-y: auto;
-    overflow-x: hidden;
-    overscroll-behavior: contain;
 }
