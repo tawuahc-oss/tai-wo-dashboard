@@ -1214,7 +1214,6 @@ footer {
     
     .weather-description { margin-top: 0; }
 
-    /* ★ 橫向時，強迫 HKO 區塊填滿高度，並改為左右兩欄並排 ★ */
     .weather-hko-text {
         height: 100%;
         grid-template-rows: minmax(0, 1fr) !important;
@@ -1241,7 +1240,7 @@ footer {
 
 
 /* =====================================================
-   PORTRAIT IPAD (直向 iPad 模式 — 微調時鐘與氣温大小)
+   PORTRAIT IPAD (直向 iPad 模式)
 ===================================================== */
 
 @media (orientation: portrait) and (min-width: 601px) {
@@ -1302,12 +1301,12 @@ footer {
         font-size: clamp(14px, 1.8vw, 20px);
     }
 
-    /* ★ 直向時，確保 HKO 區塊為上下兩列垂直排列 ★ */
     .weather-hko-text {
         grid-template-rows: minmax(0, 1fr) minmax(0, 1fr);
         grid-template-columns: 1fr;
     }
 }
+
 
 /* =====================================================
    SPLIT CALENDAR (今日 / 明日)
