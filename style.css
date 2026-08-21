@@ -1308,3 +1308,38 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+
+/* =====================================================
+   SPLIT CALENDAR (今日 / 明日)
+===================================================== */
+
+.calendar-grid-split {
+    flex: 1;
+    min-height: 0;
+    margin-top: 4px;
+
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 8px;
+}
+
+.calendar-sub-card {
+    min-width: 0;
+    min-height: 0;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 6px 8px;
+    border-radius: 12px;
+
+    background: var(--item);
+}
+
+.calendar-sub-title {
+    flex: 0 0 auto;
+    font-size: clamp(11px, 1.1vw, 14px);
+    font-weight: 800;
+    margin-bottom: 3px;
+    color: var(--text);
+}
