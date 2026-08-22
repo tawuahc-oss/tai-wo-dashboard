@@ -554,6 +554,14 @@ function showHKOPanel(
     panel.classList.remove(
         "hidden"
     );
+    
+    // 讓整個 HKO 預測與提示泡泡點擊時可以朗讀
+    panel.onclick = () => {
+        if (ttsEnabled) {
+            const titleText = panelId === "hkoForecastPanel" ? "天氣預測" : "特別天氣提示";
+            speakText(`${titleText}：${text.trim()}`);
+        }
+    };
 
 }
 
@@ -1024,7 +1032,9 @@ async function loadWeather() {
         const weatherMainBox = document.getElementById("weatherMainBox");
         if (weatherMainBox) {
             weatherMainBox.onclick = () => {
-                speakText(`當前天氣 ${info[1]}，氣溫 ${Math.round(data.current.temperature_2m)}度，相對濕度 ${data.current.relative_humidity_2m}%`);
+                if (ttsEnabled) {
+                    speakText(`當前天氣 ${info[1]}，氣溫 ${Math.round(data.current.temperature_2m)}度，相對濕度 ${data.current.relative_humidity_2m}%`);
+                }
             };
         }
 
@@ -1032,7 +1042,9 @@ async function loadWeather() {
         const todayRangeBox = document.getElementById("todayRangeBox");
         if (todayRangeBox) {
             todayRangeBox.onclick = () => {
-                speakText(`今日氣溫介乎 ${Math.round(data.daily.temperature_2m_min[0])}度至 ${Math.round(data.daily.temperature_2m_max[0])}度`);
+                if (ttsEnabled) {
+                    speakText(`今日氣溫介乎 ${Math.round(data.daily.temperature_2m_min[0])}度至 ${Math.round(data.daily.temperature_2m_max[0])}度`);
+                }
             };
         }
 
@@ -1204,7 +1216,9 @@ function renderForecast(
 
 
         item.addEventListener("click", () => {
-            speakText(`時間 ${time}，天氣 ${info[1]}，氣溫 ${Math.round(data.hourly.temperature_2m[hour])}度，降雨機率 ${data.hourly.precipitation_probability[hour] ?? 0}%`);
+            if (ttsEnabled) {
+                speakText(`時間 ${time}，天氣 ${info[1]}，氣溫 ${Math.round(data.hourly.temperature_2m[hour])}度，降雨機率 ${data.hourly.precipitation_probability[hour] ?? 0}%`);
+            }
         });
 
 
@@ -1346,6 +1360,22 @@ function renderTrains(
                 train.valid === "Y"
         )
         .slice(0, 3);
+        
+        
+    // 讓整個方向的泡泡可以被點擊朗讀總結
+    const directionBox = container.parentElement;
+    if (directionBox) {
+        directionBox.onclick = (e) => {
+            if (ttsEnabled) {
+                if (upcoming.length === 0) {
+                    speakText(`太和站${directionName}暫無班次`);
+                } else {
+                    const times = upcoming.map(t => `${t.ttnt}分鐘`).join("、");
+                    speakText(`太和站${directionName}，未來班次大約在：${times}後到達`);
+                }
+            }
+        };
+    }
 
 
     if (
@@ -1385,8 +1415,11 @@ function renderTrains(
                 `;
 
 
-            item.addEventListener("click", () => {
-                speakText(`港鐵太和站，${directionName}，往 ${train.dest || "未知"}，大約 ${train.ttnt} 分鐘後到達`);
+            item.addEventListener("click", (e) => {
+                if (ttsEnabled) {
+                    e.stopPropagation(); // 阻止觸發外層 directionBox 朗讀
+                    speakText(`港鐵太和站，${directionName}，往 ${train.dest || "未知"}，大約 ${train.ttnt} 分鐘後到達`);
+                }
             });
 
 
@@ -1743,6 +1776,23 @@ function renderNews(
         "";
 
 
+    // 讓整個新聞卡片點擊時可以朗讀前3則新聞焦點
+    const card = container.closest('.card');
+    if (card) {
+        card.onclick = (e) => {
+            if (ttsEnabled) {
+                const source = elementId === "nowNews" ? "NOW News" : "BBC News";
+                if (!items || !items.length) {
+                    speakText(`${source} 暫無新聞`);
+                    return;
+                }
+                const topItems = items.slice(0, 3).map(i => i.title).join("。下一則：");
+                speakText(`${source} 焦點新聞：${topItems}`);
+            }
+        };
+    }
+
+
     if (
         !items ||
         !items.length
@@ -1795,6 +1845,7 @@ function renderNews(
                 link.addEventListener("click", (e) => {
                     if (ttsEnabled) {
                         e.preventDefault();
+                        e.stopPropagation(); // 阻止觸發外層卡片的連續朗讀
                         speakText(item.title);
                     }
                 });
@@ -2121,7 +2172,7 @@ async function loadCalendar() {
     tomorrow.setDate(tomorrow.getDate() + 1);
 
 
-    // 香港常見公眾假期 (可自行擴充)
+    // 香港常見公眾假期
     const holidays = {
         "1-1": "元旦",
         "5-1": "勞動節",
@@ -2168,6 +2219,36 @@ async function loadCalendar() {
     const tomorrowEvents = getEventsForDate(tomorrow);
 
 
+    /* 綁定今日行程整個卡片的朗讀功能 */
+    const todayCard = todayContainer.parentElement;
+    if (todayCard) {
+        todayCard.onclick = () => {
+            if (ttsEnabled) {
+                if (todayEvents.length === 0) {
+                    speakText("今日無行程");
+                } else {
+                    speakText("今日行程：" + todayEvents.join("，"));
+                }
+            }
+        };
+    }
+
+
+    /* 綁定明日行程整個卡片的朗讀功能 */
+    const tomorrowCard = tomorrowContainer.parentElement;
+    if (tomorrowCard) {
+        tomorrowCard.onclick = () => {
+            if (ttsEnabled) {
+                if (tomorrowEvents.length === 0) {
+                    speakText("明日無行程");
+                } else {
+                    speakText("明日行程：" + tomorrowEvents.join("，"));
+                }
+            }
+        };
+    }
+
+
     /* 渲染今日 */
 
     if (todayEvents.length === 0) {
@@ -2203,10 +2284,6 @@ async function loadCalendar() {
 
                 item.textContent =
                     e;
-
-                item.addEventListener("click", () => {
-                    speakText(`今日行程：${e}`);
-                });
 
                 todayContainer.appendChild(
                     item
@@ -2253,10 +2330,6 @@ async function loadCalendar() {
 
                 item.textContent =
                     e;
-
-                item.addEventListener("click", () => {
-                    speakText(`明日行程：${e}`);
-                });
 
                 tomorrowContainer.appendChild(
                     item
