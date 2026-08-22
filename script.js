@@ -35,17 +35,6 @@ const NOW_INTERNATIONAL_RSS =
     "https://news.google.com/rss/search?q=site%3Anews.now.com%2Fhome%2Finternational&hl=zh-HK&gl=HK&ceid=HK%3Azh-Hant";
 
 
-/* iCloud 訂閱日曆連結 */
-const ICLOUD_CALENDARS = [
-    "https://p170-caldav.icloud.com/published/2/ODA1MjEyOTQ3NzgwNTIxMssqreFkn5MljNTC_3qVRJ3s9OwRJhK0r3O4-sax3JrI_KMLy9TpQmuJ2t8jrY2lM73_p-QWN2TKEBvK98Q30Qs",
-    "https://p170-caldav.icloud.com/published/2/ODA1MjEyOTQ3NzgwNTIxMssqreFkn5MljNTC_3qVRJ1k5zbbkMsz4vVe9lJM1E6e",
-    "https://p170-caldav.icloud.com/published/2/ODA1MjEyOTQ3NzgwNTIxMssqreFkn5MljNTC_3qVRJ1pgnMLghN0zGqrwi_ENPqf",
-    "https://p170-caldav.icloud.com/published/2/ODA1MjEyOTQ3NzgwNTIxMssqreFkn5MljNTC_3qVRJ2mbiVciD6GSfks91rAceJIbNHZyrQKq77gKKvB7UanyoWpRyHIJcQyrmmaZSVjo2s",
-    "https://p170-caldav.icloud.com/published/2/ODA1MjEyOTQ3NzgwNTIxMssqreFkn5MljNTC_3qVRJ37ec25P4O8drDnPPCz3eldFn9hLR4SrDeKePNc2U0DYbdY_HWVqUoM6RB8mZP-d8U",
-    "https://p170-caldav.icloud.com/published/2/ODA1MjEyOTQ3NzgwNTIxMssqreFkn5MljNTC_3qVRJ3l57idu39MOFFJ9rdPSeQ5aivqI9-jDLZ1Dy9WemMZAQwVTw6TWIiVlrRZEhEZQYQ"
-];
-
-
 /* =====================================================
    SPEECH SYNTHESIS (語音朗讀控制)
 ===================================================== */
@@ -2102,7 +2091,7 @@ async function loadBBCNews() {
 
 
 /* =====================================================
-   CALENDAR (iCloud + Google Birthdays + 二十四節氣)
+   CALENDAR (假期 + 二十四節氣)
 ===================================================== */
 
 async function loadCalendar() {
@@ -2132,6 +2121,16 @@ async function loadCalendar() {
     tomorrow.setDate(tomorrow.getDate() + 1);
 
 
+    // 香港常見公眾假期 (可自行擴充)
+    const holidays = {
+        "1-1": "元旦",
+        "5-1": "勞動節",
+        "7-1": "香港特別行政區成立紀念日",
+        "10-1": "國慶日",
+        "12-25": "聖誕節",
+        "12-26": "聖誕節後第一個周日"
+    };
+
     // 二十四節氣對照表
     const solarTerms = {
         "2-4": "立春", "2-19": "雨水",
@@ -2148,180 +2147,18 @@ async function loadCalendar() {
         "1-5": "小寒", "1-20": "大寒"
     };
 
-    function getSolarTerm(date) {
-        const key = `${date.getMonth() + 1}-${date.getDate()}`;
-        return solarTerms[key] || null;
-    }
-
-
-    // 1. 抓取所有 iCloud 日曆
-    let allEvents = [];
-
-    for (const calUrl of ICLOUD_CALENDARS) {
-        try {
-            const proxyUrl = "https://corsproxy.io/?" + encodeURIComponent(calUrl);
-            const response = await fetch(proxyUrl, { cache: "no-store" });
-            if (response.ok) {
-                const icsText = await response.text();
-                const events = parseICS(icsText);
-                allEvents.push(...events);
-            }
-        } catch (e) {
-            console.warn("Failed to load an iCloud calendar:", e);
-        }
-    }
-
-
-    // 2. 內建 Google 生日資料
-    const googleBirthdaysICS = `
-BEGIN:VCALENDAR
-VERSION:2.0
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:20250725
-RRULE:FREQ=YEARLY
-SUMMARY:何靖琳的生日
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:20240302
-RRULE:FREQ=YEARLY
-SUMMARY:柳文文的生日
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:19921218
-RRULE:FREQ=YEARLY
-SUMMARY:吳萬超的生日
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:19940622
-RRULE:FREQ=YEARLY
-SUMMARY:勞曉彤的生日
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:19610825
-RRULE:FREQ=YEARLY
-SUMMARY:Mom的生日
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:19920311
-RRULE:FREQ=YEARLY
-SUMMARY:Brother的生日
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:19931218
-RRULE:FREQ=YEARLY
-SUMMARY:李少康的生日
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:19870302
-RRULE:FREQ=YEARLY
-SUMMARY:林廣俊的生日
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:20240228
-RRULE:FREQ=YEARLY
-SUMMARY:梁洪恩的生日
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:20001014
-RRULE:FREQ=YEARLY
-SUMMARY:黎思瑩的生日
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:20230102
-RRULE:FREQ=YEARLY
-SUMMARY:吳詠遙的生日
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:20230326
-RRULE:FREQ=YEARLY
-SUMMARY:李詠欣的生日
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:20240205
-RRULE:FREQ=YEARLY
-SUMMARY:林鉅文的生日
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:20231022
-RRULE:FREQ=YEARLY
-SUMMARY:楊卓鋒的生日
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:20240915
-RRULE:FREQ=YEARLY
-SUMMARY:貞貞的生日
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:20240527
-RRULE:FREQ=YEARLY
-SUMMARY:彭潔琳的生日
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:19940321
-RRULE:FREQ=YEARLY
-SUMMARY:戴家樂的生日
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:19941119
-RRULE:FREQ=YEARLY
-SUMMARY:蘇朗慈的生日
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:19940209
-RRULE:FREQ=YEARLY
-SUMMARY:朱麗君的生日
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:19560419
-RRULE:FREQ=YEARLY
-SUMMARY:Dad的生日
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:20160722
-RRULE:FREQ=YEARLY
-SUMMARY:信主：朱麗君
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:20250727
-RRULE:FREQ=YEARLY
-SUMMARY:吳晨羽的生日
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:20241005
-RRULE:FREQ=YEARLY
-SUMMARY:梁洪麗的生日
-END:VEVENT
-BEGIN:VEVENT
-DTSTART;VALUE=DATE:19940616
-RRULE:FREQ=YEARLY
-SUMMARY:鄺如雪的生日
-END:VEVENT
-    `;
-
-    const birthdayEvents = parseICS(googleBirthdaysICS);
-    allEvents.push(...birthdayEvents);
-
 
     function getEventsForDate(date) {
+        const key = `${date.getMonth() + 1}-${date.getDate()}`;
         const results = [];
         
-        // 1. 加入二十四節氣
-        const term = getSolarTerm(date);
-        if (term) {
-            results.push(term);
+        if (holidays[key]) {
+            results.push(holidays[key]);
         }
-
-        // 2. 加入當天符合的行程與生日
-        const targetMonth = date.getMonth();
-        const targetDay = date.getDate();
-
-        allEvents.forEach(e => {
-            if (e.date.getMonth() === targetMonth && e.date.getDate() === targetDay) {
-                if (!results.includes(e.summary)) {
-                    results.push(e.summary);
-                }
-            }
-        });
+        
+        if (solarTerms[key]) {
+            results.push(solarTerms[key]);
+        }
 
         return results;
     }
@@ -2430,46 +2267,6 @@ END:VEVENT
 
     }
 
-}
-
-
-function parseICS(icsText) {
-    const events = [];
-    const lines = icsText.split(/\r\n|\n|\r/);
-    let currentEvent = null;
-
-    for (const line of lines) {
-        if (line === "BEGIN:VEVENT") {
-            currentEvent = {};
-        } else if (line === "END:VEVENT") {
-            if (currentEvent && currentEvent.summary && currentEvent.date) {
-                events.push(currentEvent);
-            }
-            currentEvent = null;
-        } else if (currentEvent) {
-            if (line.startsWith("SUMMARY")) {
-                currentEvent.summary = line.split(":")[1] || "";
-            } else if (line.startsWith("DTSTART")) {
-                const val = line.split(":")[1] || "";
-                currentEvent.date = parseICSDate(val);
-            }
-        }
-    }
-
-    return events;
-}
-
-
-function parseICSDate(str) {
-    if (!str || str.length < 8) {
-        return new Date();
-    }
-    const year = parseInt(str.substring(0, 4), 10);
-    const month = parseInt(str.substring(4, 6), 10) - 1;
-    const day = parseInt(str.substring(6, 8), 10);
-    const date = new Date(year, month, day);
-    date.setHours(0, 0, 0, 0);
-    return date;
 }
 
 
