@@ -67,6 +67,61 @@ function setupTTSToggle() {
     });
 }
 
+/* 全頁總結朗讀功能 */
+function readEntireDashboard() {
+    if (!ttsEnabled) return;
+    
+    let summary = "";
+    
+    // 1. 日期與時間
+    const dateStr = document.getElementById("dateMain")?.textContent || "";
+    const lunarStr = document.getElementById("lunarDate")?.textContent || "";
+    const now = new Date();
+    const ampm = now.getHours() >= 12 ? '下午' : '上午';
+    const hrs = now.getHours() % 12 || 12;
+    const mins = now.getMinutes();
+    summary += `現在是 ${dateStr}，${lunarStr}。時間是${ampm}${hrs}點${mins === 0 ? '整' : mins + '分'}。`;
+    
+    // 2. 天氣
+    const weatherDesc = document.getElementById("weatherDescription")?.textContent || "";
+    const temp = document.getElementById("temperature")?.textContent?.replace('°', '') || "";
+    const range = document.getElementById("todayRange")?.textContent?.replace(/°/g, '度') || "";
+    summary += `天氣方面，目前${weatherDesc}，氣溫${temp}度，今日氣溫介乎${range}。`;
+    
+    const hkoSpecial = document.getElementById("hkoSpecial")?.textContent || "";
+    const hkoSpecialPanel = document.getElementById("hkoSpecialPanel");
+    if (hkoSpecial && hkoSpecialPanel && !hkoSpecialPanel.classList.contains("hidden")) {
+        summary += `特別天氣提示：${hkoSpecial}。`;
+    }
+
+    // 3. 港鐵
+    let mtrDown = document.querySelector("#mtrDown .train-time")?.textContent?.trim() || "";
+    mtrDown = mtrDown ? mtrDown.replace('min', '分鐘') : "暫無班次";
+    
+    let mtrUp = document.querySelector("#mtrUp .train-time")?.textContent?.trim() || "";
+    mtrUp = mtrUp ? mtrUp.replace('min', '分鐘') : "暫無班次";
+    
+    summary += `交通方面，太和站往金鐘下班車，大約在 ${mtrDown} 後到達；往上水下班車，大約在 ${mtrUp} 後到達。`;
+    
+    // 4. 日程
+    const todayEvents = Array.from(document.querySelectorAll("#calendarToday .calendar-item")).map(el => el.textContent.trim()).join("、");
+    if (todayEvents) {
+        summary += `今日行程有：${todayEvents}。`;
+    } else {
+        summary += `今日無行程。`;
+    }
+    
+    // 5. 新聞焦點 (取第一則新聞)
+    const topNews = document.querySelector("#nowNews .news-item")?.textContent?.trim() || "";
+    if (topNews && !topNews.includes("載入") && !topNews.includes("沒有新聞")) {
+        summary += `最新焦點新聞：${topNews}。播報完畢。`;
+    } else {
+        summary += `播報完畢。`;
+    }
+    
+    speakText(summary);
+}
+
 
 /* =====================================================
    WEATHER CODE
@@ -2496,6 +2551,17 @@ document.addEventListener(
         loadCalendar();
 
         updateLastUpdated();
+        
+        
+        /* 綁定日期泡泡的全頁朗讀功能 */
+        const dateBubble = document.querySelector(".date-bubble");
+        if (dateBubble) {
+            dateBubble.addEventListener("click", (e) => {
+                // 如果點到裡面的按鈕 (語音或重整)，就不要觸發全版朗讀
+                if (e.target.closest("button")) return; 
+                readEntireDashboard();
+            });
+        }
 
 
         /* CLOCK */
