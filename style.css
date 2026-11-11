@@ -696,7 +696,7 @@ body {
 ===================================================== */
 
 .weather-hko-text:has(
-    .weather-hko-section:not(.hidden):only-child
+    .weather-hko-section:not(.hidden)):not(:has(.weather-hko-section:not(.hidden) ~ .weather-hko-section:not(.hidden))
 ) {
     grid-template-rows:
         minmax(0, 1fr);
@@ -1164,6 +1164,8 @@ footer {
 @media (max-width: 600px) {
     html, body { overflow: auto; }
     .dashboard {
+        position: relative;
+        inset: auto;
         height: auto;
         min-height: 100vh;
         overflow: visible;
@@ -1220,7 +1222,7 @@ footer {
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
     }
 
-    .weather-hko-text:has(.weather-hko-section:not(.hidden):only-child) {
+    .weather-hko-text:has(.weather-hko-section:not(.hidden)):not(:has(.weather-hko-section:not(.hidden) ~ .weather-hko-section:not(.hidden))) {
         grid-template-columns: minmax(0, 1fr);
     }
 

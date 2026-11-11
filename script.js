@@ -76,7 +76,7 @@ function readEntireDashboard() {
     // 1. 日期與時間
     const dateStr = document.getElementById("dateMain")?.textContent || "";
     const lunarStr = document.getElementById("lunarDate")?.textContent || "";
-    const now = new Date();
+    const now = new Date(new Date().toLocaleString("en-US", { timeZone: "Asia/Hong_Kong" }));
     const ampm = now.getHours() >= 12 ? '下午' : '上午';
     const hrs = now.getHours() % 12 || 12;
     const mins = now.getMinutes();
@@ -500,28 +500,24 @@ function getCurrentLocation() {
    FETCH JSON
 ===================================================== */
 
-async function fetchJSON(url) {
-
-    const response =
-        await fetch(
-            url,
-            {
-                cache: "no-store"
-            }
-        );
-
-
-    if (!response.ok) {
-
-        throw new Error(
-            `Request failed: ${response.status}`
-        );
-
+// Keep the timeout active until the response body has also been read.
+async function fetchResource(url, type = "json", timeoutMs = 10000) {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+        const response = await fetch(url, {
+            cache: "no-store",
+            signal: controller.signal
+        });
+        if (!response.ok) throw new Error(`Request failed: ${response.status}`);
+        return await response[type]();
+    } finally {
+        clearTimeout(timer);
     }
+}
 
-
-    return response.json();
-
+async function fetchJSON(url) {
+    return fetchResource(url);
 }
 
 
@@ -913,26 +909,7 @@ async function loadWeather() {
             `&forecast_days=2`;
 
 
-        const response =
-            await fetch(
-                url,
-                {
-                    cache: "no-store"
-                }
-            );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "Weather unavailable"
-            );
-
-        }
-
-
-        const data =
-            await response.json();
+        const data = await fetchResource(url, "json");
 
 
         const info =
@@ -1294,26 +1271,7 @@ async function loadMTR() {
 
     try {
 
-        const response =
-            await fetch(
-                `${MTR_API}?line=EAL&sta=TWO&lang=TC`,
-                {
-                    cache: "no-store"
-                }
-            );
-
-
-        if (!response.ok) {
-
-            throw new Error(
-                "MTR unavailable"
-            );
-
-        }
-
-
-        const data =
-            await response.json();
+        const data = await fetchResource(`${MTR_API}?line=EAL&sta=TWO&lang=TC`, "json");
 
 
         const station =
@@ -1384,6 +1342,15 @@ async function loadMTR() {
 
 }
 
+
+const MTR_STATION_NAMES = {
+    ADM: "金鐘", HUH: "紅磡", MKK: "旺角東", SHT: "沙田",
+    FOT: "火炭", RAC: "馬場", TAP: "大埔墟", TWO: "太和",
+    FAN: "粉嶺", SHS: "上水", LOW: "羅湖", LMC: "落馬洲"
+};
+function trainDestination(code) {
+    return MTR_STATION_NAMES[code] || code || "未知目的地";
+}
 
 function renderTrains(
     trains,
@@ -1458,22 +1425,19 @@ function renderTrains(
                 "train";
 
 
-            item.innerHTML =
-                `
-                    <div class="train-time">
-                        ${train.ttnt} min
-                    </div>
-
-                    <div class="train-destination">
-                        ${train.dest || ""}
-                    </div>
-                `;
-
+            const time = document.createElement("div");
+            time.className = "train-time";
+            time.textContent = `${train.ttnt} min`;
+            const destination = document.createElement("div");
+            destination.className = "train-destination";
+            destination.textContent = trainDestination(train.dest);
+            item.appendChild(time);
+            item.appendChild(destination);
 
             item.addEventListener("click", (e) => {
                 if (ttsEnabled) {
                     e.stopPropagation(); // 阻止觸發外層 directionBox 朗讀
-                    speakText(`港鐵太和站，${directionName}，往 ${train.dest || "未知"}，大約 ${train.ttnt} 分鐘後到達`);
+                    speakText(`港鐵太和站，${directionName}，往 ${trainDestination(train.dest)}，大約 ${train.ttnt} 分鐘後到達`);
                 }
             });
 
@@ -1503,26 +1467,7 @@ async function getRSS2JSON(
         );
 
 
-    const response =
-        await fetch(
-            url,
-            {
-                cache: "no-store"
-            }
-        );
-
-
-    if (!response.ok) {
-
-        throw new Error(
-            "RSS2JSON request failed"
-        );
-
-    }
-
-
-    const data =
-        await response.json();
+    const data = await fetchResource(url, "json");
 
 
     if (
@@ -1554,26 +1499,7 @@ async function getRSSCorsProxy(
         );
 
 
-    const response =
-        await fetch(
-            url,
-            {
-                cache: "no-store"
-            }
-        );
-
-
-    if (!response.ok) {
-
-        throw new Error(
-            "CorsProxy request failed"
-        );
-
-    }
-
-
-    const xml =
-        await response.text();
+    const xml = await fetchResource(url, "text");
 
 
     if (
@@ -1606,26 +1532,7 @@ async function getRSSAllOrigins(
         );
 
 
-    const response =
-        await fetch(
-            url,
-            {
-                cache: "no-store"
-            }
-        );
-
-
-    if (!response.ok) {
-
-        throw new Error(
-            "AllOrigins request failed"
-        );
-
-    }
-
-
-    const xml =
-        await response.text();
+    const xml = await fetchResource(url, "text");
 
 
     if (
@@ -2200,7 +2107,45 @@ async function loadBBCNews() {
    CALENDAR (假期 + 二十四節氣)
 ===================================================== */
 
+let holidays = typeof BUNDLED_HOLIDAYS === "undefined" ? {} : { ...BUNDLED_HOLIDAYS };
+let lastCalendarDate = "";
+let holidayUpdateStarted = false;
+
+function hongKongDateKey(date = new Date()) {
+    const parts = new Intl.DateTimeFormat("en-GB", {
+        year: "numeric", month: "2-digit", day: "2-digit", timeZone: "Asia/Hong_Kong"
+    }).formatToParts(date);
+    const part = type => parts.find(value => value.type === type).value;
+    return `${part("year")}-${part("month")}-${part("day")}`;
+}
+
+function refreshCalendarIfNeeded() {
+    if (hongKongDateKey() !== lastCalendarDate) loadCalendar();
+}
+
+async function updateHolidays() {
+    try {
+        const data = await fetchJSON("https://www.1823.gov.hk/common/ical/tc.json");
+        const events = data.vcalendar?.[0]?.vevent;
+        if (!Array.isArray(events) || !events.length) throw new Error("Invalid holiday feed");
+        const updated = {};
+        for (const event of events) {
+            const key = event.dtstart?.[0];
+            if (/^\d{8}$/.test(key) && typeof event.summary === "string") updated[key] = event.summary;
+        }
+        if (!Object.keys(updated).length) throw new Error("Empty holiday feed");
+        holidays = { ...holidays, ...updated };
+        loadCalendar();
+    } catch (error) {
+        console.warn("Holiday update unavailable; using bundled data.", error);
+    }
+}
+
 async function loadCalendar() {
+    if (!holidayUpdateStarted) {
+        holidayUpdateStarted = true;
+        void updateHolidays();
+    }
 
     const todayContainer =
         document.getElementById(
@@ -2220,22 +2165,11 @@ async function loadCalendar() {
     }
 
 
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
-
+    const dateKey = hongKongDateKey();
+    lastCalendarDate = dateKey;
+    const now = new Date(`${dateKey}T00:00:00Z`);
     const tomorrow = new Date(now);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
-
-    // 香港常見公眾假期
-    const holidays = {
-        "1-1": "元旦",
-        "5-1": "勞動節",
-        "7-1": "香港特別行政區成立紀念日",
-        "10-1": "國慶日",
-        "12-25": "聖誕節",
-        "12-26": "聖誕節後第一個周日"
-    };
+    tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
 
     // 二十四節氣對照表
     const solarTerms = {
@@ -2255,11 +2189,14 @@ async function loadCalendar() {
 
 
     function getEventsForDate(date) {
-        const key = `${date.getMonth() + 1}-${date.getDate()}`;
+        const key = `${date.getUTCMonth() + 1}-${date.getUTCDate()}`;
+        const holidayKey = date.toISOString().slice(0, 10).replaceAll("-", "");
         const results = [];
         
-        if (holidays[key]) {
-            results.push(holidays[key]);
+        if (holidays[holidayKey]) {
+            results.push(holidays[holidayKey]);
+        } else if (!Object.keys(holidays).some(key => key.startsWith(String(date.getUTCFullYear())))) {
+            results.push("公眾假期資料暫未涵蓋此年份");
         }
         
         if (solarTerms[key]) {
@@ -2567,7 +2504,10 @@ document.addEventListener(
         /* CLOCK */
 
         setInterval(
-            updateClock,
+            () => {
+                updateClock();
+                refreshCalendarIfNeeded();
+            },
             1000
         );
 
