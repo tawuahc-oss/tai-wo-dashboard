@@ -1446,3 +1446,92 @@ footer {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
+
+/* Device layouts: iPad 8 and iPhone 16 Pro, including standalone mode. */
+html { height: 100%; min-height: 100%; background: #efbec4; -webkit-text-size-adjust: 100%; }
+body { min-height: 100vh; min-height: 100dvh; background-attachment: scroll; }
+.dashboard { position: relative; inset: auto; min-height: 100vh; min-height: 100dvh; height: auto; overflow: visible; }
+html, body { overflow-x: hidden; overflow-y: auto; }
+.dashboard-content { overflow: visible; }
+.date-bubble { padding: 10px 100px 10px 12px; }
+.top-actions { top: 50%; transform: translateY(-50%); right: 10px; }
+.top-action-btn { width: 40px; height: 40px; }
+.weather-main { flex-direction: column; align-items: center; text-align: center; gap: 5px; }
+.weather-description { overflow-wrap: anywhere; }
+.analog-clock { width: 170px; height: 170px; flex: none; }
+.clock-card { row-gap: 10px; }
+.forecast-card { min-height: 140px; }
+.forecast { min-height: 100px; }
+.mtr-card { min-height: 205px; }
+.train { flex: 1 0 auto; min-height: 42px; }
+.train-list { overflow-y: auto; }
+footer { flex-wrap: wrap; gap: 6px; padding-top: 4px; }
+
+@media (min-width: 700px) {
+    .dashboard-content { grid-template-rows: minmax(330px, 2.2fr) minmax(140px, .85fr) minmax(210px, 1.3fr) minmax(165px, 1fr); }
+    .top-grid { grid-template-columns: minmax(200px, .78fr) minmax(0, 1.72fr); }
+    .weather-layout { grid-template-columns: minmax(145px, 1fr) minmax(0, 1.7fr); }
+    .weather-left-column { grid-template-rows: minmax(115px, 1fr) auto; }
+    .weather-icon-temp { flex-direction: column; gap: 4px; }
+    .weather-icon { font-size: 46px; }
+    .temperature { font-size: 44px; }
+    .weather-hko-text { min-height: 170px; }
+    .news-card { min-height: 165px; }
+}
+
+@media (min-width: 700px) and (orientation: landscape) {
+    .dashboard-content { grid-template-rows: minmax(310px, 2.1fr) minmax(140px, .85fr) minmax(210px, 1.3fr) minmax(165px, 1fr); }
+    .weather-icon-temp { flex-direction: row; }
+    .weather-layout { grid-template-columns: minmax(155px, 1fr) minmax(0, 2fr); }
+}
+
+/* Phones use a readable, vertically scrolling layout in either orientation. */
+@media (max-width: 699px), (max-height: 500px) and (pointer: coarse) {
+    .dashboard { display: flex; flex-direction: column; padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); gap: 12px; }
+    .dashboard-content { display: flex; flex-direction: column; gap: 12px; }
+    .top-grid, .middle-grid, .news-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
+    .clock-card { min-height: 245px; padding: 14px; }
+    .digital-time { font-size: 32px; }
+    .weather-column { gap: 12px; }
+    .date-main { white-space: normal; font-size: 22px; }
+    .date-lunar { font-size: 13px; }
+    .date-bubble { min-height: 76px; }
+    .weather-card { min-height: 390px; padding: 14px; }
+    .weather-layout { flex: none; display: flex; flex-direction: column; overflow: visible; gap: 12px; }
+    .weather-left-column { display: flex; flex-direction: column; overflow: visible; gap: 12px; }
+    .weather-icon-temp { flex-direction: column; gap: 5px; }
+    .weather-icon { font-size: 52px; }
+    .temperature { font-size: 48px; }
+    .weather-main { margin-top: 8px; }
+    .weather-details { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .weather-detail { flex-direction: column; gap: 5px; padding: 8px 4px; }
+    .weather-detail-value { font-size: 15px; }
+    .weather-hko-text { height: auto; display: flex; flex-direction: column; gap: 8px; overflow: visible; }
+    .weather-hko-section { height: auto; min-height: 90px; max-height: 200px; }
+    .weather-hko-content { flex: 1 1 auto; height: auto; max-height: 150px; font-size: 13px; }
+    .forecast-card { min-height: 165px; padding: 12px; }
+    .forecast { flex: none; min-height: 115px; grid-template-columns: repeat(8, minmax(68px, 1fr)); overflow-x: auto; padding-bottom: 6px; }
+    .forecast-icon { font-size: 24px; }
+    .forecast-temp { font-size: 17px; }
+    .forecast-time, .forecast-rain { font-size: 11px; }
+    .mtr-card { min-height: 235px; padding: 12px; }
+    .train { min-height: 45px; }
+    .train-time { font-size: 17px; line-height: 1.2; }
+    .train-destination { font-size: 12px; }
+    .calendar-card { min-height: 230px; }
+    .news-card { height: 260px; min-height: 260px; }
+    .news-item { font-size: 14px; padding: 8px 2px; }
+    .card-title { font-size: 16px; }
+}
+
+/* Keep intrinsic clock and weather content inside their cards. */
+.clock-card { grid-template-rows: auto minmax(180px, 1fr); }
+@media (min-width: 700px) {
+    .weather-left-column { grid-template-rows: auto auto; align-content: center; overflow: visible; }
+    .weather-main { min-height: 100px; }
+    .weather-details { flex-shrink: 0; }
+    .weather-card { min-height: 265px; }
+    .weather-layout { min-height: 205px; }
+    .top-grid { min-height: 350px; }
+    .dashboard-content { grid-template-rows: minmax(350px, 2.2fr) minmax(140px, .85fr) minmax(210px, 1.3fr) minmax(165px, 1fr); }
+}
