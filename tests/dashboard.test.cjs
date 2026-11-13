@@ -10,7 +10,8 @@ function dashboard(instant = '2026-02-17T04:00:00Z') {
     const elements = new Map();
     function element() {
         return {
-            textContent: '', style: {}, children: [], parentElement: {},
+            textContent: '', style: {}, children: [], parentElement: { querySelector() { return { textContent: '' }; } },
+            querySelector() { return { textContent: '' }; },
             classList: { add() {}, remove() {}, contains() { return false; } },
             appendChild(child) { this.children.push(child); },
             addEventListener() {}, closest() { return null; },
@@ -138,4 +139,42 @@ test('refresh button recovers after all loaders fail', async () => {
     context.setTimeout = callback => callback();
     await context.refreshDashboard();
     assert.equal(elements.get('refreshButton').disabled, false);
+});
+
+test('HKO restores current temperature and forecast when Open-Meteo fails', async () => {
+    const { context, elements } = dashboard();
+    context.fetch = async url => {
+        if (url.includes('open-meteo')) throw new Error('Timed out');
+        return { ok: true, json: async () => url.includes('rhrread') ? {
+            temperature: { data: [{ place: '大埔', value: 26 }] },
+            humidity: { data: [{ value: 72 }] }, updateTime: '2026-11-13T15:00:00+08:00'
+        } : url.includes('dataType=fnd') ? { weatherForecast: [{
+            forecastDate: '20261114', forecastMintemp: { value: 23 }, forecastMaxtemp: { value: 27 },
+            forecastWeather: '有雨', PSR: '高'
+        }] } : {} };
+    };
+    await context.loadWeather();
+    assert.equal(elements.get('temperature').textContent, '26°');
+    assert.equal(elements.get('rainProbability').textContent, '高');
+    assert.equal(elements.get('forecast').children.length, 1);
+    assert.match(elements.get('weatherTitle').textContent, /大埔/);
+    assert.match(elements.get('weatherUpdated').textContent, /2026-11-13/);
+    assert.equal(elements.get('forecast').children[0].children[1].textContent, '🌧️');
+});
+
+test('current weather does not wait for a geolocation permission prompt', async () => {
+    const { context, elements } = dashboard();
+    context.navigator.geolocation = { getCurrentPosition() { throw new Error('Must not prompt'); } };
+    context.fetch = async url => ({ ok: true, json: async () => url.includes('rhrread') ? {
+        temperature: { data: [{ place: '大埔', value: 25 }] }, humidity: { data: [{ value: 70 }] }
+    } : {} });
+    await context.loadWeather();
+    assert.equal(elements.get('temperature').textContent, '25°');
+});
+
+test('total weather outage shows an actionable error rather than permanent loading', async () => {
+    const { context, elements } = dashboard();
+    await context.loadWeather();
+    assert.match(elements.get('weatherUpdated').textContent, /重試/);
+    assert.match(elements.get('forecast').textContent, /未能載入/);
 });

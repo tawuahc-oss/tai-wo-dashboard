@@ -86,7 +86,7 @@ function readEntireDashboard() {
     const weatherDesc = document.getElementById("weatherDescription")?.textContent || "";
     const temp = document.getElementById("temperature")?.textContent?.replace('°', '') || "";
     const range = document.getElementById("todayRange")?.textContent?.replace(/°/g, '度') || "";
-    summary += `天氣方面，目前${weatherDesc}，氣溫${temp}度，今日氣溫介乎${range}。`;
+    summary += `天氣方面，目前${weatherDesc}，氣溫${temp}度，預報氣溫介乎${range}。`;
     
     const hkoSpecial = document.getElementById("hkoSpecial")?.textContent || "";
     const hkoSpecialPanel = document.getElementById("hkoSpecialPanel");
@@ -890,28 +890,98 @@ function extractSpecialWeatherTips(data) {
    WEATHER
 ===================================================== */
 
-async function loadWeather() {
+let weatherRequestInFlight = null;
 
-    try {
+function loadWeather() {
+    if (weatherRequestInFlight) return weatherRequestInFlight;
+    weatherRequestInFlight = updateWeather().finally(() => { weatherRequestInFlight = null; });
+    return weatherRequestInFlight;
+}
 
-        const location =
-            await getCurrentLocation();
+async function updateWeather() {
+    // This is the Tai Wo station dashboard: do not block weather on a location prompt.
+    const location = { latitude: FALLBACK_LATITUDE, longitude: FALLBACK_LONGITUDE, fallback: true };
+    const url = `${WEATHER_API}?latitude=${location.latitude}&longitude=${location.longitude}` +
+        "&current=temperature_2m,relative_humidity_2m,weather_code" +
+        "&hourly=temperature_2m,precipitation_probability,weather_code" +
+        "&daily=temperature_2m_max,temperature_2m_min&timezone=Asia%2FHong_Kong&forecast_days=2";
+    let primaryReady = false;
+    let currentReady = false;
+    let forecastReady = false;
+    const primary = (async () => {
+        const data = await fetchResource(url, "json", 20000);
+        if (!Number.isFinite(data.current?.temperature_2m) || !data.hourly?.time?.length || !data.daily?.temperature_2m_min?.length) {
+            throw new Error("Incomplete weather response");
+        }
+        renderOpenMeteoWeather(data, location);
+        primaryReady = currentReady = forecastReady = true;
+    })();
+    const backup = (async () => {
+        const current = await fetchJSON("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=rhrread&lang=tc");
+        if (!primaryReady) {
+            renderHKOCurrent(current);
+            currentReady = true;
+        }
+        const forecast = await fetchJSON("https://data.weather.gov.hk/weatherAPI/opendata/weather.php?dataType=fnd&lang=tc");
+        if (!primaryReady) {
+            renderHKOForecast(forecast);
+            forecastReady = true;
+        }
+    })();
+    await Promise.allSettled([primary, backup, loadHKOWeatherText()]);
+    if (!currentReady) {
+        document.getElementById("weatherDescription").textContent = "天氣暫時未能載入";
+        document.getElementById("weatherUpdated").textContent = "未能連接天氣服務，請按 ↻ 重試";
+    }
+    if (!forecastReady) document.getElementById("forecast").textContent = "天氣預報暫時未能載入";
+}
 
+function renderHKOCurrent(data) {
+    const readings = data.temperature?.data;
+    const reading = readings?.find(item => item.place === "大埔") || readings?.find(item => item.place === "香港天文台");
+    if (!Number.isFinite(reading?.value)) throw new Error("Missing HKO temperature");
+    document.getElementById("weatherTitle").textContent = `🌤️ 太和天氣（${reading.place}）`;
+    document.getElementById("temperature").textContent = `${Math.round(reading.value)}°`;
+    document.getElementById("weatherDescription").textContent = "天文台最新實況";
+    document.getElementById("weatherIcon").textContent = "🌡️";
+    const humidity = data.humidity?.data?.[0]?.value;
+    document.getElementById("humidity").textContent = Number.isFinite(humidity) ? `${humidity}%` : "—";
+    document.getElementById("humidity").parentElement.querySelector(".weather-detail-label").textContent = "💧 香港濕度";
+    document.getElementById("weatherUpdated").textContent = `天文台 · ${data.updateTime?.slice(0, 16).replace("T", " ") || "最新實況"}`;
+    document.getElementById("weatherMainBox").onclick = () => speakText(`天文台${reading.place}氣溫${reading.value}度`);
+}
 
-        const url =
-            `${WEATHER_API}` +
-            `?latitude=${location.latitude}` +
-            `&longitude=${location.longitude}` +
-            `&current=temperature_2m,relative_humidity_2m,weather_code` +
-            `&hourly=temperature_2m,precipitation_probability,weather_code` +
-            `&daily=temperature_2m_max,temperature_2m_min` +
-            `&timezone=Asia%2FHong_Kong` +
-            `&forecast_days=2`;
+function renderHKOForecast(data) {
+    const days = data.weatherForecast?.filter(day => /^\d{8}$/.test(day.forecastDate) && Number.isFinite(day.forecastMintemp?.value) && Number.isFinite(day.forecastMaxtemp?.value));
+    if (!days?.length) throw new Error("Missing HKO forecast");
+    const first = days[0];
+    const dateLabel = day => `${Number(day.forecastDate.slice(4, 6))}/${Number(day.forecastDate.slice(6, 8))}`;
+    document.getElementById("todayRangeBox").querySelector(".weather-detail-label").textContent = `📅 ${dateLabel(first)}`;
+    document.getElementById("todayRange").textContent = `${first.forecastMintemp.value}° — ${first.forecastMaxtemp.value}°`;
+    document.getElementById("rainProbability").parentElement.querySelector(".weather-detail-label").textContent = `🌧️ ${dateLabel(first)}降雨`;
+    document.getElementById("rainProbability").textContent = first.PSR || "—";
+    document.getElementById("todayRangeBox").onclick = () => speakText(`${dateLabel(first)}氣溫介乎${first.forecastMintemp.value}至${first.forecastMaxtemp.value}度`);
+    document.getElementById("forecastTitle").textContent = "🌦️ 天文台未來天氣預報";
+    const container = document.getElementById("forecast");
+    container.innerHTML = "";
+    for (const day of days.slice(0, 8)) {
+        const item = document.createElement("div");
+        item.className = "forecast-item";
+        const description = day.forecastWeather || "";
+        const icon = description.includes("雷暴") ? "⛈️" : description.includes("雨") ? "🌧️" : description.includes("霧") ? "🌫️" : description.includes("大致多雲") ? "☁️" : description.includes("雲") ? "⛅" : "🌤️";
+        for (const [className, text] of [["forecast-time", dateLabel(day)], ["forecast-icon", icon], ["forecast-temp", `${day.forecastMintemp.value}–${day.forecastMaxtemp.value}°`], ["forecast-rain", `降雨${day.PSR || "—"}`]]) {
+            const child = document.createElement("div"); child.className = className; child.textContent = text; item.appendChild(child);
+        }
+        item.onclick = () => speakText(`${dateLabel(day)}，${day.forecastWeather}，氣溫${day.forecastMintemp.value}至${day.forecastMaxtemp.value}度`);
+        container.appendChild(item);
+    }
+}
 
-
-        const data = await fetchResource(url, "json");
-
-
+function renderOpenMeteoWeather(data, location) {
+    document.getElementById("forecastTitle").textContent = "🌦️ TODAY'S FORECAST";
+    document.getElementById("todayRangeBox").querySelector(".weather-detail-label").textContent = "📅 今日";
+    document.getElementById("humidity").parentElement.querySelector(".weather-detail-label").textContent = "💧 濕度";
+    document.getElementById("rainProbability").parentElement.querySelector(".weather-detail-label").textContent = "🌧️ 降雨";
         const info =
             weatherInfo(
                 data.current.weather_code
@@ -1099,50 +1169,6 @@ async function loadWeather() {
                 `Updated ${formatTime()}`;
 
         }
-
-    }
-
-
-    catch (error) {
-
-        console.error(
-            "Weather error:",
-            error
-        );
-
-
-        const description =
-            document.getElementById(
-                "weatherDescription"
-            );
-
-
-        if (description) {
-
-            description.textContent =
-                "Weather unavailable";
-
-        }
-
-    }
-
-
-    /* HKO text loads separately */
-
-    try {
-
-        await loadHKOWeatherText();
-
-    }
-
-    catch (error) {
-
-        console.error(
-            "HKO text error:",
-            error
-        );
-
-    }
 
 }
 

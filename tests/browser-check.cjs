@@ -14,6 +14,7 @@ const { pathToFileURL } = require('node:url');
         page.on('pageerror', error => errors.push(error.message));
         await page.route('https://**/*', route => route.abort());
         await page.goto(pathToFileURL(path.resolve(__dirname, '../index.html')).href);
+        await page.evaluate(() => loadWeather());
         await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
         const mobile = await page.evaluate(() => ({
             position: getComputedStyle(document.querySelector('.dashboard')).position,
