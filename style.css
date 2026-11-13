@@ -1467,24 +1467,6 @@ html, body { overflow-x: hidden; overflow-y: auto; }
 .train-list { overflow-y: auto; }
 footer { flex-wrap: wrap; gap: 6px; padding-top: 4px; }
 
-@media (min-width: 700px) {
-    .dashboard-content { grid-template-rows: minmax(330px, 2.2fr) minmax(140px, .85fr) minmax(210px, 1.3fr) minmax(165px, 1fr); }
-    .top-grid { grid-template-columns: minmax(200px, .78fr) minmax(0, 1.72fr); }
-    .weather-layout { grid-template-columns: minmax(145px, 1fr) minmax(0, 1.7fr); }
-    .weather-left-column { grid-template-rows: minmax(115px, 1fr) auto; }
-    .weather-icon-temp { flex-direction: column; gap: 4px; }
-    .weather-icon { font-size: 46px; }
-    .temperature { font-size: 44px; }
-    .weather-hko-text { min-height: 170px; }
-    .news-card { min-height: 165px; }
-}
-
-@media (min-width: 700px) and (orientation: landscape) {
-    .dashboard-content { grid-template-rows: minmax(310px, 2.1fr) minmax(140px, .85fr) minmax(210px, 1.3fr) minmax(165px, 1fr); }
-    .weather-icon-temp { flex-direction: row; }
-    .weather-layout { grid-template-columns: minmax(155px, 1fr) minmax(0, 2fr); }
-}
-
 /* Phones use a readable, vertically scrolling layout in either orientation. */
 @media (max-width: 699px), (max-height: 500px) and (pointer: coarse) {
     .dashboard { display: flex; flex-direction: column; padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left)); gap: 12px; }
@@ -1524,14 +1506,82 @@ footer { flex-wrap: wrap; gap: 6px; padding-top: 4px; }
     .card-title { font-size: 16px; }
 }
 
-/* Keep intrinsic clock and weather content inside their cards. */
-.clock-card { grid-template-rows: auto minmax(180px, 1fr); }
-@media (min-width: 700px) {
-    .weather-left-column { grid-template-rows: auto auto; align-content: center; overflow: visible; }
-    .weather-main { min-height: 100px; }
-    .weather-details { flex-shrink: 0; }
-    .weather-card { min-height: 265px; }
-    .weather-layout { min-height: 205px; }
-    .top-grid { min-height: 350px; }
-    .dashboard-content { grid-template-rows: minmax(350px, 2.2fr) minmax(140px, .85fr) minmax(210px, 1.3fr) minmax(165px, 1fr); }
+/* Tablets and desktops: size every row to the visible screen, including Safari's bars. */
+@media (min-width: 700px) and (min-height: 501px) {
+    html, body { height: 100%; min-height: 0; overflow: hidden; }
+    .dashboard {
+        position: fixed;
+        inset: 0;
+        height: 100%;
+        height: 100dvh;
+        min-height: 0;
+        overflow: hidden;
+        display: grid;
+        grid-template-rows: minmax(0, 1fr) auto;
+    }
+    .dashboard-content {
+        display: grid;
+        grid-template-rows: minmax(0, 2.5fr) minmax(0, .85fr) minmax(0, 1.25fr) minmax(0, 1.4fr);
+        overflow: hidden;
+    }
+    .top-grid { grid-template-columns: minmax(180px, .7fr) minmax(0, 1.8fr); min-height: 0; }
+    .middle-grid { grid-template-columns: minmax(230px, 1fr) minmax(0, 1.6fr); }
+    .clock-card { grid-template-rows: auto minmax(0, 1fr); row-gap: 6px; }
+    .clock-area { container-type: size; }
+    .analog-clock { width: min(100cqw, 100cqh, 180px); height: min(100cqw, 100cqh, 180px); }
+    .digital-time { font-size: clamp(24px, 3vw, 40px); }
+    .date-main { font-size: clamp(18px, 2.2vw, 30px); }
+    .weather-column { gap: 6px; }
+    .date-bubble { padding-top: 7px; padding-bottom: 7px; }
+    .weather-card, .forecast-card, .mtr-card, .calendar-card, .news-card { min-height: 0; }
+    .weather-layout { grid-template-columns: minmax(120px, 1fr) minmax(0, 1.7fr); min-height: 0; }
+    .weather-left-column { grid-template-rows: minmax(0, 1fr) auto; align-content: normal; overflow: hidden; }
+    .weather-main { min-height: 0; margin-top: 0; }
+    .weather-icon-temp { flex-direction: row; gap: 6px; }
+    .weather-icon { font-size: clamp(30px, 4.5vw, 48px); }
+    .temperature { font-size: clamp(30px, 4.2vw, 46px); }
+    .weather-description { font-size: 13px; margin-top: 0; }
+    .weather-hko-text { min-height: 0; }
+    .weather-detail { padding: 3px 6px; }
+    .weather-detail-value { font-size: 14px; }
+    .forecast { min-height: 0; }
+    .train { flex: 1 1 0; min-height: 0; }
+    .train-list { overflow: hidden; }
+    .train-time { font-size: 15px; line-height: 1.1; }
+    .train-destination { font-size: 11px; line-height: 1.1; }
+    footer { padding-top: 0; flex-wrap: nowrap; }
+}
+
+@media (min-width: 700px) and (min-height: 501px) and (orientation: landscape) {
+    .dashboard-content { grid-template-rows: minmax(0, 2fr) minmax(0, .9fr) minmax(0, 1.4fr) minmax(0, 1fr); }
+    .weather-layout { grid-template-columns: minmax(120px, 1fr) minmax(0, 2fr); }
+}
+
+/* Browser toolbars reduce the available height even on a full-size iPad. */
+@media (min-width: 700px) and (min-height: 501px) and (max-height: 700px) {
+    .dashboard { padding-top: max(6px, env(safe-area-inset-top, 0px)); padding-bottom: max(6px, env(safe-area-inset-bottom, 0px)); }
+    .dashboard-content { gap: 6px; }
+    .card-title { font-size: 13px; }
+    .clock-card, .weather-card, .forecast-card, .mtr-card, .calendar-card, .news-card { padding: 6px 9px; }
+    .date-main { font-size: 20px; }
+    .date-lunar { font-size: 11px; }
+    .date-bubble { padding-top: 5px; padding-bottom: 5px; }
+    .top-action-btn { width: 32px; height: 32px; }
+    .weather-main { gap: 2px; }
+    .weather-icon { font-size: 32px; }
+    .temperature { font-size: 32px; }
+    .weather-description { font-size: 11px; }
+    .weather-details { gap: 3px; }
+    .weather-detail { padding: 2px 5px; }
+    .weather-detail-label { font-size: 10px; }
+    .weather-detail-value { font-size: 12px; }
+    .forecast-item { padding: 2px 3px; }
+    .forecast-time { font-size: 10px; line-height: 1; }
+    .forecast-icon { font-size: 18px; line-height: 1; margin: 1px 0; }
+    .forecast-temp { font-size: 14px; line-height: 1.1; }
+    .forecast-rain { font-size: 9px; line-height: 1; }
+    .forecast-item > *, .train > * { flex-shrink: 0; }
+    .train { padding: 2px 4px; }
+    .train-time { font-size: 13px; }
+    .train-destination { font-size: 10px; }
 }
