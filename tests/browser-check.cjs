@@ -53,11 +53,14 @@ const { pathToFileURL } = require('node:url');
             { width: 1024, height: 1366 }, { width: 1366, height: 900 }
         ]) {
             await page.setViewportSize(viewport);
+            await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
             const layout = await page.evaluate(() => ({
                 width: innerWidth, height: innerHeight,
                 overflow: document.documentElement.scrollWidth > innerWidth,
                 footerBottom: document.querySelector('footer').getBoundingClientRect().bottom,
                 pageScrolls: document.documentElement.scrollHeight > innerHeight + 1,
+                bottomGap: innerHeight - document.querySelector('footer').getBoundingClientRect().bottom,
+                dashboardBottom: document.querySelector('.dashboard').getBoundingClientRect().bottom,
                 clipped: [...document.querySelectorAll('.card, .date-bubble, .train, .train-time, .train-destination, .forecast-item, .forecast-time, .forecast-icon, .forecast-temp, .forecast-rain, .weather-details, .weather-main, .digital-time, .analog-clock')].filter(element => {
                     const box = element.getBoundingClientRect();
                     if (box.top < -1 || box.bottom > innerHeight + 1 || box.left < -1 || box.right > innerWidth + 1) return true;
@@ -73,6 +76,8 @@ const { pathToFileURL } = require('node:url');
             console.log('Desktop/tablet layout:', layout);
             assert.equal(layout.overflow, false);
             assert.equal(layout.pageScrolls, false);
+            assert.ok(Math.abs(layout.dashboardBottom - layout.height) < 1);
+            assert.ok(layout.bottomGap <= 12);
             assert.deepEqual(layout.clipped, []);
             assert.ok(layout.footerBottom <= layout.height + 1);
             if (process.env.QA_SCREENSHOTS && viewport.width === 1080 && viewport.height === 680) {
@@ -93,6 +98,23 @@ const { pathToFileURL } = require('node:url');
         assert.ok(Math.abs(panel.height - panel.panelHeight) < 2);
         assert.deepEqual(errors, []);
         console.log('Single weather panel fills available height; no page errors.');
+        // Simulate Safari reporting a visible height different from CSS viewport units.
+        await page.evaluate(() => {
+            const viewport = new EventTarget();
+            viewport.height = innerHeight - 100;
+            viewport.scale = 1;
+            Object.defineProperty(window, 'visualViewport', { configurable: true, value: viewport });
+            window.dispatchEvent(new Event('resize'));
+        });
+        await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+        assert.ok(await page.evaluate(() => Math.abs(document.querySelector('.dashboard').getBoundingClientRect().height - visualViewport.height) < 1));
+        await page.evaluate(() => {
+            visualViewport.height = innerHeight;
+            window.dispatchEvent(new Event('resize'));
+        });
+        await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))));
+        assert.ok(await page.evaluate(() => Math.abs(document.querySelector('.dashboard').getBoundingClientRect().bottom - innerHeight) < 1));
+        console.log('Safari viewport-height mismatch and restored height: passed.');
     } finally {
         await browser.close();
     }

@@ -1514,6 +1514,7 @@ footer { flex-wrap: wrap; gap: 6px; padding-top: 4px; }
         inset: 0;
         height: 100%;
         height: 100dvh;
+        height: var(--dashboard-viewport-height, 100dvh);
         min-height: 0;
         overflow: hidden;
         display: grid;
@@ -1549,6 +1550,8 @@ footer { flex-wrap: wrap; gap: 6px; padding-top: 4px; }
     .train-list { overflow: hidden; }
     .train-time { font-size: 15px; line-height: 1.1; }
     .train-destination { font-size: 11px; line-height: 1.1; }
+    .news-grid { grid-template-rows: minmax(0, 1fr); align-content: stretch; }
+    .news-card { height: auto; align-self: stretch; }
     footer { padding-top: 0; flex-wrap: nowrap; }
 }
 

@@ -9,6 +9,7 @@
 
 - 手機版可以向下捲動至新聞及頁尾。
 - iPad 直向及橫向會按 Safari 可見高度排列，所有主要區塊同時顯示，毋須捲動整頁；新聞及長天氣提示可在各自欄內捲動。
+- 旋轉、重新開啟頁面或 Safari 工具列變動時會重新量度可見高度，避免版面下方出現額外留白。
 - 今日／明日日曆按香港時間計算，跨午夜會自動更新。
 - 附有香港政府公布的 2025–2027 年公眾假期資料，亦會嘗試從政府更新。
 - 資料請求會在 10 秒後中止，包括回應內容的下載；新聞會嘗試後備來源。
@@ -25,7 +26,7 @@
 
 ```powershell
 node --check script.js
-node --test tests/dashboard.test.cjs
+node --test tests/dashboard.test.cjs tests/viewport.test.cjs
 ```
 
 `tests/browser-check.cjs` 是額外的瀏覽器檢查，需要 Playwright 及 Edge。
@@ -33,6 +34,6 @@ node --test tests/dashboard.test.cjs
 
 ## 發佈檔案
 
-上傳網站時，請一併上傳 `index.html`、`script.js`、`style.css`、`holidays.js`
+上傳網站時，請一併上傳 `index.html`、`script.js`、`style.css`、`holidays.js`、`viewport.js`
 及 `Weather & News Dashboard Thumbnail.png`，保持它們在同一資料夾。
 正式網站：https://tawuahc-oss.github.io/tai-wo-dashboard/
